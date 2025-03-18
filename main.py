@@ -129,11 +129,12 @@ class Interface(customtkinter.CTk, Interface_frames):
         self.error_label.configure(text="")  
         self.login_screen_destroy()
         self.interface_screen_build()
+
+        self.success_label = customtkinter.CTkLabel(self, text="Vous êtes connecté !", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
+        self.success_label.grid(row=9, column=0, padx=20, pady=10)  
             
             
-        print("Connexion réussie")
-        self.login_screen_destroy()
-        self.interface_screen_build()
+
 
     def validate_email(self, email):
         email_regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$"
