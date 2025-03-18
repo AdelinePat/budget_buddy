@@ -54,6 +54,8 @@ class Interface(customtkinter.CTk, Interface_frames):
         self.email_box.destroy()
         self.password_text.destroy()
         self.password_box.destroy()
+        self.subtitle_text.destroy()
+        self.button_create_account.destroy()
         self.button.destroy()
     
     def interface_screen_build(self):
