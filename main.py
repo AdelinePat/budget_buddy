@@ -1,6 +1,6 @@
 import customtkinter
 import time
-from __settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, TITLE_FONT, TEXT_FONT
+from __settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK,get_text_font, get_title_font
 
 class Interface_frames:
     pass
@@ -13,35 +13,33 @@ class Interface(customtkinter.CTk, Interface_frames):
         self.config(background = DARK_BLUE)
         self.title("Connexion Client")
         self.columnconfigure((0), weight=1)
+        self.title_font = get_title_font(30)
+        self.text_font = get_text_font(15)
         self.login_screen_build()
 
     def get_font(self):
         pass
     
     def login_screen_build(self):
-        app = customtkinter.CTk()
-
-        self.email_text = customtkinter.CTkTextbox(master=self, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= DARK_BLUE, text_color = SOFT_YELLOW) # champs "email"
+        self.email_text = customtkinter.CTkTextbox(master=self, font=self.text_font, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= DARK_BLUE, text_color = SOFT_YELLOW) # champs "email"
         self.email_text.grid(row=1, column=0, sticky="sew", padx=20, pady=5)
         self.email_text.insert("0.0", "Votre adresse email : ")
         self.email_text.configure(state='disabled')
 
-        self.email_box = customtkinter.CTkTextbox(master=self, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE) # champs "email"
+        self.email_box = customtkinter.CTkTextbox(master=self, font=self.text_font, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE) # champs "email"
         self.email_box.grid(row=2, column=0, sticky="sew", padx=20, pady=0)
         self.email_box.insert("0.0", "")
 
-        self.password_text = customtkinter.CTkTextbox(master=self, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= DARK_BLUE, text_color = SOFT_YELLOW) # champs "email"
+        self.password_text = customtkinter.CTkTextbox(master=self, font=self.text_font, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= DARK_BLUE, text_color = SOFT_YELLOW) # champs "email"
         self.password_text.grid(row=3, column=0, sticky="sew", padx=20, pady=5)
         self.password_text.insert("0.0", "Votre mot de passe : ")
         self.password_text.configure(state='disabled') 
 
-        self.password_box = customtkinter.CTkTextbox(master=self, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE) # champs "email"
+        self.password_box = customtkinter.CTkTextbox(master=self, font=self.text_font, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE) # champs "email"
         self.password_box.grid(row=4, column=0, sticky="sew", padx=20, pady=0)
         self.password_box.insert("0.0", "")
-
-        # lecker_font = change_font(TITLE_FONT, 30)
-
-        self.button = customtkinter.CTkButton(self, text="Se connecter", command=self.button_callbck, corner_radius=7, bg_color= DARK_BLUE, fg_color = PINK) # bouton se connecter
+        
+        self.button = customtkinter.CTkButton(self, text="Se connecter".upper(), font=self.text_font, command=self.button_callbck, corner_radius=7, bg_color= DARK_BLUE, fg_color = PINK) # bouton se connecter
         self.button.grid(row=6, column=0, padx=20, pady=20)
     
     def login_screen_destroy(self):
@@ -52,7 +50,7 @@ class Interface(customtkinter.CTk, Interface_frames):
         self.button.destroy()
     
     def interface_screen_build(self):
-        self.button = customtkinter.CTkButton(self, text="Se déconnecter", command=self.button_callbck_logout, corner_radius=10, bg_color=DARK_BLUE, fg_color = PINK)
+        self.button = customtkinter.CTkButton(self, text="Se déconnecter".upper(), font=self.text_font, command=self.button_callbck_logout, corner_radius=10, bg_color=DARK_BLUE, fg_color = PINK)
         self.button.grid(row=1, column=0, padx=20, pady=20)
 
 
