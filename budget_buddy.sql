@@ -134,3 +134,73 @@ WHERE
     u.id_user = (SELECT id_user FROM users WHERE lastname = 'Eminence' AND firstname = 'Shadow') AND
     deal_date BETWEEN '2025-03-14' AND '2025-03-24' 
 ORDER BY t.deal_date DESC;
+
+
+-- trie par date (ASC et DESC)
+SELECT DISTINCT
+    id_transaction, lastname, firstname, deal_type, balance, deal_date, category, amount
+FROM
+    users u
+JOIN
+    bank_account ba USING(id_user)
+JOIN
+    transactions t ON t.id_account_emitter = ba.id_account OR t.id_account_receiver = ba.id_account
+WHERE
+    u.id_user = (SELECT id_user FROM users WHERE lastname = 'Doe' AND firstname = 'John')
+ORDER BY t.deal_date DESC;
+
+-- trie par fourchette de date
+SELECT DISTINCT
+    id_transaction, lastname, firstname, deal_type, balance, deal_date, category, amount
+FROM
+    users u
+JOIN
+    bank_account ba USING(id_user)
+JOIN
+    transactions t ON t.id_account_emitter = ba.id_account OR t.id_account_receiver = ba.id_account
+WHERE
+    u.id_user = (SELECT id_user FROM users WHERE lastname = 'Eminence' AND firstname = 'Shadow') AND
+    deal_date BETWEEN '2025-03-14' AND '2025-03-24' 
+ORDER BY t.deal_date DESC;
+
+-- trie par categorie (loisir bidule machin)
+SELECT DISTINCT
+    id_transaction, lastname, firstname, deal_type, balance, deal_date, category, amount
+FROM
+    users u
+JOIN
+    bank_account ba USING(id_user)
+JOIN
+    transactions t ON t.id_account_emitter = ba.id_account OR t.id_account_receiver = ba.id_account
+WHERE
+    u.id_user = (SELECT id_user FROM users WHERE lastname = 'Mangeot' AND firstname = 'Jolyne') AND
+    (t.category REGEXP '(deal)' OR t.deal_description REGEXP '(drogu)')
+ORDER BY t.category DESC;
+
+-- trie par type
+SELECT DISTINCT
+    id_transaction, lastname, firstname, deal_type, balance, deal_date, category, amount
+FROM
+    users u
+JOIN
+    bank_account ba USING(id_user)
+JOIN
+    transactions t ON t.id_account_emitter = ba.id_account OR t.id_account_receiver = ba.id_account
+WHERE
+    u.id_user = (SELECT id_user FROM users WHERE lastname = 'Eminence' AND firstname = 'Shadow') AND
+    t.deal_type = 'retrait'
+ORDER BY t.deal_type DESC;
+
+-- trie par montant (ASC et DESC)
+SELECT DISTINCT
+    id_transaction, lastname, firstname, deal_type, balance, deal_date, category, amount
+FROM
+    users u
+JOIN
+    bank_account ba USING(id_user)
+JOIN
+    transactions t ON t.id_account_emitter = ba.id_account OR t.id_account_receiver = ba.id_account
+WHERE
+    u.id_user = (SELECT id_user FROM users WHERE lastname = 'Mangeot' AND firstname = 'Jolyne') AND
+    t.amount > 100
+ORDER BY t.amount DESC;
