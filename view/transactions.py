@@ -1,4 +1,6 @@
 import customtkinter
+# import tkcalendar
+from CTkDatePicker import CTkDatePicker
 from view.interface import Interface
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK
 
@@ -8,7 +10,7 @@ class TransactionView(Interface):
         self.screen_build()
     
     def deal_type_callback(choice):
-        print("combobox dropdown clicked:", choice)
+        print("DEAL TYPE : combobox dropdown clicked:")
 
     def screen_build(self):
         self.title_text = customtkinter.CTkLabel(master=self, text="Budget Buddy", font=self.title_font, text_color=YELLOW, bg_color=DARK_BLUE)
@@ -20,11 +22,18 @@ class TransactionView(Interface):
         self.deal_type_text = customtkinter.CTkLabel(master=self, text="Choisissez le type de transaction :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
         self.deal_type_text.grid(row=2, column=0, sticky="sew", padx=20, pady=5)
 
-        deal_type_choice = customtkinter.CTkComboBox(master=self,
+        self.deal_type_choice = customtkinter.CTkComboBox(master=self,
                                     values=['Retrait', 'Dépôt', 'Transfert'],
-                                    command=self.deal_type_callback())
-        deal_type_choice.grid(row=3, column=0, sticky="sew", padx=20, pady=0)
-        deal_type_choice.set("Dépôt")
+                                    command=self.deal_type_callback(),
+                                    font=self.text_font, text_color=DARK_BLUE, bg_color=DARK_BLUE, fg_color=SOFT_YELLOW,
+                                    dropdown_fg_color = SOFT_YELLOW, dropdown_text_color = DARK_BLUE, dropdown_font= self.text_font,
+                                    dropdown_hover_color = SOFT_BLUE
+                                    )
+        
+        self.deal_type_choice.grid(row=3, column=0, sticky="sew", padx=20, pady=0)
+        self.deal_type_choice.set("Dépôt")
+
+        self.chose_date = 
 
         # self.email_box = customtkinter.CTkTextbox(master=self, font=self.text_font, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE) # champs "email"
         # self.email_box.grid(row=3, column=0, sticky="sew", padx=20, pady=0)
