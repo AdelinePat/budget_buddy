@@ -1,4 +1,7 @@
 import customtkinter
+from PIL import Image
+import customtkinter
+
 ## COLORS
 DARK_BLUE = '#1D2F6F'
 SOFT_BLUE = '#8390FA'
@@ -24,4 +27,20 @@ def get_text_font(font_size):
     custom_font = customtkinter.CTkFont(family="Josefin Sans Regular", size=font_size)
     custom_font = ("Josefin Sans Regular", font_size)
     return custom_font
+    
 
+def get_eye_icons():
+
+    eye_open = customtkinter.CTkImage(
+        light_image=Image.open("./assets/img/eye_open.png"),  
+        dark_image=Image.open("./assets/img/eye_open.png"), 
+        size=(20, 20),
+    )
+    
+    eye_closed = customtkinter.CTkImage(
+        light_image=Image.open("./assets/img/eye_closed.png"),  
+        dark_image=Image.open("./assets/img/eye_closed.png"), 
+        size=(20, 20)
+    )
+
+    return eye_open, eye_closed
