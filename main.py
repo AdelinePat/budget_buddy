@@ -4,9 +4,6 @@ import time
 import re
 from __settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, get_text_font, get_title_font, get_eye_icons
 
-
-
-
 class Interface_frames:
     pass
 
@@ -24,8 +21,6 @@ class Interface(customtkinter.CTk, Interface_frames):
         self.eye_open, self.eye_closed = get_eye_icons()
         self.login_screen_build()
         
-
-
     def get_font(self):
         pass
     
@@ -74,6 +69,7 @@ class Interface(customtkinter.CTk, Interface_frames):
         self.button_create_account = customtkinter.CTkButton(self, text="Créer un compte".upper(), font=self.text_font, command=self.button_callback, corner_radius=7, bg_color=DARK_BLUE, fg_color=PINK)
         self.button_create_account.grid(row=8, column=0, padx=20, pady=20)
 
+
     def toggle_password(self):
         if self.password_visible:
             self.show_password_button.configure(image=self.eye_closed) 
@@ -83,8 +79,6 @@ class Interface(customtkinter.CTk, Interface_frames):
             self.password_box.configure(show="")  
         
         self.password_visible = not self.password_visible
-
-    
 
     def login_screen_destroy(self):
         self.email_entry.destroy()
@@ -134,8 +128,6 @@ class Interface(customtkinter.CTk, Interface_frames):
         self.success_label.grid(row=9, column=0, padx=20, pady=10)  
             
             
-
-
     def validate_email(self, email):
         email_regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$"
         return re.match(email_regex, email)
