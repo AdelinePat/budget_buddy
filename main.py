@@ -50,7 +50,18 @@ class Interface(customtkinter.CTk, Interface_frames):
         self.password_box.grid(row=5, column=0, sticky="sew", padx=20, pady=0)
 
        
-        self.show_password_button = customtkinter.CTkButton(self, text="👁", width=40, command=self.toggle_password)
+        self.show_password_button = customtkinter.CTkButton(
+    self, 
+    text="",  # Supprime le texte
+    width=40, 
+    image=self.eye_closed,  
+    command=self.toggle_password,
+    fg_color="transparent",  
+    hover = False,
+    border_width=0,
+    corner_radius=0
+)
+
         self.show_password_button.grid(row=5, column=2, padx=10)
 
         self.button = customtkinter.CTkButton(self, text="Se connecter".upper(), font=self.text_font, command=self.button_callbck, corner_radius=7, bg_color=DARK_BLUE, fg_color=PINK)
