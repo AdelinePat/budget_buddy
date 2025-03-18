@@ -18,7 +18,7 @@ CREATE TABLE Bank_account (
     id_user INT NOT NULL,
     account_type VARCHAR(100) NOT NULL,
     account_name VARCHAR(100) NULL,
-    balance INT NOT NULL,
+    balance DECIMAL(13, 2) NOT NULL,
     min_balance INT UNSIGNED NOT NULL,
     FOREIGN KEY (id_user) REFERENCES Users(id_user)
 )
@@ -29,12 +29,12 @@ CREATE TABLE Transactions (
     id_account_emitter INT NULL,
     id_account_receiver INT NULL,
     deal_description VARCHAR(100) NOT NULL,
-    amount INT UNSIGNED NOT NULL,
+    amount DECIMAL(13, 2) UNSIGNED NOT NULL,
     deal_date DATE NOT NULL,
     deal_type VARCHAR(100) NOT NULL,
-    frequency INT UNSIGNED NOT NULL,
+    frequency INT UNSIGNED NULL,
     category VARCHAR(100) NOT NULL,
-    charges INT NULL,
+    charges DECIMAL(13, 2) NULL,
     FOREIGN KEY (id_account_emitter) REFERENCES Bank_account(id_account),
     FOREIGN KEY (id_account_receiver) REFERENCES Bank_account(id_account)
 )
@@ -108,8 +108,10 @@ TABLE Bank_account;
 
 TABLE Transactions;
 DESCRIBE Users;
+DESCRIBE Bank_account;
+DESCRIBE Transactions;
 
--- DROP DATABASE Budget_Buddy;
+DROP DATABASE Budget_Buddy;
 
 SELECT id_transaction lastname, firstname, balance, deal_date, category, amount
 FROM Users
