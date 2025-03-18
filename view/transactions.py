@@ -1,6 +1,7 @@
 import customtkinter
 # import tkcalendar
-from CTkDatePicker import CTkDatePicker
+# from CTkDatePicker import CTkDatePicker
+from tkcalendar import Calendar
 from view.interface import Interface
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK
 
@@ -33,7 +34,11 @@ class TransactionView(Interface):
         self.deal_type_choice.grid(row=3, column=0, sticky="sew", padx=20, pady=0)
         self.deal_type_choice.set("Dépôt")
 
-        self.chose_date = 
+        self.chose_date = Calendar(master=self, selectmode='day', font=self.text_font,
+            showweeknumbers=False, cursor="hand2", date_pattern= 'y-mm-dd',
+            borderwidth=0, bordercolor='white')
+        
+        self.chose_date.grid(row= 4,column=0, padx=30, pady=10, sticky='sew')
 
         # self.email_box = customtkinter.CTkTextbox(master=self, font=self.text_font, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE) # champs "email"
         # self.email_box.grid(row=3, column=0, sticky="sew", padx=20, pady=0)
