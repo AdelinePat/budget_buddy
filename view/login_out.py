@@ -1,26 +1,12 @@
 import customtkinter
-import tkinter
-import time
-from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK,get_text_font, get_title_font
+from view.interface import Interface
+from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK
 
-class Interface_frames:
-    pass
-
-class Interface(customtkinter.CTk, Interface_frames):
-    def __init__(self, window_title):
-        super().__init__()
-        self.current_scene = "broad_view"
-        self.geometry("640x480")
-        self.config(background = DARK_BLUE)
-        self.title(window_title)
-        self.columnconfigure((0), weight=1)
-        self.title_font = get_title_font(30)
-        self.text_font = get_text_font(15)
+class LogInOut(Interface):
+    def __init__(self,window_title, column_number):
+        super().__init__(window_title, column_number)
         self.login_screen_build()
 
-    def get_font(self):
-        pass
-    
     def login_screen_build(self):
         self.title_text = customtkinter.CTkLabel(master=self, text="Budget Buddy", font=self.title_font, text_color=YELLOW, bg_color=DARK_BLUE)
         self.title_text.grid(row=0, column=0, sticky="sew", padx=20, pady=0)
@@ -77,6 +63,3 @@ class Interface(customtkinter.CTk, Interface_frames):
         self.interface_screen_destroy()
         self.login_screen_build()
         # self.confirmed = True
-
-client_account_interface = Interface()
-client_account_interface.mainloop()
