@@ -96,7 +96,9 @@ class Interface(customtkinter.CTk, Interface_frames):
     def logout(self):
         self.interface_screen_destroy()
         self.login_screen_build()
-
+        if self.success_label:  
+            self.success_label.destroy()
+        self.success_label = None
     def interface_screen_destroy(self):
         self.button.destroy()
 
@@ -146,6 +148,9 @@ class Interface(customtkinter.CTk, Interface_frames):
         print("Déconnexion réussie")
         self.interface_screen_destroy()
         self.login_screen_build()
+        if self.success_label: 
+            self.success_label.destroy()
+        self.success_label = None
 
 client_account_interface = Interface()
 client_account_interface.mainloop()
