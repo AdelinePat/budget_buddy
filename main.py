@@ -1,6 +1,6 @@
 import customtkinter
 import time
-from __settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, TITLE_FONT, TEXT_FONT, change_font
+from __settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, TITLE_FONT, TEXT_FONT
 
 class Interface_frames:
     pass
@@ -19,11 +19,12 @@ class Interface(customtkinter.CTk, Interface_frames):
         pass
     
     def login_screen_build(self):
+        app = customtkinter.CTk()
 
         self.email_text = customtkinter.CTkTextbox(master=self, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= DARK_BLUE, text_color = SOFT_YELLOW) # champs "email"
         self.email_text.grid(row=1, column=0, sticky="sew", padx=20, pady=5)
         self.email_text.insert("0.0", "Votre adresse email : ")
-        self.email_text.configure(state='disabled') 
+        self.email_text.configure(state='disabled')
 
         self.email_box = customtkinter.CTkTextbox(master=self, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE) # champs "email"
         self.email_box.grid(row=2, column=0, sticky="sew", padx=20, pady=0)
@@ -40,7 +41,7 @@ class Interface(customtkinter.CTk, Interface_frames):
 
         # lecker_font = change_font(TITLE_FONT, 30)
 
-        self.button = customtkinter.CTkButton(self, font=(TEXT_FONT, 30), text="Se connecter", command=self.button_callbck, corner_radius=7, bg_color= DARK_BLUE, fg_color = PINK) # bouton se connecter
+        self.button = customtkinter.CTkButton(self, text="Se connecter", command=self.button_callbck, corner_radius=7, bg_color= DARK_BLUE, fg_color = PINK) # bouton se connecter
         self.button.grid(row=6, column=0, padx=20, pady=20)
     
     def login_screen_destroy(self):
