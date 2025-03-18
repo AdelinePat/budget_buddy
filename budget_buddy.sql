@@ -1,15 +1,17 @@
--- Active: 1741679024806@@127.0.0.1@3306@budget_buddy
+-- Active: 1742312366575@@127.0.0.1@3306@Budget_Buddy
 CREATE DATABASE IF NOT EXISTS Budget_Buddy;
 USE Budget_Buddy;
 DROP TABLE IF EXISTS Users;
 CREATE TABLE Users (
-    id_user INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    id_user INT AUTO_INCREMENT NOT NULL,
     lastname VARCHAR(255) NOT NULL,
     firstname VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL
-)
-
+    password VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id_user)
+);
+DESCRIBE Users;
+TABLE Users;
 DROP TABLE IF EXISTS Bank_account;
 CREATE TABLE Bank_account (
     id_account INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -105,33 +107,33 @@ TABLE Users;
 TABLE Bank_account;
 
 TABLE Transactions;
-DESCRIBE users;
+DESCRIBE Users;
 
 -- DROP DATABASE Budget_Buddy;
 
 SELECT id_transaction lastname, firstname, balance, deal_date, category, amount
-FROM users
-JOIN bank_account ba USING(id_user)
-JOIN transactions t ON ba.id_account = t.id_account_emitter OR ba.id_account = t.id_account_receiver
+FROM Users
+JOIN Bank_account ba USING(id_user)
+JOIN Transactions t ON ba.id_account = t.id_account_emitter OR ba.id_account = t.id_account_receiver
 ORDER BY deal_date DESC;
 
 SELECT DISTINCT id_transaction, lastname, firstname, deal_type, balance, deal_date, category, amount
-FROM users u
-JOIN bank_account ba USING(id_user)
-JOIN transactions t ON ba.id_account = t.id_account_emitter OR ba.id_account = t.id_account_receiver
+FROM Users u
+JOIN Bank_account ba USING(id_user)
+JOIN Transactions t ON ba.id_account = t.id_account_emitter OR ba.id_account = t.id_account_receiver
 ORDER BY id_transaction DESC;
 
 
 SELECT DISTINCT
     id_transaction, lastname, firstname, deal_type, balance, deal_date, category, amount
 FROM
-    users u
+    Users u
 JOIN
-    bank_account ba USING(id_user)
+    Bank_account ba USING(id_user)
 JOIN
-    transactions t ON t.id_account_emitter = ba.id_account OR t.id_account_receiver = ba.id_account
+    Transactions t ON t.id_account_emitter = ba.id_account OR t.id_account_receiver = ba.id_account
 WHERE
-    u.id_user = (SELECT id_user FROM users WHERE lastname = 'Eminence' AND firstname = 'Shadow') AND
+    u.id_user = (SELECT id_user FROM Users WHERE lastname = 'Eminence' AND firstname = 'Shadow') AND
     deal_date BETWEEN '2025-03-14' AND '2025-03-24' 
 ORDER BY t.deal_date DESC;
 
@@ -140,26 +142,26 @@ ORDER BY t.deal_date DESC;
 SELECT DISTINCT
     id_transaction, lastname, firstname, deal_type, balance, deal_date, category, amount
 FROM
-    users u
+    Users u
 JOIN
-    bank_account ba USING(id_user)
+    Bank_account ba USING(id_user)
 JOIN
-    transactions t ON t.id_account_emitter = ba.id_account OR t.id_account_receiver = ba.id_account
+    Transactions t ON t.id_account_emitter = ba.id_account OR t.id_account_receiver = ba.id_account
 WHERE
-    u.id_user = (SELECT id_user FROM users WHERE lastname = 'Doe' AND firstname = 'John')
+    u.id_user = (SELECT id_user FROM Users WHERE lastname = 'Doe' AND firstname = 'John')
 ORDER BY t.deal_date DESC;
 
 -- trie par fourchette de date
 SELECT DISTINCT
     id_transaction, lastname, firstname, deal_type, balance, deal_date, category, amount
 FROM
-    users u
+    Users u
 JOIN
-    bank_account ba USING(id_user)
+    Bank_account ba USING(id_user)
 JOIN
-    transactions t ON t.id_account_emitter = ba.id_account OR t.id_account_receiver = ba.id_account
+    Transactions t ON t.id_account_emitter = ba.id_account OR t.id_account_receiver = ba.id_account
 WHERE
-    u.id_user = (SELECT id_user FROM users WHERE lastname = 'Eminence' AND firstname = 'Shadow') AND
+    u.id_user = (SELECT id_user FROM Users WHERE lastname = 'Eminence' AND firstname = 'Shadow') AND
     deal_date BETWEEN '2025-03-14' AND '2025-03-24' 
 ORDER BY t.deal_date DESC;
 
@@ -167,13 +169,13 @@ ORDER BY t.deal_date DESC;
 SELECT DISTINCT
     id_transaction, lastname, firstname, deal_type, balance, deal_date, category, amount
 FROM
-    users u
+    Users u
 JOIN
-    bank_account ba USING(id_user)
+    Bank_account ba USING(id_user)
 JOIN
-    transactions t ON t.id_account_emitter = ba.id_account OR t.id_account_receiver = ba.id_account
+    Transactions t ON t.id_account_emitter = ba.id_account OR t.id_account_receiver = ba.id_account
 WHERE
-    u.id_user = (SELECT id_user FROM users WHERE lastname = 'Mangeot' AND firstname = 'Jolyne') AND
+    u.id_user = (SELECT id_user FROM Users WHERE lastname = 'Mangeot' AND firstname = 'Jolyne') AND
     (t.category REGEXP '(deal)' OR t.deal_description REGEXP '(drogu)')
 ORDER BY t.category DESC;
 
@@ -181,13 +183,13 @@ ORDER BY t.category DESC;
 SELECT DISTINCT
     id_transaction, lastname, firstname, deal_type, balance, deal_date, category, amount
 FROM
-    users u
+    Users u
 JOIN
-    bank_account ba USING(id_user)
+    Bank_account ba USING(id_user)
 JOIN
-    transactions t ON t.id_account_emitter = ba.id_account OR t.id_account_receiver = ba.id_account
+    Transactions t ON t.id_account_emitter = ba.id_account OR t.id_account_receiver = ba.id_account
 WHERE
-    u.id_user = (SELECT id_user FROM users WHERE lastname = 'Eminence' AND firstname = 'Shadow') AND
+    u.id_user = (SELECT id_user FROM Users WHERE lastname = 'Eminence' AND firstname = 'Shadow') AND
     t.deal_type = 'retrait'
 ORDER BY t.deal_type DESC;
 
@@ -195,12 +197,12 @@ ORDER BY t.deal_type DESC;
 SELECT DISTINCT
     id_transaction, lastname, firstname, deal_type, balance, deal_date, category, amount
 FROM
-    users u
+    Users u
 JOIN
-    bank_account ba USING(id_user)
+    Bank_account ba USING(id_user)
 JOIN
-    transactions t ON t.id_account_emitter = ba.id_account OR t.id_account_receiver = ba.id_account
+    Transactions t ON t.id_account_emitter = ba.id_account OR t.id_account_receiver = ba.id_account
 WHERE
-    u.id_user = (SELECT id_user FROM users WHERE lastname = 'Mangeot' AND firstname = 'Jolyne') AND
+    u.id_user = (SELECT id_user FROM Users WHERE lastname = 'Mangeot' AND firstname = 'Jolyne') AND
     t.amount > 100
 ORDER BY t.amount DESC;
