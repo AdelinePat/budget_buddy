@@ -108,3 +108,29 @@ TABLE Transactions;
 DESCRIBE users;
 
 -- DROP DATABASE Budget_Buddy;
+
+SELECT id_transaction lastname, firstname, balance, deal_date, category, amount
+FROM users
+JOIN bank_account ba USING(id_user)
+JOIN transactions t ON ba.id_account = t.id_account_emitter OR ba.id_account = t.id_account_receiver
+ORDER BY deal_date DESC;
+
+SELECT DISTINCT id_transaction, lastname, firstname, deal_type, balance, deal_date, category, amount
+FROM users u
+JOIN bank_account ba USING(id_user)
+JOIN transactions t ON ba.id_account = t.id_account_emitter OR ba.id_account = t.id_account_receiver
+ORDER BY id_transaction DESC;
+
+
+SELECT DISTINCT
+    id_transaction, lastname, firstname, deal_type, balance, deal_date, category, amount
+FROM
+    users u
+JOIN
+    bank_account ba USING(id_user)
+JOIN
+    transactions t ON t.id_account_emitter = ba.id_account OR t.id_account_receiver = ba.id_account
+WHERE
+    u.id_user = (SELECT id_user FROM users WHERE lastname = 'Eminence' AND firstname = 'Shadow') AND
+    deal_date BETWEEN '2025-03-14' AND '2025-03-24' 
+ORDER BY t.deal_date DESC;
