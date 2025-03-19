@@ -277,39 +277,25 @@ class Interface(customtkinter.CTk, Interface_frames):
     
 
 
-    def get_all_users():
+def get_all_users():
+    conn = sqlite3.connect('users.sql')  
+    cursor = conn.cursor()
+    
+    cursor.execute("SELECT id, first_name, last_name, email, hashed_password FROM users")  
+    users = cursor.fetchall()  
+    
+    conn.close()
+    
+    return users
 
-        conn = sqlite3.connect('users.sql') 
-        cursor = conn.cursor()
-        
-        cursor.execute("SELECT * FROM users")
-        
-
-        users = cursor.fetchall()
-        
-
-        conn.close()
-        
-        return users
-
-
-    users = get_all_users()
-
-
-    if users:
-        for user in users:
-            user_id, first_name, last_name, email, password = user  
-            print(f"ID: {user_id}, Prénom: {first_name}, Nom: {last_name}, Email: {email}")
-    else:
-        print("Aucun utilisateur trouvé.")
-
-    def get_user_by_email(email):
-        conn = sqlite3.connect('users.db')
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
-        user = cursor.fetchone()  
-        conn.close()
-        return user
+# Test : Afficher les utilisateurs et leurs mots de passe hachés
+users = get_all_users()
+if users:
+    for user in users:
+        user_id, first_name, last_name, email, hashed_password = user  
+        print(f"ID: {user_id}, Prénom: {first_name}, Nom: {last_name}, Email: {email}, Hash: {hashed_password}")
+else:
+    print("Aucun utilisateur trouvé.")
 
     # email = "exemple@domaine.com"  
     # user = get_user_by_email(email)
