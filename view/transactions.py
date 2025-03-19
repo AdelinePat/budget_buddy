@@ -4,7 +4,7 @@ import customtkinter
 from tkcalendar import Calendar
 # from CTkDatePicker import CTkDatePicker
 from view.interface import Interface
-from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, DARK_PINK
+from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, SOFT_BLUE2, SOFT_BLUE3, DARK_PINK
 
 class TransactionView(Interface):
     def __init__(self,window_title, column_number, current_session):
@@ -18,7 +18,7 @@ class TransactionView(Interface):
         self.receiver = ""
         self.deal_description = ""
         self.category = ""
-        self.last_choice = "Transfert"
+        self.last_choice = ""
         self.amount = 0
         self.get_fields_deposit_withdrawal()
 
@@ -99,7 +99,7 @@ class TransactionView(Interface):
             dropdown_hover_color = SOFT_BLUE, corner_radius=10)
 
         self.deal_type_choice.grid(row=row2, column=0, sticky="sew", padx=20, pady=0)
-        self.deal_type_choice.set(self.deal_type_list[-1])
+        # self.deal_type_choice.set(self.deal_type_list[-1])
         self.type_selected = self.deal_type_choice.get()
     
     def build_category_field(self, row1, row2):
@@ -127,7 +127,7 @@ class TransactionView(Interface):
             borderwidth=2, bordercolor=DARK_BLUE,
             background=DARK_BLUE, foreground=SOFT_YELLOW, headersbackground=PINK,
             selectbackground=PINK, normalbackground=LIGHT_BLUE, weekendbackground=SOFT_BLUE, corner_radius=10,
-            othermonthbackground="grey", othermonthwebackground=SOFT_BLUE, othermonthforeground="white", othermonthweforeground="white"
+            othermonthbackground=SOFT_BLUE2, othermonthwebackground=SOFT_BLUE3, othermonthforeground=DARK_BLUE, othermonthweforeground=DARK_BLUE
             )
         
         self.chose_date.grid(row=row2,column=0, padx=30, pady=10, sticky='sew')
