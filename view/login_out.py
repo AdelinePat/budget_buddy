@@ -4,6 +4,7 @@ import time
 import re
 import bcrypt
 import sqlite3
+
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK
 from view.utiltool import UtilTool, get_eye_icons
 
@@ -24,38 +25,11 @@ class Interface(customtkinter.CTk, Interface_frames):
         self.text_font = self.util.get_text_font(15)
         self.password_visible = False 
         self.eye_open, self.eye_closed = get_eye_icons()
-        self.initialize_database()
         self.login_screen_build()
         self.lift() 
         self.attributes("-topmost", True) 
 
-    def initialize_database(self):
-        conn = sqlite3.connect('users.sql')
-        cursor = conn.cursor()
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                email TEXT UNIQUE NOT NULL,
-                hashed_password TEXT NOT NULL
-            )
-        ''')
-        conn.commit()
-        conn.close()
 
-    def initialize_database(self):
-        conn = sqlite3.connect('users.sql')
-        cursor = conn.cursor()
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                first_name TEXT NOT NULL,
-                last_name TEXT NOT NULL,
-                email TEXT UNIQUE NOT NULL,
-                hashed_password TEXT NOT NULL
-            )
-        ''')
-        conn.commit()
-        conn.close()
 
         
     def get_font(self):
@@ -172,16 +146,31 @@ class Interface(customtkinter.CTk, Interface_frames):
         self.confirm_password_box = customtkinter.CTkEntry(self, font=self.text_font, width=200, height=30, show="*")
         self.confirm_password_box.grid(row=11, column=0, sticky="sew", padx=20, pady=5)
 
+        self.show_password_button = customtkinter.CTkButton(
+            self, 
+            text="",  
+            width=40, 
+            image=self.eye_closed,  
+            command=self.toggle_password,
+            fg_color="transparent",  
+            hover = False,
+            border_width=0,
+            corner_radius=0
+        )
+
+        self.show_password_button.grid(row=9, column=1, padx=10)
+
 
         self.button_register = customtkinter.CTkButton(self, text="S'inscrire".upper(), font=self.text_font, command=self.register_callback, corner_radius=7, bg_color=DARK_BLUE, fg_color=PINK)
-        self.button_register.grid(row=12, column=0, padx=20, pady=10)
+        self.button_register.grid(row=14, column=0, padx=20, pady=10)
 
 
         self.button_back = customtkinter.CTkButton(self, text="Retour".upper(), font=self.text_font, command=self.login_screen_build, corner_radius=7, bg_color=DARK_BLUE, fg_color=PINK)
-        self.button_back.grid(row=13, column=0, padx=20, pady=10)
+        self.button_back.grid(row=15, column=0, padx=20, pady=10)
 
         self.error_label = customtkinter.CTkLabel(self, text="", text_color="red")
-        self.error_label.grid(row=14, column=0, padx=20, pady=5)
+        self.error_label.grid(row=16, column=0, padx=20, pady=5)
+
 
     def register_user(self, first_name, last_name, email, password, confirm_password):
         
