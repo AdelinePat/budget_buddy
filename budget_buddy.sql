@@ -21,7 +21,7 @@ CREATE TABLE Bank_account (
     balance DECIMAL(13, 2) NOT NULL,
     min_balance INT UNSIGNED NOT NULL,
     FOREIGN KEY (id_user) REFERENCES Users(id_user)
-)
+);
 
 DROP TABLE IF EXISTS Transactions;
 CREATE TABLE Transactions (
@@ -37,7 +37,7 @@ CREATE TABLE Transactions (
     charges DECIMAL(13, 2) NULL,
     FOREIGN KEY (id_account_emitter) REFERENCES Bank_account(id_account),
     FOREIGN KEY (id_account_receiver) REFERENCES Bank_account(id_account)
-)
+);
 
 INSERT INTO
     Users(lastname, firstname, email, password)
