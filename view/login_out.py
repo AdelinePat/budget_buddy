@@ -26,9 +26,11 @@ class Interface(customtkinter.CTk, Interface_frames):
         self.eye_open, self.eye_closed = get_eye_icons()
         self.initialize_database()
         self.login_screen_build()
+        self.lift() 
+        self.attributes("-topmost", True) 
 
     def initialize_database(self):
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect('users.sql')
         cursor = conn.cursor()
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS users (
@@ -41,7 +43,7 @@ class Interface(customtkinter.CTk, Interface_frames):
         conn.close()
 
     def initialize_database(self):
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect('users.sql')
         cursor = conn.cursor()
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS users (
@@ -54,7 +56,6 @@ class Interface(customtkinter.CTk, Interface_frames):
         ''')
         conn.commit()
         conn.close()
-
 
         
     def get_font(self):
@@ -79,7 +80,7 @@ class Interface(customtkinter.CTk, Interface_frames):
         hashed_password = self.hash_password(password)
 
         try:
-            conn = sqlite3.connect('users.db')
+            conn = sqlite3.connect('users.sql')
             cursor = conn.cursor()
             cursor.execute("INSERT INTO users (email, hashed_password) VALUES (?, ?)", (email, hashed_password))
             conn.commit()
@@ -135,47 +136,48 @@ class Interface(customtkinter.CTk, Interface_frames):
 
     def register_screen_build(self):
         self.login_screen_destroy()
+        self.geometry("640x700")
 
         self.title_text = customtkinter.CTkLabel(self, text="Créer un compte", font=self.title_font, text_color=YELLOW, bg_color=DARK_BLUE)
         self.title_text.grid(row=1, column=0, sticky="sew", padx=20, pady=10)
 
         self.first_name_label = customtkinter.CTkLabel(self, text="Prénom :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
-        self.first_name_label.grid(row=2, column=0, sticky="w", padx=20, pady=5)
+        self.first_name_label.grid(row=2, column=0, sticky="sew", padx=20, pady=5)
 
         self.first_name_box = customtkinter.CTkEntry(self, font=self.text_font, width=200, height=30)
-        self.first_name_box.grid(row=3, column=0, padx=20, pady=5)
+        self.first_name_box.grid(row=3, column=0, sticky="sew", padx=20, pady=5)
 
         self.last_name_label = customtkinter.CTkLabel(self, text="Nom :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
-        self.last_name_label.grid(row=4, column=0, sticky="w", padx=20, pady=5)
+        self.last_name_label.grid(row=4, column=0, sticky="sew", padx=20, pady=5)
 
         self.last_name_box = customtkinter.CTkEntry(self, font=self.text_font, width=200, height=30)
-        self.last_name_box.grid(row=5, column=0, padx=20, pady=5)
+        self.last_name_box.grid(row=5, column=0, sticky="sew", padx=20, pady=5)
 
         self.email_label = customtkinter.CTkLabel(self, text="Email :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
-        self.email_label.grid(row=6, column=0, sticky="w", padx=20, pady=5)
+        self.email_label.grid(row=6, column=0, sticky="sew", padx=20, pady=5)
 
         self.email_box = customtkinter.CTkEntry(self, font=self.text_font, width=200, height=30)
-        self.email_box.grid(row=7, column=0, padx=20, pady=5)
+        self.email_box.grid(row=7, column=0, sticky="sew", padx=20, pady=5)
 
         self.password_label = customtkinter.CTkLabel(self, text="Mot de passe :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
-        self.password_label.grid(row=8, column=0, sticky="w", padx=20, pady=5)
+        self.password_label.grid(row=8, column=0, sticky="sew", padx=20, pady=5)
 
         self.password_box = customtkinter.CTkEntry(self, font=self.text_font, width=200, height=30, show="*")
-        self.password_box.grid(row=9, column=0, padx=20, pady=5)
+        self.password_box.grid(row=9, column=0, sticky="sew", padx=20, pady=5)
 
    
         self.confirm_password_label = customtkinter.CTkLabel(self, text="Confirmez le mot de passe :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
-        self.confirm_password_label.grid(row=10, column=0, sticky="w", padx=20, pady=5)
+        self.confirm_password_label.grid(row=10, column=0, sticky="sew", padx=20, pady=5)
 
         self.confirm_password_box = customtkinter.CTkEntry(self, font=self.text_font, width=200, height=30, show="*")
-        self.confirm_password_box.grid(row=11, column=0, padx=20, pady=5)
+        self.confirm_password_box.grid(row=11, column=0, sticky="sew", padx=20, pady=5)
 
 
-        self.button_register = customtkinter.CTkButton(self, text="S'inscrire", font=self.text_font, command=self.register_callback, corner_radius=7, fg_color=PINK)
+        self.button_register = customtkinter.CTkButton(self, text="S'inscrire".upper(), font=self.text_font, command=self.register_callback, corner_radius=7, bg_color=DARK_BLUE, fg_color=PINK)
         self.button_register.grid(row=12, column=0, padx=20, pady=10)
 
 
-        self.button_back = customtkinter.CTkButton(self, text="Retour", font=self.text_font, command=self.login_screen_build, corner_radius=7, fg_color=SOFT_BLUE)
+        self.button_back = customtkinter.CTkButton(self, text="Retour".upper(), font=self.text_font, command=self.login_screen_build, corner_radius=7, bg_color=DARK_BLUE, fg_color=PINK)
         self.button_back.grid(row=13, column=0, padx=20, pady=10)
 
         self.error_label = customtkinter.CTkLabel(self, text="", text_color="red")
@@ -208,8 +210,10 @@ class Interface(customtkinter.CTk, Interface_frames):
         hashed_password = self.hash_password(password)
 
         try:
-            conn = sqlite3.connect('users.db')
+            conn = sqlite3.connect('users.sql')
             cursor = conn.cursor()
+
+            
             cursor.execute("INSERT INTO users (first_name, last_name, email, hashed_password) VALUES (?, ?, ?, ?)", 
                         (first_name, last_name, email, hashed_password))
             conn.commit()
@@ -292,7 +296,7 @@ class Interface(customtkinter.CTk, Interface_frames):
 
     
     def get_user_password_from_db(self, email):
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect('users.sql')
         cursor = conn.cursor()
         query = "SELECT hashed_password FROM users WHERE email = ?"
         cursor.execute(query, (email,))
