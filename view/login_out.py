@@ -134,53 +134,52 @@ class Interface(customtkinter.CTk, Interface_frames):
 
 
     def register_screen_build(self):
-      
         self.login_screen_destroy()
 
         self.title_text = customtkinter.CTkLabel(self, text="Créer un compte", font=self.title_font, text_color=YELLOW, bg_color=DARK_BLUE)
-        self.title_text.grid(row=0, column=0, sticky="sew", padx=20, pady=10)
+        self.title_text.grid(row=1, column=0, sticky="sew", padx=20, pady=10)
 
         self.first_name_label = customtkinter.CTkLabel(self, text="Prénom :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
-        self.first_name_label.grid(row=1, column=0, sticky="w", padx=20, pady=5)
+        self.first_name_label.grid(row=2, column=0, sticky="w", padx=20, pady=5)
 
         self.first_name_box = customtkinter.CTkEntry(self, font=self.text_font, width=200, height=30)
-        self.first_name_box.grid(row=2, column=0, padx=20, pady=5)
+        self.first_name_box.grid(row=3, column=0, padx=20, pady=5)
 
         self.last_name_label = customtkinter.CTkLabel(self, text="Nom :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
-        self.last_name_label.grid(row=3, column=0, sticky="w", padx=20, pady=5)
+        self.last_name_label.grid(row=4, column=0, sticky="w", padx=20, pady=5)
 
         self.last_name_box = customtkinter.CTkEntry(self, font=self.text_font, width=200, height=30)
-        self.last_name_box.grid(row=4, column=0, padx=20, pady=5)
+        self.last_name_box.grid(row=5, column=0, padx=20, pady=5)
 
         self.email_label = customtkinter.CTkLabel(self, text="Email :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
-        self.email_label.grid(row=5, column=0, sticky="w", padx=20, pady=5)
+        self.email_label.grid(row=6, column=0, sticky="w", padx=20, pady=5)
 
         self.email_box = customtkinter.CTkEntry(self, font=self.text_font, width=200, height=30)
-        self.email_box.grid(row=6, column=0, padx=20, pady=5)
+        self.email_box.grid(row=7, column=0, padx=20, pady=5)
 
         self.password_label = customtkinter.CTkLabel(self, text="Mot de passe :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
-        self.password_label.grid(row=7, column=0, sticky="w", padx=20, pady=5)
+        self.password_label.grid(row=8, column=0, sticky="w", padx=20, pady=5)
 
         self.password_box = customtkinter.CTkEntry(self, font=self.text_font, width=200, height=30, show="*")
-        self.password_box.grid(row=8, column=0, padx=20, pady=5)
+        self.password_box.grid(row=9, column=0, padx=20, pady=5)
 
    
         self.confirm_password_label = customtkinter.CTkLabel(self, text="Confirmez le mot de passe :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
-        self.confirm_password_label.grid(row=9, column=0, sticky="w", padx=20, pady=5)
+        self.confirm_password_label.grid(row=10, column=0, sticky="w", padx=20, pady=5)
 
         self.confirm_password_box = customtkinter.CTkEntry(self, font=self.text_font, width=200, height=30, show="*")
-        self.confirm_password_box.grid(row=10, column=0, padx=20, pady=5)
+        self.confirm_password_box.grid(row=11, column=0, padx=20, pady=5)
 
 
         self.button_register = customtkinter.CTkButton(self, text="S'inscrire", font=self.text_font, command=self.register_callback, corner_radius=7, fg_color=PINK)
-        self.button_register.grid(row=11, column=0, padx=20, pady=10)
+        self.button_register.grid(row=12, column=0, padx=20, pady=10)
 
 
         self.button_back = customtkinter.CTkButton(self, text="Retour", font=self.text_font, command=self.login_screen_build, corner_radius=7, fg_color=SOFT_BLUE)
-        self.button_back.grid(row=12, column=0, padx=20, pady=10)
+        self.button_back.grid(row=13, column=0, padx=20, pady=10)
 
         self.error_label = customtkinter.CTkLabel(self, text="", text_color="red")
-        self.error_label.grid(row=13, column=0, padx=20, pady=5)
+        self.error_label.grid(row=14, column=0, padx=20, pady=5)
 
     def register_user(self, first_name, last_name, email, password, confirm_password):
         
@@ -247,6 +246,8 @@ class Interface(customtkinter.CTk, Interface_frames):
         self.show_password_button.destroy()  
         self.button.destroy()
         self.button_create_account.destroy()
+        self.subtitle_text.destroy()
+        self.title_text.destroy()
 
     def interface_screen_build(self):
         self.button = customtkinter.CTkButton(self, text="Se déconnecter".upper(), font=self.text_font, command=self.button_callbck_logout, corner_radius=10, bg_color=DARK_BLUE, fg_color=PINK)
