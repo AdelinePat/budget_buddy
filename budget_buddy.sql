@@ -1,4 +1,4 @@
--- Active: 1742312366575@@127.0.0.1@3306@Budget_Buddy
+-- Active: 1742149907433@@127.0.0.1@3306@budget_buddy
 CREATE DATABASE IF NOT EXISTS Budget_Buddy;
 USE Budget_Buddy;
 DROP TABLE IF EXISTS Users;
