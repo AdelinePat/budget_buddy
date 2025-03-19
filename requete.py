@@ -1,5 +1,5 @@
 import mysql.connector
-
+import sqlite3
 # Connexion à MySQL
 conn = mysql.connector.connect(
     host="127.0.0.1",  
@@ -24,27 +24,55 @@ cursor.execute("""
     );
 """)
 
+def initialize_database(self):
+        conn = sqlite3.connect('users.sql')
+        cursor = conn.cursor()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                email TEXT UNIQUE NOT NULL,
+                hashed_password TEXT NOT NULL
+            )
+        ''')
+        conn.commit()
+        conn.close()
+
+def initialize_database(self):
+        conn = sqlite3.connect('users.sql')
+        cursor = conn.cursor()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                first_name TEXT NOT NULL,
+                last_name TEXT NOT NULL,
+                email TEXT UNIQUE NOT NULL,
+                hashed_password TEXT NOT NULL
+            )
+        ''')
+        conn.commit()
+        conn.close()
+
 # Tentative d'insertion d'un utilisateur
 try:
-    cursor.execute("""
-        INSERT INTO Users (lastname, firstname, email, password) 
-        VALUES (%s, %s, %s, %s)
-    """, ('Doe', 'John', 'john.doe@gmail.com', '123456_Abb'))
-    
-    # Valider l'insertion
-    conn.commit()
-    print("Utilisateur inséré avec succès.")
+        cursor.execute("""
+            INSERT INTO Users (lastname, firstname, email, password) 
+            VALUES (%s, %s, %s, %s)
+        """, ('Doe', 'John', 'john.doe@gmail.com', '123456_Abb'))
+        
+        # Valider l'insertion
+        conn.commit()
+        print("Utilisateur inséré avec succès.")
 except mysql.connector.Error as err:
-    print(f"Erreur lors de l'insertion : {err}")
-    conn.rollback()  # Annuler l'insertion si une erreur se produit
+        print(f"Erreur lors de l'insertion : {err}")
+        conn.rollback()  # Annuler l'insertion si une erreur se produit
 
-# Vérification de l'insertion en récupérant les données
+    # Vérification de l'insertion en récupérant les données
 cursor.execute("SELECT * FROM Users;")
 users = cursor.fetchall()
 
-# Afficher les utilisateurs récupérés
+    # Afficher les utilisateurs récupérés
 for user in users:
-    print(user)
+        print(user)
 
 # Fermer la connexion
 cursor.close()
