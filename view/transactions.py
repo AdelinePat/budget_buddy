@@ -2,6 +2,7 @@ import customtkinter
 # import tkcalendar
 # from CTkDatePicker import CTkDatePicker
 from tkcalendar import Calendar
+# from CTkDatePicker import CTkDatePicker
 from view.interface import Interface
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK
 
@@ -9,19 +10,25 @@ class TransactionView(Interface):
     def __init__(self,window_title, column_number):
         super().__init__(window_title, column_number)
         self.deal_type_list = ['Retrait', 'Dépôt', 'Transfert']
+        self.type_selected = ""
+        self.date_selected = ""
 
         self.screen_build()
     
     def deal_type_callback(self, choice):
-        print(f"DEAL TYPE : combobox dropdown clicked: {choice}")
+        self.type_selected = choice
+        print(self.type_selected)
 
-    def deal_date_callback(self):
-        print("")
+    def deal_date_callback(self, choice):
+        # self.date_selected = self.chose_date.get_date()
+        self.date_selected = choice
+        print(self.date_selected)
 
-    def display_type_selection(self):
-        selection = self.deal_type_list.get()
-        # messagebox = messagebox.showinfo(message=f"The selected value is: {selection}")
-        print(f"The selected value is: {selection}")
+    def confirm_form_callback(self):
+        self.date_selected = self.chose_date.get_date()
+        self.type_selected = self.type_selected
+
+        print(self.date_selected, self.type_selected)
 
     def screen_build(self):
         self.title_text = customtkinter.CTkLabel(master=self, text="Budget Buddy", font=self.title_font, text_color=YELLOW, bg_color=DARK_BLUE)
@@ -36,32 +43,29 @@ class TransactionView(Interface):
         self.deal_type_choice = customtkinter.CTkComboBox(master=self,
                                     values=self.deal_type_list,
                                     state="readonly",
-                                    command=self.deal_type_callback(self.deal_type_choice.get()),
+                                    command=self.deal_type_callback,
                                     font=self.text_font, text_color=DARK_BLUE, bg_color=DARK_BLUE, fg_color=SOFT_YELLOW,
                                     dropdown_fg_color = SOFT_YELLOW, dropdown_text_color = DARK_BLUE, dropdown_font= self.text_font,
                                     dropdown_hover_color = SOFT_BLUE
                                     )
 
         self.deal_type_choice.grid(row=3, column=0, sticky="sew", padx=20, pady=0)
-        self.deal_type_choice.set("Dépôt")
-        
-        # self.deal_type_callback(self.deal_type_choice.get())
-
-        # self.button_type = customtkinter.CTkButton(self, text="Display selection".upper(),
-        #                                            command=self.display_type_selection())
-         # bouton se connecter
-        # self.button_type.grid(row=3, column=0, padx=20, pady=0)
+        self.deal_type_choice.set(self.deal_type_list[1])
 
 
         self.deal_date_text = customtkinter.CTkLabel(master=self, text="Choisissez la date de votre transactions :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
         self.deal_date_text.grid(row=4, column=0, sticky="sew", padx=20, pady=5)
 
         self.chose_date = Calendar(master=self, selectmode='day', font=self.text_font,
+            command=self.deal_date_callback,
             showweeknumbers=False, cursor="hand2", date_pattern= 'y-mm-dd',
             borderwidth=0, bordercolor='white',
             background=DARK_BLUE, foreground="red", headersbackground=SOFT_BLUE)
         
         self.chose_date.grid(row= 6,column=0, padx=30, pady=10, sticky='sew')
+        # print(f"date choisie ?? : {self.chose_date.get_date()}")
+        # self.date_selected = self.chose_date.get_date()
+        print(f"test : {self.date_selected}")
 
         # self.email_box = customtkinter.CTkTextbox(master=self, font=self.text_font, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE) # champs "email"
         # self.email_box.grid(row=3, column=0, sticky="sew", padx=20, pady=0)
@@ -75,11 +79,12 @@ class TransactionView(Interface):
         # self.password_box.grid(row=5, column=0, sticky="sew", padx=20, pady=0)
         # self.password_box.insert("0.0", "")
 
-        self.button = customtkinter.CTkButton(self, text="Se connecter".upper(), font=self.text_font, command=self.button_callbck, corner_radius=7, bg_color= DARK_BLUE, fg_color = PINK) # bouton se connecter
+        self.button = customtkinter.CTkButton(self, text="Confirmer la transaction".upper(), font=self.text_font, command=self.confirm_form_callback, corner_radius=7, bg_color= DARK_BLUE, fg_color = PINK) # bouton se connecter
         self.button.grid(row=7, column=0, padx=20, pady=20)
 
-        self.button_create_account = customtkinter.CTkButton(self, text="Créer un compte".upper(), font=self.text_font, command=self.button_callbck, corner_radius=7, bg_color= DARK_BLUE, fg_color = PINK) # bouton se connecter
-        self.button_create_account.grid(row=8, column=0, padx=20, pady=20)
+        # self.button_create_account = customtkinter.CTkButton(self, text="Créer un compte".upper(), font=self.text_font, command=self.button_callbck, corner_radius=7, bg_color= DARK_BLUE, fg_color = PINK) # bouton se connecter
+        # self.button_create_account.grid(row=8, column=0, padx=20, pady=20)
+        
     
     def login_screen_destroy(self):
         self.email_text.destroy()
