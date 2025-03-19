@@ -10,6 +10,5 @@ from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YEL
 class ViewTransactions():
     pass
 
-
 login_view = TransactionView("Transactions", 0)
 login_view.mainloop()
