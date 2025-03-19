@@ -110,7 +110,7 @@ class Interface(customtkinter.CTk, Interface_frames):
 
     def register_screen_build(self):
         self.login_screen_destroy()
-        self.geometry("640x700")
+        self.geometry("640x600")
 
         self.title_text = customtkinter.CTkLabel(self, text="Créer un compte", font=self.title_font, text_color=YELLOW, bg_color=DARK_BLUE)
         self.title_text.grid(row=1, column=0, sticky="sew", padx=20, pady=10)
@@ -165,8 +165,8 @@ class Interface(customtkinter.CTk, Interface_frames):
         self.button_register.grid(row=14, column=0, padx=20, pady=10)
 
 
-        self.button_back = customtkinter.CTkButton(self, text="Retour".upper(), font=self.text_font, command=self.login_screen_build, corner_radius=7, bg_color=DARK_BLUE, fg_color=PINK)
-        self.button_back.grid(row=15, column=0, padx=20, pady=10)
+        # self.button_back = customtkinter.CTkButton(self, text="Retour".upper(), font=self.text_font, command=self.login_screen_build, corner_radius=7, bg_color=DARK_BLUE, fg_color=PINK)
+        # self.button_back.grid(row=15, column=0, padx=20, pady=10)
 
         self.error_label = customtkinter.CTkLabel(self, text="", text_color="red")
         self.error_label.grid(row=16, column=0, padx=20, pady=5)
