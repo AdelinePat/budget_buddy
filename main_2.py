@@ -4,7 +4,6 @@ import customtkinter
 # import secrets
 
 
-
 # from view.interface import Interface
 from view.login_out import LogInOut
 from view.transactions import TransactionView
