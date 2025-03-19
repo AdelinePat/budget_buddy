@@ -64,7 +64,7 @@ class Interface(customtkinter.CTk, Interface_frames):
         self.button.grid(row=7, column=0, padx=20, pady=20)
 
         self.error_label = customtkinter.CTkLabel(self, text="", text_color="red")
-        self.error_label.grid(row=2, column=0, padx=20, pady=5)
+        self.error_label.grid(row=6, column=0, padx=20, pady=5)
 
         self.button_create_account = customtkinter.CTkButton(self, text="Créer un compte".upper(), font=self.text_font, command=self.button_callback, corner_radius=7, bg_color=DARK_BLUE, fg_color=PINK)
         self.button_create_account.grid(row=8, column=0, padx=20, pady=20)
