@@ -135,7 +135,7 @@ class Interface(customtkinter.CTk, Interface_frames):
         return re.match(email_regex, email)
     
     def validate_password(self, password):
-        password_regex = r"^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_])[A-Za-z\d@$!%*?&_]{8,}$"
+        password_regex = r"^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_\-])[A-Za-z\d@$!%*?&_\-]{8,}$"
         return re.match(password_regex, password)
 
     def button_callbck(self):
