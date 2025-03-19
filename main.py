@@ -1,8 +1,12 @@
-import customtkinter
-import tkinter
-import time
-import re
-from __settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, get_text_font, get_title_font, get_eye_icons
+# import customtkinter
+# # import tkinter
+# import time
+
+# import re
+# from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK
+# from PIL import Image
+
+
 
 class Interface_frames:
     pass
@@ -17,6 +21,7 @@ class Interface(customtkinter.CTk, Interface_frames):
         self.columnconfigure((0), weight=1)
         self.title_font = get_title_font(30)
         self.text_font = get_text_font(15)
+        self.columnconfigure((0, 1, 2, 3), weight=1)  
         self.password_visible = False 
         self.eye_open, self.eye_closed = get_eye_icons()
         self.login_screen_build()
@@ -50,7 +55,7 @@ class Interface(customtkinter.CTk, Interface_frames):
     self, 
     text="",  
     width=40, 
-    image=self.eye_closed,  
+    image=self.eye_open,  
     command=self.toggle_password,
     fg_color="transparent",  
     hover = False,
@@ -58,7 +63,7 @@ class Interface(customtkinter.CTk, Interface_frames):
     corner_radius=0
 )
 
-        self.show_password_button.grid(row=5, column=2, padx=10)
+        self.show_password_button.grid(row=5, column=1, padx=10)
 
         self.button = customtkinter.CTkButton(self, text="Se connecter".upper(), font=self.text_font, command=self.button_callback, corner_radius=7, bg_color=DARK_BLUE, fg_color=PINK)
         self.button.grid(row=7, column=0, padx=20, pady=20)
@@ -152,5 +157,5 @@ class Interface(customtkinter.CTk, Interface_frames):
             self.success_label.destroy()
         self.success_label = None
 
-client_account_interface = Interface()
+client_account_interface = Interface("Budget Buddy")
 client_account_interface.mainloop()
