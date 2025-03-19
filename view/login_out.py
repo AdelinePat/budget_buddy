@@ -9,7 +9,6 @@ from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YEL
 from view.utiltool import UtilTool, get_eye_icons
 
 class Interface_frames:
-
     pass
 
 class Interface(customtkinter.CTk, Interface_frames):
@@ -25,24 +24,48 @@ class Interface(customtkinter.CTk, Interface_frames):
         self.text_font = self.util.get_text_font(15)
         self.password_visible = False 
         self.eye_open, self.eye_closed = get_eye_icons()
+
+        # Créez la table users si elle n'existe pas déjà
+        self.create_users_table_if_not_exists()
+
         self.login_screen_build()
         self.lift() 
         self.attributes("-topmost", True) 
 
+    def create_users_table_if_not_exists(self):
+        """Crée la table users si elle n'existe pas."""
+        conn = sqlite3.connect('users.sql')
+        cursor = conn.cursor()
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            first_name TEXT NOT NULL,
+            last_name TEXT NOT NULL,
+            email TEXT UNIQUE NOT NULL,
+            hashed_password TEXT NOT NULL
+        );
+        """)
+        conn.commit()
+        conn.close()
 
+    conn = sqlite3.connect('users.sql')
+    cursor = conn.cursor()
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    tables = cursor.fetchall()
+    print(tables)  # Cela devrait afficher toutes les tables existantes dans la base de données
+    conn.close()
 
+    def register_user(self, first_name, last_name, email, password, confirm_password):
+        if not first_name or not last_name:
+            self.error_label.configure(text="Le prénom et le nom sont obligatoires.")
+            return
         
-    def get_font(self):
-        pass
-
-    def register_user(self, email, password):
-    
         if not self.validate_email(email):
             self.error_label.configure(text="Email invalide. Format attendu : exemple@domaine.com")
             return
-        
+
         if not self.validate_password(password):
-            self.error_label.configure(text=(
+            self.error_label.configure(text=( 
                 "Mot de passe invalide. Il doit contenir :\n"
                 "- Une majuscule\n"
                 "- Un chiffre\n"
@@ -50,20 +73,24 @@ class Interface(customtkinter.CTk, Interface_frames):
                 "- Au moins 8 caractères"
             ))
             return
+        
+        if password != confirm_password:
+            self.error_label.configure(text="Les mots de passe ne correspondent pas.")
+            return
 
         hashed_password = self.hash_password(password)
 
         try:
             conn = sqlite3.connect('users.sql')
             cursor = conn.cursor()
-            cursor.execute("INSERT INTO users (email, hashed_password) VALUES (?, ?)", (email, hashed_password))
+            cursor.execute("INSERT INTO users (first_name, last_name, email, hashed_password) VALUES (?, ?, ?, ?)", 
+                        (first_name, last_name, email, hashed_password))
             conn.commit()
             conn.close()
             self.error_label.configure(text="Compte créé avec succès !", text_color="green")
         except sqlite3.IntegrityError:
             self.error_label.configure(text="Cet email est déjà utilisé.", text_color="red")
 
-    
     def login_screen_build(self):
         self.title_text = customtkinter.CTkLabel(master=self, text="Budget Buddy", font=self.title_font, text_color=YELLOW, bg_color=DARK_BLUE)
         self.title_text.grid(row=0, column=0, sticky="sew", padx=20, pady=0)
@@ -107,7 +134,6 @@ class Interface(customtkinter.CTk, Interface_frames):
         self.button_create_account = customtkinter.CTkButton(self, text="Créer un compte".upper(), font=self.text_font, command=self.register_screen_build, corner_radius=7, bg_color=DARK_BLUE, fg_color=PINK)
         self.button_create_account.grid(row=8, column=0, padx=20, pady=20)
 
-
     def register_screen_build(self):
         self.login_screen_destroy()
         self.geometry("640x600")
@@ -139,7 +165,6 @@ class Interface(customtkinter.CTk, Interface_frames):
         self.password_box = customtkinter.CTkEntry(self, font=self.text_font, width=200, height=30, show="*")
         self.password_box.grid(row=9, column=0, sticky="sew", padx=20, pady=5)
 
-   
         self.confirm_password_label = customtkinter.CTkLabel(self, text="Confirmez le mot de passe :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
         self.confirm_password_label.grid(row=10, column=0, sticky="sew", padx=20, pady=5)
 
@@ -160,56 +185,11 @@ class Interface(customtkinter.CTk, Interface_frames):
 
         self.show_password_button.grid(row=9, column=1, padx=10)
 
-
         self.button_register = customtkinter.CTkButton(self, text="S'inscrire".upper(), font=self.text_font, command=self.register_callback, corner_radius=7, bg_color=DARK_BLUE, fg_color=PINK)
         self.button_register.grid(row=14, column=0, padx=20, pady=10)
 
-
-        # self.button_back = customtkinter.CTkButton(self, text="Retour".upper(), font=self.text_font, command=self.login_screen_build, corner_radius=7, bg_color=DARK_BLUE, fg_color=PINK)
-        # self.button_back.grid(row=15, column=0, padx=20, pady=10)
-
         self.error_label = customtkinter.CTkLabel(self, text="", text_color="red")
         self.error_label.grid(row=16, column=0, padx=20, pady=5)
-
-
-    def register_user(self, first_name, last_name, email, password, confirm_password):
-        
-        if not first_name or not last_name:
-            self.error_label.configure(text="Le prénom et le nom sont obligatoires.")
-            return
-        
-        if not self.validate_email(email):
-            self.error_label.configure(text="Email invalide. Format attendu : exemple@domaine.com")
-            return
-
-        if not self.validate_password(password):
-            self.error_label.configure(text=(
-                "Mot de passe invalide. Il doit contenir :\n"
-                "- Une majuscule\n"
-                "- Un chiffre\n"
-                "- Un caractère spécial (!@#$%^&*.._.)\n"
-                "- Au moins 8 caractères"
-            ))
-            return
-        
-        if password != confirm_password:
-            self.error_label.configure(text="Les mots de passe ne correspondent pas.")
-            return
-
-        hashed_password = self.hash_password(password)
-
-        try:
-            conn = sqlite3.connect('users.sql')
-            cursor = conn.cursor()
-
-            
-            cursor.execute("INSERT INTO users (first_name, last_name, email, hashed_password) VALUES (?, ?, ?, ?)", 
-                        (first_name, last_name, email, hashed_password))
-            conn.commit()
-            conn.close()
-            self.error_label.configure(text="Compte créé avec succès !", text_color="green")
-        except sqlite3.IntegrityError:
-            self.error_label.configure(text="Cet email est déjà utilisé.", text_color="red")
 
     def register_callback(self):
         first_name = self.first_name_box.get().strip()
@@ -294,9 +274,54 @@ class Interface(customtkinter.CTk, Interface_frames):
         if result:
             return result[0]
         return None
+    
+
+
+    def get_all_users():
+
+        conn = sqlite3.connect('users.sql') 
+        cursor = conn.cursor()
+        
+        cursor.execute("SELECT * FROM users")
+        
+
+        users = cursor.fetchall()
+        
+
+        conn.close()
+        
+        return users
+
+
+    users = get_all_users()
+
+
+    if users:
+        for user in users:
+            user_id, first_name, last_name, email, password = user  
+            print(f"ID: {user_id}, Prénom: {first_name}, Nom: {last_name}, Email: {email}")
+    else:
+        print("Aucun utilisateur trouvé.")
+
+    def get_user_by_email(email):
+        conn = sqlite3.connect('users.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
+        user = cursor.fetchone()  
+        conn.close()
+        return user
+
+    # email = "exemple@domaine.com"  
+    # user = get_user_by_email(email)
+    # if user:
+    #     print(user)  
+    # else:
+    #     print("Utilisateur non trouvé.")
+
+
 
     def validate_email(self, email):
-        email_regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$"
+        email_regex = r"^[\w\.\+-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,}$"
         return re.match(email_regex, email)
     
     def hash_password(self, password):
