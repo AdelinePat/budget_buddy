@@ -108,31 +108,31 @@ pip install mysql-connector
   
 ## File Structure
   
-  budget_buddy/  
+  budget_buddy/   
 |__assets/  
 │   |── font/  
 |   |── img/  
+|   
+|__controller   
+|   
+|__models/   
+|   |   
+|   |──  server.py   
 |  
-|__controller  
-|  
-|__models/  
+├── view/   
 |   |  
-|   |──  server.py  
-|  
-├── view/  
-|   |  
-|   |──   
-│   ├── interface.py  
+|   |──    
+│   ├── interface.py   
 │   ├── login_out.py   
-│   ├── transactions.py  
-│   └── __settings__.py  
+│   ├── transactions.py   
+│   └── __settings__.py   
 │  
-|  
-│──.gitignore.py  
-├── main_2.py  
-└── README.md  
+|   
+│──.gitignore.py   
+├── main_2.py   
+└── README.md   
    
----
+--- 
   
 **BDatabase**
   
