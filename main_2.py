@@ -7,8 +7,18 @@ from view.login_out import LogInOut
 from view.transactions import TransactionView
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK
 
+from model.server import ServerDatabase
+
 class ViewTransactions():
     pass
 
+server_connection = ServerDatabase()
+server_connection.server_connection()
+server_connection.create_database()
+server_connection.create_client_table()
+server_connection.create_account_table()
+server_connection.create_transactions_table()
+
 login_view = TransactionView("Transactions", 0, 'current_session')
 login_view.mainloop()
+
