@@ -34,13 +34,13 @@ class TransactionView(Interface):
         self.deal_type_text.grid(row=2, column=0, sticky="sew", padx=20, pady=5)
 
         self.deal_type_choice = customtkinter.CTkComboBox(master=self,
-                                    values=self.deal_type_list,
-                                    state="readonly",
-                                    command=self.deal_type_callback(self.deal_type_choice.get()),
-                                    font=self.text_font, text_color=DARK_BLUE, bg_color=DARK_BLUE, fg_color=SOFT_YELLOW,
-                                    dropdown_fg_color = SOFT_YELLOW, dropdown_text_color = DARK_BLUE, dropdown_font= self.text_font,
-                                    dropdown_hover_color = SOFT_BLUE
-                                    )
+            values=self.deal_type_list,
+            state="readonly",
+            command=self.deal_type_callback,
+            font=self.text_font, text_color=DARK_BLUE, bg_color=DARK_BLUE, fg_color=SOFT_YELLOW,
+            dropdown_fg_color = SOFT_YELLOW, dropdown_text_color = DARK_BLUE, dropdown_font= self.text_font,
+            dropdown_hover_color = SOFT_BLUE
+        )
 
         self.deal_type_choice.grid(row=3, column=0, sticky="sew", padx=20, pady=0)
         self.deal_type_choice.set("Dépôt")
