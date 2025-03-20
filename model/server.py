@@ -111,3 +111,6 @@ class ServerDatabase():
     
     def update_database_data(self):
         pass
+
+    def get_update_database(self):
+        pass

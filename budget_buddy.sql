@@ -1,6 +1,8 @@
--- Active: 1741679024806@@127.0.0.1@3306@budget_buddy
+-- Active: 1742312366575@@127.0.0.1@3306@budget_buddy
 
 DROP DATABASE IF EXISTS Budget_Buddy;
+
+DROP DATABASE IF EXISTS budget_buddy;
 CREATE DATABASE IF NOT EXISTS Budget_Buddy;
 
 SHOW DATABASES;
@@ -239,3 +241,13 @@ VALUES
 SELECT id_account, balance FROM bank_account
 JOIN Users u USING(id_user)
 WHERE id_account = (SELECT MIN(id_account) FROM bank_account WHERE id_user = 2);
+
+UPDATE `Bank_account` SET balance = 100
+WHERE id_account = 1;
+
+TABLE Bank_account;
+
+
+SELECT balance FROM Bank_account WHERE id_account = 2;
+
+UPDATE `Bank_account` SET balance = 1200 WHERE id_account = 2;

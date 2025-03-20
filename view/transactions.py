@@ -4,63 +4,91 @@ import customtkinter
 from tkcalendar import Calendar
 # from CTkDatePicker import CTkDatePicker
 from view.interface import Interface
-from model.transactionquery import TransactionQuery
+# from model.transactionquery import TransactionQuery
+from controller.transactionmanager import TransactionManager
 
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, SOFT_BLUE2, SOFT_BLUE3, DARK_PINK
+
+class TransactionInfo():
+    def __init__(self, current_session, deal_type, date, emitter, receiver, description, category, amount):
+        self.current_session = current_session
+        self.type = deal_type
+        self.date = date
+        self.emitter = emitter
+        self.receiver = receiver
+        self.description = description
+        self.category = category
+        self.amount = amount
+
+        # self.type = type
+        # self.date = date
+        # self.emitter = emitter
+        # self.receiver = receiver
+        # self.description = description
+        # self.categoy = category
+        # self.amount = amount
+
 
 class TransactionView(Interface): 
     def __init__(self,window_title, column_number, current_session):
         super().__init__(window_title, column_number)
         self.deal_type_list = ['Retrait', 'Dépôt', 'Transfert']
         self.category_list = ['Alimentaire', 'Loisirs', 'Prélèvement', 'Transport', 'Santé', 'Dealing', 'Activités illicites', 'Consommation de café']
-        self.type_selected = ""
-        self.date_selected = ""
-        self.current_session = current_session
-        self.emitter = ""
-        self.receiver = ""
-        self.deal_description = ""
-        self.category = ""
+        self.transaction_info = TransactionInfo(current_session, "", "", "", "", "", "", "")
+        # self.transaction_info.type = ""
+        # self.transaction_info.date = ""
+        # # self.current_session = current_session
+        # self.transaction_info.emitter = ""
+        # self.transaction_info.receiver = ""
+        # self.transaction_info.description = ""
+        # self.transaction_info.category = ""
         self.last_choice = ""
-        self.amount = 0
-        self.query = TransactionQuery()
+        # self.transaction_info.amount = 0
+        # self.query = TransactionQuery()
+        self.controller = TransactionManager()
         self.get_fields_deposit_withdrawal()
 
-        # self.screen_build()
+        self.screen_build()
     
     def deal_type_callback(self, choice):
-        if self.last_choice == 'Transfert' and self.type_selected != 'Transfert':
+        if self.last_choice == 'Transfert' and self.transaction_info.type != 'Transfert':
             self.receiver_text.destroy()
             self.receiver_box.destroy()
-            self.last_choice = self.type_selected
+            self.last_choice = self.transaction_info.type
 
-        self.type_selected = choice
-        if self.type_selected == 'Transfert':
+        self.transaction_info.type = choice
+        if self.transaction_info.type == 'Transfert':
             self.build_receiver_field(6, 7)
         else:
             if bool(self.receiver_text):
                 self.receiver_text.destroy()
                 self.receiver_box.destroy()
-        print(self.type_selected)
+        print(self.transaction_info.type)
     
     def category_callback(self, choice):
-        self.category = choice
+        self.transaction_info.category = choice
 
     def deal_date_callback(self, choice):
-        self.date_selected = choice
-        print(self.date_selected)
+        self.transaction_info.date = choice
+        print(self.transaction_info.date)
 
     def confirm_form_callback(self):
 
         self.get_fields_deposit_withdrawal()
 
-        self.date_selected = self.chose_date.get_date()
-        self.type_selected = self.deal_type_choice.get().strip()
+        self.transaction_info.date = self.chose_date.get_date()
+        self.transaction_info.type = self.deal_type_choice.get().strip()
         self.description = self.description_box.get("0.0", "end").strip()
-        self.amount = self.amount_box.get("0.0", "end")
-        self.category = self.category_choice.get()
-        if self.type_selected == 'Transfert':
-            self.receiver = self.receiver_box.get("0.0", "end").strip()
-            self.query.transfer_transaction(self.current_session, self.receiver, self.amount) #current_session, email_account, amount
+        self.transaction_info.amount = self.amount_box.get("0.0", "end")
+        self.transaction_info.category = self.category_choice.get()
+        if self.transaction_info.type == 'Transfert':
+            
+            self.transaction_info.receiver = self.receiver_box.get("0.0", "end").strip()
+            # self.controller.manage_entry(self.transaction_info)
+            # self.query.transfer_transaction(self.current_session, self.receiver, self.amount) #current_session, email_account, amount
+            message_error = self.controller.manage_transfer(self.transaction_info)
+            print(message_error)
+            self.controller.error_message = ""
         
         
         
@@ -76,12 +104,12 @@ class TransactionView(Interface):
         pass
 
     def get_fields_deposit_withdrawal(self):
-        if self.type_selected == 'Dépôt':
-            self.receiver = self.current_session
-            self.emitter = ""
+        if self.transaction_info.type == 'Dépôt':
+            self.transaction_info.receiver = self.transaction_info.current_session
+            self.transaction_info.emitter = ""
         else:
-            self.receiver = ""
-            self.emitter = self.current_session
+            self.transaction_info.receiver = ""
+            self.transaction_info.emitter = self.transaction_info.current_session
             
 # id_account_emitter, OK
 # id_account_receiver, OK
@@ -105,7 +133,7 @@ class TransactionView(Interface):
 
         self.deal_type_choice.grid(row=row2, column=0, sticky="sew", padx=20, pady=0)
         # self.deal_type_choice.set(self.deal_type_list[-1])
-        self.type_selected = self.deal_type_choice.get()
+        self.transaction_info.type = self.deal_type_choice.get()
     
     def build_category_field(self, row1, row2):
         category_text = customtkinter.CTkLabel(master=self, text="Choisissez la catégorie de votre transaction :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
