@@ -16,19 +16,18 @@ class UtilTool():
         custom_font = ("Josefin Sans Regular", font_size)
         return custom_font
     
+    def get_eye_icons(self):
 
-def get_eye_icons():
+        eye_open = customtkinter.CTkImage(
+            light_image=Image.open("./assets/img/eye_open.png"),  
+            dark_image=Image.open("./assets/img/eye_open.png"), 
+            size=(20, 20),
+        )
+        
+        eye_closed = customtkinter.CTkImage(
+            light_image=Image.open("./assets/img/eye_closed.png"),  
+            dark_image=Image.open("./assets/img/eye_closed.png"), 
+            size=(20, 20),
+        )
 
-    eye_open = customtkinter.CTkImage(
-        light_image=Image.open("./assets/img/eye_open.png"),  
-        dark_image=Image.open("./assets/img/eye_open.png"), 
-        size=(20, 20),
-    )
-    
-    eye_closed = customtkinter.CTkImage(
-        light_image=Image.open("./assets/img/eye_closed.png"),  
-        dark_image=Image.open("./assets/img/eye_closed.png"), 
-        size=(20, 20),
-    )
-
-    return eye_open, eye_closed
+        return eye_open, eye_closed

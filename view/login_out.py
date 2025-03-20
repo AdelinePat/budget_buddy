@@ -1,29 +1,23 @@
 import customtkinter
-import tkinter
-import time
+# import tkinter
+# import time
 import re
 import bcrypt
 import sqlite3
 
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK
-from view.utiltool import UtilTool, get_eye_icons
+# from view.utiltool import UtilTool
+from view.interface import Interface
 
-class Interface_frames:
-    pass
-
-class Interface(customtkinter.CTk, Interface_frames):
-    def __init__(self):
-        super().__init__()
-        self.util = UtilTool()
-        self.current_scene = "broad_view"
-        self.geometry("640x480")
-        self.config(background=DARK_BLUE)
-        self.title("Connexion Client")
-        self.columnconfigure((0), weight=1)
-        self.title_font = self.util.get_title_font(30)
-        self.text_font = self.util.get_text_font(15)
+class LogInOut(Interface):
+    def __init__(self, window_title, column_number):
+        super().__init__(window_title, column_number)
         self.password_visible = False 
-        self.eye_open, self.eye_closed = get_eye_icons()
+        self.eye_open, self.eye_closed = self.util.get_eye_icons()
+        self.email = ""
+        self.__password = ""
+        self.last_name = ""
+        self.first_name = ""
 
         # Créez la table users si elle n'existe pas déjà
         self.create_users_table_if_not_exists()
@@ -60,7 +54,7 @@ class Interface(customtkinter.CTk, Interface_frames):
             self.error_label.configure(text="Le prénom et le nom sont obligatoires.")
             return
         
-        if not self.validate_email(email):
+        if not bool(self.validate_email(email)):
             self.error_label.configure(text="Email invalide. Format attendu : exemple@domaine.com")
             return
 
@@ -277,32 +271,32 @@ class Interface(customtkinter.CTk, Interface_frames):
     
 
 
-def get_all_users():
-    conn = sqlite3.connect('users.sql')  
-    cursor = conn.cursor()
-    
-    cursor.execute("SELECT id, first_name, last_name, email, hashed_password FROM users")  
-    users = cursor.fetchall()  
-    
-    conn.close()
-    
-    return users
+    def get_all_users():
+        conn = sqlite3.connect('users.sql')  
+        cursor = conn.cursor()
+        
+        cursor.execute("SELECT id, first_name, last_name, email, hashed_password FROM users")  
+        users = cursor.fetchall()  
+        
+        conn.close()
+        
+        return users
 
-# Test : Afficher les utilisateurs et leurs mots de passe hachés
-users = get_all_users()
-if users:
-    for user in users:
-        user_id, first_name, last_name, email, hashed_password = user  
-        print(f"ID: {user_id}, Prénom: {first_name}, Nom: {last_name}, Email: {email}, Hash: {hashed_password}")
-else:
-    print("Aucun utilisateur trouvé.")
+    # Test : Afficher les utilisateurs et leurs mots de passe hachés
+    users = get_all_users()
+    if users:
+        for user in users:
+            user_id, first_name, last_name, email, hashed_password = user  
+            print(f"ID: {user_id}, Prénom: {first_name}, Nom: {last_name}, Email: {email}, Hash: {hashed_password}")
+    else:
+        print("Aucun utilisateur trouvé.")
 
-    # email = "exemple@domaine.com"  
-    # user = get_user_by_email(email)
-    # if user:
-    #     print(user)  
-    # else:
-    #     print("Utilisateur non trouvé.")
+        # email = "exemple@domaine.com"  
+        # user = get_user_by_email(email)
+        # if user:
+        #     print(user)  
+        # else:
+        #     print("Utilisateur non trouvé.")
 
 
 
@@ -336,5 +330,5 @@ else:
             self.success_label.destroy()
         self.success_label = None
 
-client_account_interface = Interface()
-client_account_interface.mainloop()
+
+
