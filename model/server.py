@@ -8,7 +8,7 @@ class ServerDatabase():
     def __init__(self):
         self.password = os.getenv("PASS")
         self.user = os.getenv("USER")
-        self.database_name = "Budget_Buddy"
+        self.database_name = "budget_buddy"
 
         pass
     def server_connection(self):
@@ -35,8 +35,24 @@ class ServerDatabase():
 
         if server.is_connected():
             self.cursor = server.cursor()
-            self.cursor.execute("CREATE DATABASE IF NOT EXISTS Budget_Buddy;")
-            self.cursor.execute(f"USE {self.database_name};")
+            # self.cursor.execute(f"DROP DATABASE IF EXISTS {self.database_name};")
+            self.cursor.execute("SHOW DATABASES;")
+            databases = self.cursor.fetchall()
+            all_data_bases = []
+            for database in databases:
+                all_data_bases.append(database[0])
+
+            if self.database_name not in all_data_bases:
+                self.cursor.execute(f"CREATE DATABASE {self.database_name};")
+                self.cursor.execute(f"USE {self.database_name};")
+
+                self.create_client_table()
+                self.create_account_table()
+                self.create_transactions_table()
+
+
+            # self.cursor.execute(f"CREATE DATABASE IF NOT EXISTS {self.database_name};")
+            # self.cursor.execute(f"USE {self.database_name};")
 
             self.cursor.close()
         server.close()
