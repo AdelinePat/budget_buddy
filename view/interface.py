@@ -13,4 +13,3 @@ class Interface(customtkinter.CTk):
         self.util = UtilTool()
         self.title_font = self.util.get_title_font(30)
         self.text_font = self.util.get_text_font(15)
-    
