@@ -196,14 +196,15 @@ class LogInOut(Interface):
 
 
     def toggle_password(self):
-        if self.password_visible:
-            self.show_password_button.configure(image=self.eye_closed) 
-            self.password_box.configure(show="*")
+        if self.password_box.cget('show') == '*':
+            self.password_box.configure(show="")
+            self.confirm_password_box.configure(show="")
+            self.show_password_button.configure(image=self.eye_open)
         else:
-            self.show_password_button.configure(image=self.eye_open) 
-            self.password_box.configure(show="")  
-        
-        self.password_visible = not self.password_visible
+            self.password_box.configure(show="*")
+            self.confirm_password_box.configure(show="*")
+            self.show_password_button.configure(image=self.eye_closed)
+
 
     def login_screen_destroy(self):
         self.email_entry.destroy()
