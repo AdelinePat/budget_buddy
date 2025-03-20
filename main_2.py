@@ -9,9 +9,6 @@ from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YEL
 
 from model.server import ServerDatabase
 
-class ViewTransactions():
-    pass
-
 server_connection = ServerDatabase()
 server_connection.server_connection()
 server_connection.create_database()
