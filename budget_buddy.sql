@@ -1,5 +1,6 @@
 -- Active: 1741679024806@@127.0.0.1@3306@budget_buddy
 CREATE DATABASE IF NOT EXISTS Budget_Buddy;
+DROP DATABASE IF EXISTS Budget_Buddy;
 USE Budget_Buddy;
 DROP TABLE IF EXISTS Users;
 CREATE TABLE Users (
@@ -20,7 +21,7 @@ CREATE TABLE Bank_account (
     account_name VARCHAR(100) NULL,
     balance DECIMAL(13, 2) NOT NULL,
     min_balance INT UNSIGNED NOT NULL,
-    FOREIGN KEY (id_user) REFERENCES Users(id_user)
+    FOREIGN KEY (id_user) REFERENCES Users(id_user) ON DELETE CASCADE
 )
 
 DROP TABLE IF EXISTS Transactions;
@@ -37,7 +38,7 @@ CREATE TABLE Transactions (
     charges DECIMAL(13, 2) NULL,
     FOREIGN KEY (id_account_emitter) REFERENCES Bank_account(id_account),
     FOREIGN KEY (id_account_receiver) REFERENCES Bank_account(id_account)
-)
+);
 
 INSERT INTO
     Users(lastname, firstname, email, password)

@@ -6,7 +6,7 @@ from tkcalendar import Calendar
 from view.interface import Interface
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, SOFT_BLUE2, SOFT_BLUE3, DARK_PINK
 
-class TransactionView(Interface):
+class TransactionView(Interface): 
     def __init__(self,window_title, column_number, current_session):
         super().__init__(window_title, column_number)
         self.deal_type_list = ['Retrait', 'Dépôt', 'Transfert']

@@ -6,3 +6,5 @@ tkinter
 tkcalendar
 mysql-connector-python
 bcrypt
+
+dotenv
