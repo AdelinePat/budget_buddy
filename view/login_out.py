@@ -18,10 +18,7 @@ class LogInOut(Interface):
         self.__password = ""
         self.last_name = ""
         self.first_name = ""
-
-        # Créez la table users si elle n'existe pas déjà
         self.create_users_table_if_not_exists()
-
         self.login_screen_build()
         self.lift() 
         self.attributes("-topmost", True) 
@@ -46,7 +43,7 @@ class LogInOut(Interface):
     cursor = conn.cursor()
     cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
     tables = cursor.fetchall()
-    print(tables)  # Cela devrait afficher toutes les tables existantes dans la base de données
+    print(tables)  
     conn.close()
 
     def register_user(self, first_name, last_name, email, password, confirm_password):
@@ -282,8 +279,6 @@ class LogInOut(Interface):
         conn.close()
         
         return users
-
-    # Test : Afficher les utilisateurs et leurs mots de passe hachés
     users = get_all_users()
     if users:
         for user in users:
