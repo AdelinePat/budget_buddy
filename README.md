@@ -108,7 +108,7 @@ pip install mysql-connector
   
 ## File Structure
   
-budget_buddy/
+budget_buddy/  
 ├── assets/                
 │   ├── font/            
 │   └── img/             
