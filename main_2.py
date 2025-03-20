@@ -12,9 +12,9 @@ from model.server import ServerDatabase
 server_connection = ServerDatabase()
 server_connection.server_connection()
 server_connection.create_database()
-server_connection.create_client_table()
-server_connection.create_account_table()
-server_connection.create_transactions_table()
+# server_connection.create_client_table()
+# server_connection.create_account_table()
+# server_connection.create_transactions_table()
 
 login_view = TransactionView("Transactions", 0, 'current_session')
 login_view.mainloop()
