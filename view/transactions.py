@@ -4,6 +4,8 @@ import customtkinter
 from tkcalendar import Calendar
 # from CTkDatePicker import CTkDatePicker
 from view.interface import Interface
+from model.transactionquery import TransactionQuery
+
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, SOFT_BLUE2, SOFT_BLUE3, DARK_PINK
 
 class TransactionView(Interface): 
@@ -20,9 +22,10 @@ class TransactionView(Interface):
         self.category = ""
         self.last_choice = ""
         self.amount = 0
+        self.query = TransactionQuery()
         self.get_fields_deposit_withdrawal()
 
-        self.screen_build()
+        # self.screen_build()
     
     def deal_type_callback(self, choice):
         if self.last_choice == 'Transfert' and self.type_selected != 'Transfert':
@@ -51,21 +54,23 @@ class TransactionView(Interface):
         self.get_fields_deposit_withdrawal()
 
         self.date_selected = self.chose_date.get_date()
-        self.type_selected = self.deal_type_choice.get()
-        self.description = self.description_box.get("0.0", "end")
-        if self.type_selected == 'Transfert':
-            self.receiver = self.receiver_box.get("0.0", "end")
+        self.type_selected = self.deal_type_choice.get().strip()
+        self.description = self.description_box.get("0.0", "end").strip()
         self.amount = self.amount_box.get("0.0", "end")
         self.category = self.category_choice.get()
+        if self.type_selected == 'Transfert':
+            self.receiver = self.receiver_box.get("0.0", "end").strip()
+            self.query.transfer_transaction(self.current_session, self.receiver, self.amount) #current_session, email_account, amount
         
         
-        print(f"type : {self.type_selected}\n"
-             f"date : {self.date_selected}\n"
-             f"catégorie : {self.category}\n"
-             f"émetteur : {self.emitter}\n"
-             f"récepteur : {self.receiver}\n"
-             f"description : {self.description}\n"
-             f"montant : {self.amount}")
+        
+        # print(f"type : {self.type_selected}\n"
+        #      f"date : {self.date_selected}\n"
+        #      f"catégorie : {self.category}\n"
+        #      f"émetteur : {self.emitter}\n"
+        #      f"récepteur : {self.receiver}\n"
+        #      f"description : {self.description}\n"
+        #      f"montant : {self.amount}")
 
     def generate_form(self):
         pass

@@ -213,3 +213,29 @@ WHERE
     u.id_user = (SELECT id_user FROM Users WHERE lastname = 'Mangeot' AND firstname = 'Jolyne') AND
     t.amount > 100
 ORDER BY t.amount DESC;
+
+
+SELECT MIN(id_account) FROM bank_account
+JOIN Users u USING(id_user)
+WHERE u.email = 'jolyne.mangeot@laplateforme.io';
+
+SELECT * FROM bank_account;
+SELECT * from users;
+-- SELECT id_account FROM bank_account WHERE (SELECT id_user FROM users WHERE email = 'jolyne.mangeot@laplateforme.io');
+
+SELECT balance FROM bank_account
+JOIN Users u USING(id_user)
+WHERE id_user = 2
+
+
+INSERT INTO bank_account
+    (id_user, account_type, balance, min_balance)
+VALUES
+    (2,
+    'Livret A',
+    300,
+    0);
+
+SELECT id_account, balance FROM bank_account
+JOIN Users u USING(id_user)
+WHERE id_account = (SELECT MIN(id_account) FROM bank_account WHERE id_user = 2);
