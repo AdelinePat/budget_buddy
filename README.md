@@ -110,24 +110,24 @@ pip install mysql-connector
   
   budget_buddy/   
 |__assets/  
-│   |── font/  
-|   |── img/  
+│  |── font/  
+|  |─ img/  
 |   
 |__controller   
 |   
 |__models/   
-|   |   
-|   |──  server.py   
+|  |   
+|  |──  server.py   
 |  
 ├── view/   
-|   |  
-|   |──    
-│   ├── interface.py   
-│   ├── login_out.py   
-│   ├── transactions.py   
-│   └── __settings__.py   
-│  
-|   
+|  |  
+|  |──    
+│  ├── interface.py   
+│  ├── login_out.py   
+│  ├── transactions.py   
+│  └── __settings__.py   
+│    
+|    
 │──.gitignore.py   
 ├── main_2.py   
 └── README.md   
