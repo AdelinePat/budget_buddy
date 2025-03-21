@@ -1,4 +1,4 @@
--- Active: 1742312366575@@127.0.0.1@3306@budget_buddy
+-- Active: 1741679024806@@127.0.0.1@3306@budget_buddy
 
 DROP DATABASE IF EXISTS Budget_Buddy;
 

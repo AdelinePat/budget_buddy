@@ -24,6 +24,27 @@ class TransactionQuery():
             database.commit()
             cursor.close()
         database.close()
+    
+    def __insert_transactions(self, transaction_info):
+        database = self.database.database_connection()
+
+        if database.is_connected():
+            cursor = database.cursor()
+            transaction_insert_query = f"INSERT INTO Transactions "
+            "(id_account_emitter, id_account_receiver, "
+            "deal_description, amount, "
+            "deal_date, deal_type, "
+            "category) "
+            "VALUES "
+            f"({transaction_info.emitter}, {transaction_info.receiver}, "
+            f"{transaction_info.description}, {transaction_info.amount }, "
+            f"{transaction_info.date}, {transaction_info.type}, "
+            f"{transaction_info.category});"
+            cursor.execute(transaction_insert_query)
+            database.commit()
+            cursor.close()
+        database.close()
+
 
     def transfer_transaction(self, transaction_info, balance_emitter, balance_receiver):
         # check if email exist => use main account for transfert
@@ -35,10 +56,10 @@ class TransactionQuery():
             self.__update_balance_query(transaction_info.emitter, final_balance)
             receiver_balance = balance_receiver + transaction_info.amount
             self.__update_balance_query(transaction_info.receiver, receiver_balance)
+            # self.__insert_transactions(transaction_info)
         else:
             return "Vous ne pouvez pas faire une transaction qui vous mettra à découvert."
 
-        
         # database = self.database.database_connection()
 
         # if database.is_connected():
