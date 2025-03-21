@@ -18,8 +18,14 @@ class TransactionQuery():
 
         if database.is_connected():
             cursor = database.cursor()
-            deposit_query = f"UPDATE Bank_account SET balance = {new_balance} WHERE id_account = {id_account};"
-            cursor.execute(deposit_query)
+            deposit_query = "UPDATE Bank_account SET balance = %(balance)s WHERE id_account = %(id_account)s;"
+
+            values = {
+                'balance' : new_balance,
+                'id_account' : id_account
+            }
+            
+            cursor.execute(deposit_query, values)
 
             result = cursor.fetchone()
             print(f"RESULTAT UPDATE BALANCE {result}")
@@ -38,15 +44,18 @@ class TransactionQuery():
             deal_description, amount, 
             deal_date, deal_type, 
             category) 
-            VALUES (%s, %s,
-            %s, %s,
-            %s, %s,
-            %s);"""
+            VALUES (%(emitter)s, %(receiver)s,
+            %(description)s, %(amount)s,
+            %(date)s, %(type)s,
+            %(category)s);"""
 
-            values = (transaction_info.get_emitter(), transaction_info.get_receiver(),
-                      transaction_info.get_description(), transaction_info.get_amount(),
-                      transaction_info.get_date(), transaction_info.get_type(),
-                      transaction_info.get_category())
+            values = {'emitter' : transaction_info.get_emitter(),
+                      'receiver' : transaction_info.get_receiver(),
+                      'description' : transaction_info.get_description(),
+                      'amount' : transaction_info.get_amount(),
+                      'date': transaction_info.get_date(),
+                      'type' : transaction_info.get_type(),
+                      'category' : transaction_info.get_category()}
 
             cursor.execute(query, values)
 

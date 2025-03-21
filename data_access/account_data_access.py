@@ -14,9 +14,12 @@ class DataAccess():
 
         if database.is_connected():
             cursor = database.cursor()
-            cursor.execute("SELECT MIN(id_account) FROM Bank_account " +
-                            "JOIN Users u USING(id_user) " +
-                            f"WHERE u.email = '{email}';")
+            query = """SELECT MIN(id_account) FROM Bank_account
+                        JOIN Users u USING(id_user) 
+                        WHERE u.email = %s;"""
+
+            cursor.execute(query, (email,))
+        
             
             account = cursor.fetchone()
             cursor.close()
@@ -34,9 +37,11 @@ class DataAccess():
 
         if database.is_connected():
             cursor = database.cursor()
-            cursor.execute("SELECT MIN(id_account) FROM Bank_account " +
-                        "JOIN Users u USING(id_user) " +
-                        f"WHERE u.id_user = {client_id}")
+            query = """SELECT MIN(id_account) FROM Bank_account
+                    JOIN Users u USING(id_user)
+                    WHERE u.id_user = %s;"""
+            
+            cursor.execute(query, (client_id,))
             
             account = cursor.fetchone()
             cursor.close()
@@ -52,10 +57,12 @@ class DataAccess():
 
         if database.is_connected():
             cursor = database.cursor()
-            cursor.execute("SELECT balance FROM Bank_account " +
-                            "JOIN Users u USING(id_user) " +
-                            "WHERE id_account = (SELECT MIN(id_account) " +
-                            f"FROM Bank_account WHERE id_user = {user_id});")
+            query = """SELECT balance FROM Bank_account
+                    JOIN Users u USING(id_user)
+                    WHERE id_account = (SELECT MIN(id_account)
+                    FROM Bank_account WHERE id_user = %s);"""
+            
+            cursor.execute(query, (user_id,))
             balance = float(cursor.fetchone()[0])
             cursor.close()
         database.close()
@@ -71,8 +78,9 @@ class DataAccess():
 
         if database.is_connected():
             cursor = database.cursor()
-            balance_query = f"SELECT balance FROM Bank_account WHERE id_account = {account_id};"
-            cursor.execute(balance_query)
+            balance_query = "SELECT balance FROM Bank_account WHERE id_account = %s;"
+
+            cursor.execute(balance_query, (account_id, ))
             balance = float(cursor.fetchone()[0])
             cursor.close()
         database.close()
