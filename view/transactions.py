@@ -7,6 +7,7 @@ from view.interface import Interface
 # from model.transactionquery import TransactionQuery
 from controller.transactionmanager import TransactionManager
 from view.transactioninfo import TransactionInfo
+from model.transactionexception import TransactionException
 from view.transactions_frame import Scrollable_frame
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, SOFT_BLUE2, SOFT_BLUE3, DARK_PINK
 
@@ -70,13 +71,16 @@ class TransactionView(Interface):
         self.transaction_info.category = self.transaction_frame.category_choice.get()
         if self.transaction_info.type == 'Transfert':
             self.transaction_info.set_receiver(self.transaction_frame.receiver_box.get("0.0", "end").strip())
-            
-        message_error = self.controller.manage_transaction(self.transaction_info)
-        print(message_error)
-        self.controller.error_message = ""
 
-    def generate_form(self):
-        pass
+        try:
+            self.controller.manage_transaction(self.transaction_info)
+            self.build_transaction_result("Transaction réussie")
+        except TransactionException as e:
+            self.build_transaction_result(e)
+
+    def build_transaction_result(self, error_message):
+        self.transaction_frame.error_message_text = customtkinter.CTkLabel(master=self.transaction_frame, text=error_message, font=self.text_font, text_color=SOFT_BLUE, bg_color=DARK_BLUE)
+        self.transaction_frame.error_message_text.grid(row=14, column=0, sticky="sn", padx=20, pady=5)
 
     def get_fields_deposit_withdrawal(self):
         if self.transaction_info.type == 'Dépôt':
@@ -190,8 +194,12 @@ class TransactionView(Interface):
         self.build_description(10, 11)
         self.build_amount_field(12, 13)
         self.transaction_frame.button = customtkinter.CTkButton(master=self.transaction_frame, text="Confirmer la transaction".upper(), font=self.text_font, command=self.confirm_form_callback, corner_radius=7, bg_color= DARK_BLUE, fg_color = PINK) # bouton se connecter
-        self.transaction_frame.button.grid(row=14, column=0, padx=20, pady=20)
+        self.transaction_frame.button.grid(row=15, column=0, sticky="snew", padx=20, pady=(20,5))
+        self.transaction_frame.button_return = customtkinter.CTkButton(master=self.transaction_frame, text="Retour".upper(), font=self.text_font, command=self.return_button_callbck, corner_radius=7, bg_color= DARK_BLUE, fg_color = PINK) # bouton se connecter
+        self.transaction_frame.button_return.grid(row=16, column=0, sticky="snew", padx=20, pady=5)
 
+    def return_button_callbck(self):
+        self.destroy()
     
     def login_screen_destroy(self):
         self.email_text.destroy()

@@ -17,6 +17,7 @@ server_connection.server_connection()
 server_connection.create_database()
 
 # view = LogInOut("Connexion Client", 0)
+# view.mainloop()
 
 # view_test = TransactionManager("Transactions", 0, 2) # window_title, column_number, current_session (id_user)
 view_test = TransactionView("Transactions", 0, 2)
