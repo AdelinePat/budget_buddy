@@ -20,6 +20,10 @@ class TransactionQuery():
             cursor = database.cursor()
             deposit_query = f"UPDATE Bank_account SET balance = {new_balance} WHERE id_account = {id_account};"
             cursor.execute(deposit_query)
+
+            result = cursor.fetchone()
+            print(f"RESULTAT UPDATE BALANCE {result}")
+   
             database.commit()
             cursor.close()
         database.close()
@@ -45,6 +49,9 @@ class TransactionQuery():
                       transaction_info.category)
 
             cursor.execute(query, values)
+
+            result = cursor.fetchone()
+            print(f"RESULTAT INSERT TRANSACTION {result}")
    
             database.commit()
             cursor.close()
