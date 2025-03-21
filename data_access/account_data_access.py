@@ -54,12 +54,9 @@ class DataAccess():
 
         if database.is_connected():
             cursor = database.cursor()
-            print(f"account number receiver or emitter : {account_id}")
             balance_query = f"SELECT balance FROM Bank_account WHERE id_account = {account_id};"
             cursor.execute(balance_query)
-
             balance = float(cursor.fetchone()[0])
-            print(f"balance in data_access : {balance}")
             cursor.close()
         database.close()
         return balance   

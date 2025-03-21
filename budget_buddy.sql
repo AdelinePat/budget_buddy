@@ -460,3 +460,5 @@ DESCRIBE Transactions;
 --     u.id_user = (SELECT id_user FROM Users WHERE lastname = 'Mangeot' AND firstname = 'Jolyne') AND
 --     t.amount > 100
 -- ORDER BY t.amount DESC;
+
+TABLE Transactions;

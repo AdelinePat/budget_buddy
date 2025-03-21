@@ -25,22 +25,21 @@ class TransactionQuery():
     
     def __insert_transactions(self, transaction_info):
         database = self.database.database_connection()
-        print(transaction_info.date)
 
         if database.is_connected():
             cursor = database.cursor()
-            query = """INSERT INTO Transactions
+            query = """INSERT INTO Transactions 
             (id_account_emitter, id_account_receiver,
             deal_description, amount, 
             deal_date, deal_type, 
-            category)
+            category) 
             VALUES (%s, %s,
             %s, %s,
             %s, %s,
             %s);"""
 
-            values = (transaction_info.emitter, transaction_info.receiver,
-                      transaction_info.description, transaction_info.amount,
+            values = (transaction_info.get_emitter(), transaction_info.get_receiver(),
+                      transaction_info.description, transaction_info.get_amount(),
                       transaction_info.date, transaction_info.type,
                       transaction_info.category)
 
@@ -51,32 +50,30 @@ class TransactionQuery():
         database.close()
     
     def withdrawal_transaction(self, transaction_info, balance_emitter):
-        print(f"amount : {transaction_info.amount}")
-        print(f"balance_emitter = {balance_emitter}")
-        final_balance = balance_emitter - transaction_info.amount
-        print(f"final balance = {final_balance}")
-
+        final_balance = balance_emitter - transaction_info.get_amount()
         if self.__is_balance_valid(final_balance):
-            self.__update_balance_query(transaction_info.emitter, final_balance)
+            self.__update_balance_query(transaction_info.get_emitter(), final_balance)
             self.__insert_transactions(transaction_info)
+            print("Le retrait a été effecuté avec succès")
         else:
             return "Vous ne pouvez pas faire une transaction qui vous mettra à découvert."
         
     def deposit_transaction(self, transaction_info, balance_receiver):
-        final_balance = balance_receiver + transaction_info.amount
+        final_balance = balance_receiver + transaction_info.get_amount()
 
-        self.__update_balance_query(transaction_info.receiver, final_balance)
+        self.__update_balance_query(transaction_info.get_receiver(), final_balance)
         self.__insert_transactions(transaction_info)
+        print("Le dépôt a été effecuté avec succès")
 
     def transfer_transaction(self, transaction_info, balance_emitter, balance_receiver):
-        final_balance = balance_emitter - transaction_info.amount
+        final_balance = balance_emitter - transaction_info.get_amount()
 
         if self.__is_balance_valid(final_balance):
             self.__update_balance_query(transaction_info.emitter, final_balance)
-            receiver_balance = balance_receiver + transaction_info.amount
-            self.__update_balance_query(transaction_info.receiver, receiver_balance)
+            receiver_balance = balance_receiver + transaction_info.get_amount()
+            self.__update_balance_query(transaction_info.get_receiver(), receiver_balance)
             self.__insert_transactions(transaction_info)
-            print("transactions réussie")
+            print("Transfert réussie")
         else:
             return "Vous ne pouvez pas faire une transaction qui vous mettra à découvert."
             
