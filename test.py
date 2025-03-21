@@ -1,6 +1,6 @@
 from model.server import ServerDatabase
 from datetime import datetime
-from view.transactioninfo import TransactionInfo
+from model.transactioninfo import TransactionInfo
 
 test = TransactionInfo(1, "Retrait", "2025-06-97", 1, None, "Ceci est une description", "Pot-de-vin", 42.45)
 

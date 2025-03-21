@@ -6,11 +6,10 @@ from model.transactionexception import TransactionException
 
 class TransactionManager():
     def __init__(self):
-        self.query = TransactionQuery()
-        self.data_access = DataAccess()
-        self.balance_emitter = 0
-        self.balance_receiver = 0
-        self.ERROR_MESSAGEEEE = None
+        self.__query = TransactionQuery()
+        self.__data_access = DataAccess()
+        self.__balance_emitter = 0
+        self.__balance_receiver = 0
 
     
     def __check_date(self, deal_date):
@@ -20,7 +19,7 @@ class TransactionManager():
             raise TransactionException(error_message)
 
     def __get_account_number_from_email(self, email): #transaction_info.receiver
-        account_number = self.data_access.get_account_number_from_email(email)
+        account_number = self.__data_access.get_account_number_from_email(email)
         if account_number != 'Null':
             return account_number[0]
         else:
@@ -34,8 +33,8 @@ class TransactionManager():
             raise TransactionException(error_message)
             # print("Vous ne pouvez pas faire de transfert sur le même compte")
 
-        self.balance_emitter = self.data_access.get_balance_from_account(transaction_info.get_emitter())
-        self.balance_receiver = self.data_access.get_balance_from_account(transaction_info.get_receiver())
+        self.__balance_emitter = self.__data_access.get_balance_from_account(transaction_info.get_emitter())
+        self.__balance_receiver = self.__data_access.get_balance_from_account(transaction_info.get_receiver())
 
         # transaction_info.amount = self.__convert_amount(transaction_info.amount)
         transaction_info.set_amount(self.__convert_amount(transaction_info.get_amount()))
@@ -45,7 +44,7 @@ class TransactionManager():
             raise TransactionException(error_message)
 
     def __manage_entry_for_withdrawal(self, transaction_info): #emitter and no receiver
-        self.balance_emitter = self.data_access.get_balance_from_account(transaction_info.get_emitter()) #convert balance into float
+        self.__balance_emitter = self.__data_access.get_balance_from_account(transaction_info.get_emitter()) #convert balance into float
         # transaction_info.amount = self.__convert_amount(transaction_info.amount)
 
         transaction_info.set_amount(self.__convert_amount(transaction_info.get_amount()))
@@ -55,7 +54,7 @@ class TransactionManager():
             raise TransactionException(error_message)
         
     def __manage_entry_for_deposit(self, transaction_info): #receiver and no emitter
-        self.balance_receiver = self.data_access.get_balance_from_account(transaction_info.get_receiver())
+        self.__balance_receiver = self.__data_access.get_balance_from_account(transaction_info.get_receiver())
         # transaction_info.amount = self.__convert_amount(transaction_info.amount)
 
         transaction_info.set_amount(self.__convert_amount(transaction_info.get_amount()))
@@ -74,21 +73,21 @@ class TransactionManager():
 
     def manage_transaction(self, transaction_info):
         # check if transaction_info.amount > 0, else error !!! Regex already take care of it ???
-        self.__check_date(transaction_info.date)
+        self.__check_date(transaction_info.get_date())
 
-        print(f"TYPE EN DEBUT DE MANAGE TRANACTION {transaction_info.type}")
+        print(f"TYPE EN DEBUT DE MANAGE TRANACTION {transaction_info.get_type()}")
 
-        if transaction_info.type == 'Transfert':     
+        if transaction_info.get_type() == 'Transfert':     
             self.__manage_entry_for_transfer(transaction_info)
-            self.query.transfer_transaction(transaction_info, self.balance_emitter, self.balance_receiver)
+            self.__query.transfer_transaction(transaction_info, self.__balance_emitter, self.__balance_receiver)
 
-        elif transaction_info.type == 'Retrait':
+        elif transaction_info.get_type() == 'Retrait':
             self.__manage_entry_for_withdrawal(transaction_info)
-            self.query.withdrawal_transaction(transaction_info, self.balance_emitter)
+            self.__query.withdrawal_transaction(transaction_info, self.__balance_emitter)
         else:
             self.__manage_entry_for_deposit(transaction_info)
-            self.query.deposit_transaction(transaction_info, self.balance_receiver)
+            self.__query.deposit_transaction(transaction_info, self.__balance_receiver)
 
     def manage_transfer(self, transaction_info):
         self.__manage_entry_for_transfer(transaction_info)
-        self.query.transfer_transaction(transaction_info, self.balance_emitter, self.balance_receiver)
+        self.__query.transfer_transaction(transaction_info, self.__balance_emitter, self.__balance_receiver)

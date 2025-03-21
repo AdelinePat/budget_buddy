@@ -44,9 +44,9 @@ class TransactionQuery():
             %s);"""
 
             values = (transaction_info.get_emitter(), transaction_info.get_receiver(),
-                      transaction_info.description, transaction_info.get_amount(),
-                      transaction_info.date, transaction_info.type,
-                      transaction_info.category)
+                      transaction_info.get_description(), transaction_info.get_amount(),
+                      transaction_info.get_date(), transaction_info.get_type(),
+                      transaction_info.get_category())
 
             cursor.execute(query, values)
 

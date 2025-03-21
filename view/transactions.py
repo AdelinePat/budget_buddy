@@ -6,7 +6,7 @@ from tkcalendar import Calendar, DateEntry
 from view.interface import Interface
 # from model.transactionquery import TransactionQuery
 from controller.transactionmanager import TransactionManager
-from view.transactioninfo import TransactionInfo
+from model.transactioninfo import TransactionInfo
 from model.transactionexception import TransactionException
 from view.transactions_frame import Scrollable_frame
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, SOFT_BLUE2, SOFT_BLUE3, DARK_PINK
@@ -39,13 +39,13 @@ class TransactionView(Interface):
         self.screen_build()
     
     def deal_type_callback(self, choice):
-        if self.last_choice == 'Transfert' and self.transaction_info.type != 'Transfert':
+        if self.last_choice == 'Transfert' and self.transaction_info.get_type() != 'Transfert':
             self.transaction_frame.receiver_text.destroy()
             self.transaction_frame.receiver_box.destroy()
-            self.last_choice = self.transaction_info.type
+            self.last_choice = self.transaction_info.get_type()
 
-        self.transaction_info.type = choice
-        if self.transaction_info.type == 'Transfert':
+        self.transaction_info.set_type(choice)
+        if self.transaction_info.get_type() == 'Transfert':
             self.build_receiver_field(6, 7)
         else:
             if bool(self.transaction_frame.receiver_text):
@@ -53,23 +53,23 @@ class TransactionView(Interface):
                 self.transaction_frame.receiver_box.destroy()
 
     def category_callback(self, choice):
-        self.transaction_info.category = choice
+        self.transaction_info.set_category(choice)
 
     def deal_date_callback(self, choice):
-        self.transaction_info.date = choice
+        self.transaction_info.set_date(choice)
 
     def confirm_form_callback(self):
 
         self.get_fields_deposit_withdrawal()
 
-        self.transaction_info.date = self.transaction_frame.chose_date.get_date()
-        self.transaction_info.type = self.transaction_frame.deal_type_choice.get().strip()
+        self.transaction_info.set_date(self.transaction_frame.chose_date.get_date())
+        self.transaction_info.set_type(self.transaction_frame.deal_type_choice.get().strip())
 
-        self.transaction_info.description = self.transaction_frame.description_box.get("0.0", "end").strip()
+        self.transaction_info.set_description(self.transaction_frame.description_box.get("0.0", "end").strip())
 
         self.transaction_info.set_amount(self.transaction_frame.amount_box.get("0.0", "end"))
-        self.transaction_info.category = self.transaction_frame.category_choice.get()
-        if self.transaction_info.type == 'Transfert':
+        self.transaction_info.set_category(self.transaction_frame.category_choice.get())
+        if self.transaction_info.get_type() == 'Transfert':
             self.transaction_info.set_receiver(self.transaction_frame.receiver_box.get("0.0", "end").strip())
 
         try:
@@ -86,12 +86,12 @@ class TransactionView(Interface):
         self.transaction_frame.error_message_text.grid(row=14, column=0, sticky="sn", padx=20, pady=5)
 
     def get_fields_deposit_withdrawal(self):
-        if self.transaction_info.type == 'Dépôt':
-            self.transaction_info.set_receiver(self.transaction_info.current_session)
+        if self.transaction_info.get_type() == 'Dépôt':
+            self.transaction_info.set_receiver(self.transaction_info.get_current_session())
             self.transaction_info.set_emitter(None)
         else:
             self.transaction_info.set_receiver(None)
-            self.transaction_info.set_emitter(self.transaction_info.current_session)
+            self.transaction_info.set_emitter(self.transaction_info.get_current_session())
 
     def build_type_field(self, row1, row2):
         self.transaction_frame.deal_type_text = customtkinter.CTkLabel(master=self.transaction_frame, text="Choisissez le type de transaction :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
@@ -107,8 +107,8 @@ class TransactionView(Interface):
         self.transaction_frame.deal_type_choice.grid(row=row2, column=0, sticky="sew", padx=20, pady=0)
         self.transaction_frame.deal_type_choice.set(self.deal_type_list[-1])
 
-        self.transaction_info.type = self.transaction_frame.deal_type_choice.get()
-        print(f"dropdown type avant callback: {self.transaction_info.type}")
+        self.transaction_info.set_type(self.transaction_frame.deal_type_choice.get())
+        print(f"dropdown type avant callback: {self.transaction_info.get_type()}")
     
     def build_category_field(self, row1, row2):
         category_text = customtkinter.CTkLabel(master=self.transaction_frame, text="Choisissez la catégorie de votre transaction :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
@@ -123,8 +123,8 @@ class TransactionView(Interface):
 
         self.transaction_frame.category_choice.grid(row=row2, column=0, sticky="sew", padx=20, pady=0)
         self.transaction_frame.category_choice.set(self.category_list[-1])
-        self.transaction_info.category = self.transaction_frame.category_choice.get()
-        print(f"dropdown categorie avant callback: {self.transaction_info.type}")
+        self.transaction_info.set_category(self.transaction_frame.category_choice.get())
+        print(f"dropdown categorie avant callback: {self.transaction_info.get_type()}")
      
     def build_date_entry(self, row1, row2):
         self.transaction_frame.deal_date_text = customtkinter.CTkLabel(master=self.transaction_frame, text="Choisissez la date de votre transaction :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
@@ -188,9 +188,9 @@ class TransactionView(Interface):
         self.build_type_field(2, 3)
         self.build_category_field(4, 5)
         self.get_fields_deposit_withdrawal()
-        if self.transaction_info.type == 'Transfert':
+        if self.transaction_info.get_type() == 'Transfert':
             self.build_receiver_field(6, 7)
-        if self.last_choice == 'Transfert' and self.transaction_info.type != 'Transfert':
+        if self.last_choice == 'Transfert' and self.transaction_info.get_type() != 'Transfert':
             self.transaction_frame.receiver_text.destroy()
             self.transaction_frame.receiver_box.destroy()
         self.build_date_entry(8, 9)
