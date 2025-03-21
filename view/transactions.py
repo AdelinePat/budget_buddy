@@ -7,6 +7,7 @@ from view.interface import Interface
 # from model.transactionquery import TransactionQuery
 from controller.transactionmanager import TransactionManager
 from view.transactioninfo import TransactionInfo
+from view.transactions_frame import Scrollable_frame
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, SOFT_BLUE2, SOFT_BLUE3, DARK_PINK
 
 
@@ -15,6 +16,9 @@ from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YEL
 class TransactionView(Interface): 
     def __init__(self,window_title, column_number, current_session):
         super().__init__(window_title, column_number)
+        self.transaction_frame = Scrollable_frame(self, bg_color=DARK_BLUE, fg_color=DARK_BLUE)
+        self.transaction_frame.columnconfigure(0, weight=1)
+        self.transaction_frame.pack(fill='both', expand=1)
         self.deal_type_list = ['Retrait', 'Dépôt', 'Transfert']
         self.category_list = ['Alimentaire', 'Loisirs', 'Prélèvement', 'Transport', 'Santé', 'Dealing', 'Activités illicites', 'Consommation de café']
         self.transaction_info = TransactionInfo(current_session, "", "", None, None, "", "", "")
@@ -35,17 +39,17 @@ class TransactionView(Interface):
     
     def deal_type_callback(self, choice):
         if self.last_choice == 'Transfert' and self.transaction_info.type != 'Transfert':
-            self.receiver_text.destroy()
-            self.receiver_box.destroy()
+            self.transaction_frame.receiver_text.destroy()
+            self.transaction_frame.receiver_box.destroy()
             self.last_choice = self.transaction_info.type
 
         self.transaction_info.type = choice
         if self.transaction_info.type == 'Transfert':
             self.build_receiver_field(6, 7)
         else:
-            if bool(self.receiver_text):
-                self.receiver_text.destroy()
-                self.receiver_box.destroy()
+            if bool(self.transaction_frame.receiver_text):
+                self.transaction_frame.receiver_text.destroy()
+                self.transaction_frame.receiver_box.destroy()
         print(self.transaction_info.type)
     
     def category_callback(self, choice):
@@ -59,18 +63,18 @@ class TransactionView(Interface):
 
         self.get_fields_deposit_withdrawal()
 
-        self.transaction_info.date = self.chose_date.get_date()
+        self.transaction_info.date = self.transaction_frame.chose_date.get_date()
         print(f"date : {self.transaction_info.date}")
         print(f"type de la date : {type(self.transaction_info.date)}")
-        self.transaction_info.type = self.deal_type_choice.get().strip()
+        self.transaction_info.type = self.transaction_frame.deal_type_choice.get().strip()
 
-        self.transaction_info.description = self.description_box.get("0.0", "end").strip()
+        self.transaction_info.description = self.transaction_frame.description_box.get("0.0", "end").strip()
         print(f"description : {self.transaction_info.description}")
 
-        self.transaction_info.amount = self.amount_box.get("0.0", "end")
-        self.transaction_info.category = self.category_choice.get()
+        self.transaction_info.amount = self.transaction_frame.amount_box.get("0.0", "end")
+        self.transaction_info.category = self.transaction_frame.category_choice.get()
         if self.transaction_info.type == 'Transfert':
-            self.transaction_info.receiver = self.receiver_box.get("0.0", "end").strip()
+            self.transaction_info.receiver = self.transaction_frame.receiver_box.get("0.0", "end").strip()
             # self.controller.manage_entry(self.transaction_info)
             # self.query.transfer_transaction(self.current_session, self.receiver, self.amount) #current_session, email_account, amount
             # message_error = self.controller.manage_transfer(self.transaction_info)
@@ -110,44 +114,44 @@ class TransactionView(Interface):
 # category, 
 # charges
     def build_type_field(self, row1, row2):
-        self.deal_type_text = customtkinter.CTkLabel(master=self, text="Choisissez le type de transaction :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
-        self.deal_type_text.grid(row=row1, column=0, sticky="sew", padx=20, pady=5)
+        self.transaction_frame.deal_type_text = customtkinter.CTkLabel(master=self.transaction_frame, text="Choisissez le type de transaction :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
+        self.transaction_frame.deal_type_text.grid(row=row1, column=0, sticky="sew", padx=20, pady=5)
 
-        self.deal_type_choice = customtkinter.CTkComboBox(master=self,
+        self.transaction_frame.deal_type_choice = customtkinter.CTkComboBox(master=self.transaction_frame,
             values=self.deal_type_list, state="readonly",
             command=self.deal_type_callback, font=self.text_font, text_color=DARK_BLUE,
             bg_color=DARK_BLUE, fg_color=SOFT_YELLOW, dropdown_fg_color = SOFT_YELLOW, 
             dropdown_text_color = DARK_BLUE, dropdown_font= self.text_font,
             dropdown_hover_color = SOFT_BLUE, corner_radius=10)
 
-        self.deal_type_choice.grid(row=row2, column=0, sticky="sew", padx=20, pady=0)
-        self.deal_type_choice.set(self.deal_type_list[-1])
+        self.transaction_frame.deal_type_choice.grid(row=row2, column=0, sticky="sew", padx=20, pady=0)
+        self.transaction_frame.deal_type_choice.set(self.deal_type_list[-1])
 
-        self.transaction_info.type = self.deal_type_choice.get()
+        self.transaction_info.type = self.transaction_frame.deal_type_choice.get()
         print(f"dropdown type avant callback: {self.transaction_info.type}")
     
     def build_category_field(self, row1, row2):
-        category_text = customtkinter.CTkLabel(master=self, text="Choisissez la catégorie de votre transaction :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
+        category_text = customtkinter.CTkLabel(master=self.transaction_frame, text="Choisissez la catégorie de votre transaction :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
         category_text.grid(row=row1, column=0, sticky="sew", padx=20, pady=5)
 
-        self.category_choice = customtkinter.CTkComboBox(master=self,
+        self.transaction_frame.category_choice = customtkinter.CTkComboBox(master=self.transaction_frame,
             values=self.category_list, state="readonly", command=self.category_callback,
             font=self.text_font, text_color=DARK_BLUE, bg_color=DARK_BLUE, fg_color=SOFT_YELLOW,
             dropdown_fg_color = SOFT_YELLOW, dropdown_text_color = DARK_BLUE,
             dropdown_font= self.text_font, dropdown_hover_color = SOFT_BLUE,
             corner_radius=10)
 
-        self.category_choice.grid(row=row2, column=0, sticky="sew", padx=20, pady=0)
-        self.category_choice.set(self.category_list[-1])
-        self.transaction_info.category = self.category_choice.get()
+        self.transaction_frame.category_choice.grid(row=row2, column=0, sticky="sew", padx=20, pady=0)
+        self.transaction_frame.category_choice.set(self.category_list[-1])
+        self.transaction_info.category = self.transaction_frame.category_choice.get()
         print(f"dropdown categorie avant callback: {self.transaction_info.type}")
         
     # def build_dropdown_calendar(self, row1, row2):
-    #     self.deal_date_text = customtkinter.CTkLabel(master=self, text="Choisissez la date de votre transactions :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
+    #     self.deal_date_text = customtkinter.CTkLabel(master=self.transaction_frame, text="Choisissez la date de votre transactions :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
     #     self.deal_date_text.grid(row=row1, column=0, sticky="sew", padx=20, pady=5)
 
     #     self.chose_date_drop = customtkinter.CTkComboBox(
-    #         master=self, values=self.build_calendar,command=self.category_callback,
+    #         master=self.transaction_frame, values=self.build_calendar,command=self.category_callback,
     #         font=self.text_font, text_color=DARK_BLUE, bg_color=DARK_BLUE, fg_color=SOFT_YELLOW,
     #         dropdown_fg_color = SOFT_YELLOW, dropdown_text_color = DARK_BLUE,
     #         dropdown_font= self.text_font, dropdown_hover_color = SOFT_BLUE,
@@ -156,9 +160,9 @@ class TransactionView(Interface):
 
     #     self.chose_date.grid(row=row2,column=0, padx=30, pady=10, sticky='sew')
     def build_date_entry(self, row1, row2):
-        self.deal_date_text = customtkinter.CTkLabel(master=self, text="Choisissez la date de votre transaction :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
-        self.deal_date_text.grid(row=row1, column=0, sticky="sew", padx=20, pady=5)
-        self.chose_date = DateEntry(master=self, date_pattern="yyyy-mm-dd",
+        self.transaction_frame.deal_date_text = customtkinter.CTkLabel(master=self.transaction_frame, text="Choisissez la date de votre transaction :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
+        self.transaction_frame.deal_date_text.grid(row=row1, column=0, sticky="sew", padx=20, pady=5)
+        self.transaction_frame.chose_date = DateEntry(master=self.transaction_frame, date_pattern="yyyy-mm-dd",
             font=self.text_font, text_color=DARK_BLUE, bg_color=DARK_BLUE, fg_color=SOFT_YELLOW,
             dropdown_fg_color = SOFT_YELLOW, dropdown_text_color = DARK_BLUE,
             dropdown_font= self.text_font,
@@ -166,13 +170,13 @@ class TransactionView(Interface):
             background=DARK_BLUE, foreground=SOFT_YELLOW, headersbackground=PINK,
             selectbackground=PINK, normalbackground=LIGHT_BLUE, weekendbackground=SOFT_BLUE, corner_radius=10,
             othermonthbackground=SOFT_BLUE2, othermonthwebackground=SOFT_BLUE3, othermonthforeground=DARK_BLUE, othermonthweforeground=DARK_BLUE)
-        self.chose_date.grid(row=row2, column=0, sticky="sew", padx=20, pady=5)
+        self.transaction_frame.chose_date.grid(row=row2, column=0, sticky="sew", padx=20, pady=5)
 
     def build_calendar(self, row1, row2):
-        self.deal_date_text = customtkinter.CTkLabel(master=self, text="Choisissez la date de votre transaction :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
-        self.deal_date_text.grid(row=row1, column=0, sticky="sew", padx=20, pady=5)
+        self.transaction_frame.deal_date_text = customtkinter.CTkLabel(master=self.transaction_frame, text="Choisissez la date de votre transaction :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
+        self.transaction_frame.deal_date_text.grid(row=row1, column=0, sticky="sew", padx=20, pady=5)
 
-        self.chose_date = Calendar(master=self, selectmode='day', font=self.text_font,
+        self.transaction_frame.chose_date = Calendar(master=self.transaction_frame, selectmode='day', font=self.text_font,
             command=self.deal_date_callback,
             showweeknumbers=False, cursor="hand2", date_pattern= 'y-mm-dd',
             borderwidth=2, bordercolor=DARK_BLUE,
@@ -181,38 +185,38 @@ class TransactionView(Interface):
             othermonthbackground=SOFT_BLUE2, othermonthwebackground=SOFT_BLUE3, othermonthforeground=DARK_BLUE, othermonthweforeground=DARK_BLUE
             )
         
-        self.chose_date.grid(row=row2,column=0, padx=30, pady=10, sticky='sew')
+        self.transaction_frame.chose_date.grid(row=row2,column=0, padx=30, pady=10, sticky='sew')
 
     def build_description(self, row1, row2):
-        self.description_text = customtkinter.CTkLabel(master=self, text="Description de la transaction :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
-        self.description_text.grid(row=row1, column=0, sticky="sew", padx=20, pady=5)
+        self.transaction_frame.description_text = customtkinter.CTkLabel(master=self.transaction_frame, text="Description de la transaction :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
+        self.transaction_frame.description_text.grid(row=row1, column=0, sticky="sew", padx=20, pady=5)
 
-        self.description_box = customtkinter.CTkTextbox(master=self, font=self.text_font, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE) # champs "email"
-        self.description_box.grid(row=row2, column=0, sticky="sew", padx=20, pady=0)
-        self.description_box.insert("0.0", "")
+        self.transaction_frame.description_box = customtkinter.CTkTextbox(master=self.transaction_frame, font=self.text_font, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE) # champs "email"
+        self.transaction_frame.description_box.grid(row=row2, column=0, sticky="sew", padx=20, pady=0)
+        self.transaction_frame.description_box.insert("0.0", "")
 
     def build_receiver_field(self, row1, row2):
-        self.receiver_text = customtkinter.CTkLabel(master=self, text="Bénéficiaire (email) :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
-        self.receiver_text.grid(row=row1, column=0, sticky="sew", padx=20, pady=5)
+        self.transaction_frame.receiver_text = customtkinter.CTkLabel(master=self.transaction_frame, text="Bénéficiaire (email) :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
+        self.transaction_frame.receiver_text.grid(row=row1, column=0, sticky="sew", padx=20, pady=5)
 
-        self.receiver_box = customtkinter.CTkTextbox(master=self, font=self.text_font, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE) # champs "email"
-        self.receiver_box.grid(row=row2, column=0, sticky="sew", padx=20, pady=0)
-        self.receiver_box.insert("0.0", "")
+        self.transaction_frame.receiver_box = customtkinter.CTkTextbox(master=self.transaction_frame, font=self.text_font, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE) # champs "email"
+        self.transaction_frame.receiver_box.grid(row=row2, column=0, sticky="sew", padx=20, pady=0)
+        self.transaction_frame.receiver_box.insert("0.0", "")
 
     def build_amount_field(self, row1, row2):
-        self.amount_text = customtkinter.CTkLabel(master=self, text="Montant :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
-        self.amount_text.grid(row=row1, column=0, sticky="sew", padx=20, pady=5)
+        self.transaction_frame.amount_text = customtkinter.CTkLabel(master=self.transaction_frame, text="Montant :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
+        self.transaction_frame.amount_text.grid(row=row1, column=0, sticky="sew", padx=20, pady=5)
 
-        self.amount_box = customtkinter.CTkTextbox(master=self, font=self.text_font, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE) # champs "email"
-        self.amount_box.grid(row=row2, column=0, sticky="sew", padx=20, pady=0)
-        self.amount_box.insert("0.0", "")
+        self.transaction_frame.amount_box = customtkinter.CTkTextbox(master=self.transaction_frame, font=self.text_font, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE) # champs "email"
+        self.transaction_frame.amount_box.grid(row=row2, column=0, sticky="sew", padx=20, pady=0)
+        self.transaction_frame.amount_box.insert("0.0", "")
 
     def screen_build(self):
-        self.title_text = customtkinter.CTkLabel(master=self, text="Budget Buddy", font=self.title_font, text_color=YELLOW, bg_color=DARK_BLUE)
-        self.title_text.grid(row=0, column=0, sticky="sew", padx=20, pady=0)
+        self.transaction_frame.title_text = customtkinter.CTkLabel(master=self.transaction_frame, text="Budget Buddy", font=self.title_font, text_color=YELLOW, bg_color=DARK_BLUE)
+        self.transaction_frame.title_text.grid(row=0, column=0, sticky="sew", padx=20, pady=0)
 
-        self.subtitle_text = customtkinter.CTkLabel(master=self, text="Transactions", font=self.text_font, text_color=YELLOW, bg_color=DARK_BLUE)
-        self.subtitle_text.grid(row=1, column=0, sticky="sew", padx=20, pady=0)
+        self.transaction_frame.subtitle_text = customtkinter.CTkLabel(master=self.transaction_frame, text="Transactions", font=self.text_font, text_color=YELLOW, bg_color=DARK_BLUE)
+        self.transaction_frame.subtitle_text.grid(row=1, column=0, sticky="sew", padx=20, pady=0)
 
         self.build_type_field(2, 3)
         self.build_category_field(4, 5)
@@ -220,13 +224,13 @@ class TransactionView(Interface):
         if self.transaction_info.type == 'Transfert':
             self.build_receiver_field(6, 7)
         if self.last_choice == 'Transfert' and self.transaction_info.type != 'Transfert':
-            self.receiver_text.destroy()
-            self.receiver_box.destroy()
+            self.transaction_frame.receiver_text.destroy()
+            self.transaction_frame.receiver_box.destroy()
         self.build_date_entry(8, 9)
         self.build_description(10, 11)
         self.build_amount_field(12, 13)
-        self.button = customtkinter.CTkButton(self, text="Confirmer la transaction".upper(), font=self.text_font, command=self.confirm_form_callback, corner_radius=7, bg_color= DARK_BLUE, fg_color = PINK) # bouton se connecter
-        self.button.grid(row=14, column=0, padx=20, pady=20)
+        self.transaction_frame.button = customtkinter.CTkButton(master=self.transaction_frame, text="Confirmer la transaction".upper(), font=self.text_font, command=self.confirm_form_callback, corner_radius=7, bg_color= DARK_BLUE, fg_color = PINK) # bouton se connecter
+        self.transaction_frame.button.grid(row=14, column=0, padx=20, pady=20)
 
         # self.button_create_account = customtkinter.CTkButton(self, text="Créer un compte".upper(), font=self.text_font, command=self.button_callbck, corner_radius=7, bg_color= DARK_BLUE, fg_color = PINK) # bouton se connecter
         # self.button_create_account.grid(row=8, column=0, padx=20, pady=20)
