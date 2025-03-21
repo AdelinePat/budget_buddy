@@ -1,4 +1,5 @@
 from model.server import ServerDatabase
+from model.transactionexception import TransactionException
 
 # CURRENT SESSION = id_user
 
@@ -56,7 +57,8 @@ class TransactionQuery():
             self.__insert_transactions(transaction_info)
             print("Le retrait a été effecuté avec succès")
         else:
-            return "Vous ne pouvez pas faire une transaction qui vous mettra à découvert."
+            error_message = "Vous ne pouvez pas faire une transaction qui vous mettra à découvert."
+            raise TransactionException(error_message)
         
     def deposit_transaction(self, transaction_info, balance_receiver):
         final_balance = balance_receiver + transaction_info.get_amount()
@@ -69,13 +71,14 @@ class TransactionQuery():
         final_balance = balance_emitter - transaction_info.get_amount()
 
         if self.__is_balance_valid(final_balance):
-            self.__update_balance_query(transaction_info.emitter, final_balance)
+            self.__update_balance_query(transaction_info.get_emitter(), final_balance)
             receiver_balance = balance_receiver + transaction_info.get_amount()
             self.__update_balance_query(transaction_info.get_receiver(), receiver_balance)
             self.__insert_transactions(transaction_info)
             print("Transfert réussie")
         else:
-            return "Vous ne pouvez pas faire une transaction qui vous mettra à découvert."
+            error_message = "Vous ne pouvez pas faire une transaction qui vous mettra à découvert."
+            raise TransactionException(error_message)
             
 
             
