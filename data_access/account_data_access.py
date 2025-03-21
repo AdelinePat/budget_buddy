@@ -42,12 +42,9 @@ class DataAccess():
             cursor.close()
         database.close()
         return account   
-
-    def get_balance_from_main_user_account(self, current_session):
-        #TODO get balance from THE account currently used
-        #TODO update this method, when session object exist, current account number will be known and this method will become useless
-        # print(type(current_session))
-        if current_session == None or type(current_session) != int:
+   
+    def get_balance_from_main_user_account(self, user_id): #not used ?
+        if user_id == None or type(user_id) != int:
             error_message = "L'identifiant client n'est pas valide"
             raise TransactionException(error_message)
         
@@ -58,11 +55,11 @@ class DataAccess():
             cursor.execute("SELECT balance FROM Bank_account " +
                             "JOIN Users u USING(id_user) " +
                             "WHERE id_account = (SELECT MIN(id_account) " +
-                            f"FROM Bank_account WHERE id_user = {current_session});")
+                            f"FROM Bank_account WHERE id_user = {user_id});")
             balance = float(cursor.fetchone()[0])
             cursor.close()
         database.close()
-        return balance 
+        return balance
     
     def get_balance_from_account(self, account_id):
 
