@@ -29,7 +29,7 @@ class Historic_Account:
             pady=20, sticky="ew"
         )
         master.transactions_frame = Transactions_frame(master, fg_color=SOFT_BLUE, bg_color=LIGHT_BLUE, corner_radius=5)
-        master.transactions_frame.grid(row=4,column=0,padx=5, pady=5)
+        master.transactions_frame.grid(row=4,column=0,padx=15, pady=5, sticky="ew")
         # for index, transaction in enumerate(self.list_transactions):
         #     master.transactions_frame.transactions_element
 
