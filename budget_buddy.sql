@@ -246,8 +246,10 @@ UPDATE `Bank_account` SET balance = 100
 WHERE id_account = 1;
 
 TABLE Bank_account;
-
+TABLE Transactions;
 
 SELECT balance FROM Bank_account WHERE id_account = 2;
 
 UPDATE `Bank_account` SET balance = 1200 WHERE id_account = 2;
+
+SELECT deal_date FROM Transactions WHERE id_account_emitter = 2;

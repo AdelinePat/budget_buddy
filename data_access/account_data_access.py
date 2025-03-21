@@ -1,5 +1,4 @@
 from model.server import ServerDatabase
-import re
 
 class DataAccess():
     def __init__(self):
@@ -25,8 +24,8 @@ class DataAccess():
 
         if database.is_connected():
             cursor = database.cursor()
-            cursor.execute("SELECT MIN(id_account) FROM Bank_account "
-                        "JOIN Users u USING(id_user) "
+            cursor.execute("SELECT MIN(id_account) FROM Bank_account " +
+                        "JOIN Users u USING(id_user) " +
                         f"WHERE u.id_user = {client_id}")
             
             account = cursor.fetchone()

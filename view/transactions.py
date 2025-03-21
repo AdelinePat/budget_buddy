@@ -6,27 +6,10 @@ from tkcalendar import Calendar
 from view.interface import Interface
 # from model.transactionquery import TransactionQuery
 from controller.transactionmanager import TransactionManager
-
+from view.transactioninfo import TransactionInfo
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, SOFT_BLUE2, SOFT_BLUE3, DARK_PINK
 
-class TransactionInfo():
-    def __init__(self, current_session, deal_type, date, emitter, receiver, description, category, amount):
-        self.current_session = current_session
-        self.type = deal_type
-        self.date = date
-        self.emitter = emitter
-        self.receiver = receiver
-        self.description = description
-        self.category = category
-        self.amount = amount
 
-        # self.type = type
-        # self.date = date
-        # self.emitter = emitter
-        # self.receiver = receiver
-        # self.description = description
-        # self.categoy = category
-        # self.amount = amount
 
 
 class TransactionView(Interface): 
@@ -46,7 +29,7 @@ class TransactionView(Interface):
         # self.transaction_info.amount = 0
         # self.query = TransactionQuery()
         self.controller = TransactionManager()
-        self.get_fields_deposit_withdrawal()
+        # self.get_fields_deposit_withdrawal()
 
         self.screen_build()
     
@@ -77,8 +60,13 @@ class TransactionView(Interface):
         self.get_fields_deposit_withdrawal()
 
         self.transaction_info.date = self.chose_date.get_date()
+        print(f"date : {self.transaction_info.date}")
+        print(f"type de la date : {type(self.transaction_info.date)}")
         self.transaction_info.type = self.deal_type_choice.get().strip()
-        self.description = self.description_box.get("0.0", "end").strip()
+
+        self.transaction_info.description = self.description_box.get("0.0", "end").strip()
+        print(f"description : {self.transaction_info.description}")
+
         self.transaction_info.amount = self.amount_box.get("0.0", "end")
         self.transaction_info.category = self.category_choice.get()
         if self.transaction_info.type == 'Transfert':
@@ -132,8 +120,10 @@ class TransactionView(Interface):
             dropdown_hover_color = SOFT_BLUE, corner_radius=10)
 
         self.deal_type_choice.grid(row=row2, column=0, sticky="sew", padx=20, pady=0)
-        # self.deal_type_choice.set(self.deal_type_list[-1])
+        self.deal_type_choice.set(self.deal_type_list[-1])
+
         self.transaction_info.type = self.deal_type_choice.get()
+        print(f"dropdown type avant callback: {self.transaction_info.type}")
     
     def build_category_field(self, row1, row2):
         category_text = customtkinter.CTkLabel(master=self, text="Choisissez la catégorie de votre transaction :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
@@ -148,6 +138,8 @@ class TransactionView(Interface):
 
         self.category_choice.grid(row=row2, column=0, sticky="sew", padx=20, pady=0)
         self.category_choice.set(self.category_list[-1])
+        self.transaction_info.category = self.category_choice.get()
+        print(f"dropdown categorie avant callback: {self.transaction_info.type}")
         
     
     def build_calendar(self, row1, row2):
@@ -198,8 +190,12 @@ class TransactionView(Interface):
 
         self.build_type_field(2, 3)
         self.build_category_field(4, 5)
-        # if self.type_selected == 'Transfert':
-        #     self.build_receiver_field(6, 7)
+        self.get_fields_deposit_withdrawal()
+        if self.transaction_info.type == 'Transfert':
+            self.build_receiver_field(6, 7)
+        if self.last_choice == 'Transfert' and self.transaction_info.type != 'Transfert':
+            self.receiver_text.destroy()
+            self.receiver_box.destroy()
         self.build_calendar(8, 9)
         self.build_description(10, 11)
         self.build_amount_field(12, 13)
