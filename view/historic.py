@@ -1,11 +1,10 @@
 import customtkinter
 # import tkcalendar
 # from CTkDatePicker import CTkDatePicker
-from tkcalendar import Calendar
 from view.interface import Interface
 from view.interface_frames import Interface_frames
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK
-from model.historic_account import Historic_Account
+from model.historic_account_model import Historic_Account
 
 class Historic(Interface):
     def __init__(self, window_title, column_number):
