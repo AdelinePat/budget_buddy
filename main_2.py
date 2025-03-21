@@ -12,7 +12,6 @@ from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YEL
 class ViewTransactions():
     pass
 
-
 # login_view = TransactionView("Transactions", 0)
 login_view = Historic("HIHIAHHEIAHIIFEZHFEZ", 1)
 
@@ -25,4 +24,5 @@ login_view.interface_frame.box = customtkinter.CTkLabel(
     fg_color=SOFT_BLUE, text_color=LIGHT_BLUE
 )
 login_view.interface_frame.box.grid(row=0, column=0)
+
 login_view.mainloop()
