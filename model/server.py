@@ -9,6 +9,7 @@ class ServerDatabase():
         self.password = os.getenv("PASS")
         self.user = os.getenv("USER")
         self.database_name = "budget_buddy"
+        # self.database_connection
 
         pass
     def server_connection(self):
@@ -20,13 +21,17 @@ class ServerDatabase():
         return server
 
     def database_connection(self):
-        database_connection = mysql.connector.connect(
+        self.ma_database_connection = mysql.connector.connect(
             host="localhost",
             user= self.user,
             password= self.password,
             database= self.database_name
         )
-        return database_connection
+        return self.ma_database_connection
+    
+    def database_connection_close(self):
+        self.database_connection.close()
+
     
 # conn = object_server.database_connection()
 
