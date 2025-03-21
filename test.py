@@ -16,18 +16,23 @@ if my_database.is_connected():
     dates = cursor.fetchall()
 
     final_dates = []
-    for index, date in enumerate(dates):
-        print(index)
-        print(date)
-        final_dates.append(str(date[0]))
-        # date = str(date[0])
-        # date = date[0]    
-    print(final_dates)
+    # for index, date in enumerate(dates):
+    #     print(index)
+    #     print(date)
+    #     final_dates.append(str(date[0]))
+    #     # date = str(date[0])
+    #     # date = date[0]    
+    # print(final_dates)
 
-    datetime_str = '2024-06-09'
+    # datetime_str = '2024-06-09'
 
-    dateobject = datetime.strptime(datetime_str, '%y-%m-%d')
-    print(dateobject)
+    # dateobject = datetime.strptime(datetime_str, '%y-%m-%d')
+    # print(dateobject)
+
+    now = datetime.now() # current date and time
+
+    year = now.strftime("%y-%m-%d")
+    print("year:", year)
 
 
     # datetime_str = '09/19/22 13:55:26'
