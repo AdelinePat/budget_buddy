@@ -35,7 +35,6 @@ class ServerDatabase():
 
         if server.is_connected():
             self.cursor = server.cursor()
-            # self.cursor.execute(f"DROP DATABASE IF EXISTS {self.database_name};")
             self.cursor.execute("SHOW DATABASES;")
             databases = self.cursor.fetchall()
             all_data_bases = []
@@ -49,11 +48,6 @@ class ServerDatabase():
                 self.create_client_table()
                 self.create_account_table()
                 self.create_transactions_table()
-
-
-            # self.cursor.execute(f"CREATE DATABASE IF NOT EXISTS {self.database_name};")
-            # self.cursor.execute(f"USE {self.database_name};")
-
             self.cursor.close()
         server.close()
     

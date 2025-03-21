@@ -2,7 +2,7 @@ import customtkinter
 # import tkinter
 # import time
 import re
-# import bcrypt
+import bcrypt
 import sqlite3
 
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK

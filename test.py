@@ -1,21 +1,26 @@
 from model.server import ServerDatabase
 from datetime import datetime
+from view.transactioninfo import TransactionInfo
 
-account = 'jolyne.mangeot@laplateforme.io'
-current_session = 2
+test = TransactionInfo(1, "Retrait", "2025-06-97", 1, None, "Ceci est une description", "Pot-de-vin", 42.45)
 
-database = ServerDatabase()
+print(test.get_amount())
+    
+# account = 'jolyne.mangeot@laplateforme.io'
+# current_session = 2
 
-my_database = database.database_connection()
-account_id = 1
+# database = ServerDatabase()
 
-if my_database.is_connected():
-    cursor = my_database.cursor()
-    query = "SELECT deal_date FROM Transactions WHERE id_account_emitter = 2;"
-    cursor.execute(query)
-    dates = cursor.fetchall()
+# my_database = database.database_connection()
+# account_id = 1
 
-    final_dates = []
+# if my_database.is_connected():
+#     cursor = my_database.cursor()
+#     query = "SELECT deal_date FROM Transactions WHERE id_account_emitter = 2;"
+#     cursor.execute(query)
+#     dates = cursor.fetchall()
+
+#     final_dates = []
     # for index, date in enumerate(dates):
     #     print(index)
     #     print(date)
@@ -29,10 +34,10 @@ if my_database.is_connected():
     # dateobject = datetime.strptime(datetime_str, '%y-%m-%d')
     # print(dateobject)
 
-    now = datetime.now() # current date and time
+    # now = datetime.now() # current date and time
 
-    year = now.strftime("%y-%m-%d")
-    print("year:", year)
+    # year = now.strftime("%y-%m-%d")
+    # print("year:", year)
 
 
     # datetime_str = '09/19/22 13:55:26'
