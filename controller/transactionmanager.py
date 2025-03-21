@@ -2,6 +2,7 @@
 from model.transactionquery import TransactionQuery
 from data_access.account_data_access import DataAccess
 import re
+import datetime
 
 class TransactionManager():
     def __init__(self):
@@ -13,13 +14,15 @@ class TransactionManager():
         # self.view = TransactionView(window_title, column_number, current_session)
         # self.view.screen_build()
     
-    def manage_deposit(self):
-        if self.view.receiver == self.view.current_session:
-            self.query.method_inexistant()
-    
-    def manage_withdrawal(self):
+    def __check_date(self, date):
         pass
-    
+        date_string = date.split("-")
+        year = date_string[0]
+        month = date_string[1]
+        day = date_string[2]
+
+        current_time = datetime
+
     def __get_account_number_from_email(self, email): #transaction_info.receiver
         account_number = self.data_access.get_account_number_from_email(email)
         if account_number != 'Null':
