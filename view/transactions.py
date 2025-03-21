@@ -225,9 +225,6 @@ class TransactionView(Interface):
         self.build_date_entry(8, 9)
         self.build_description(10, 11)
         self.build_amount_field(12, 13)
-
-        
-
         self.button = customtkinter.CTkButton(self, text="Confirmer la transaction".upper(), font=self.text_font, command=self.confirm_form_callback, corner_radius=7, bg_color= DARK_BLUE, fg_color = PINK) # bouton se connecter
         self.button.grid(row=14, column=0, padx=20, pady=20)
 
