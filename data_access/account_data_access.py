@@ -1,10 +1,15 @@
 from model.server import ServerDatabase
+from model.transactionexception import TransactionException
 
 class DataAccess():
     def __init__(self):
         self.database = ServerDatabase()
 
     def get_account_number_from_email(self, email):
+        if email == None or email == "":
+            error_message = "Vous devez remplir le champ email"
+            raise TransactionException(error_message)
+        
         database = self.database.database_connection()
 
         if database.is_connected():
@@ -20,6 +25,11 @@ class DataAccess():
         return account
 
     def get_account_number_from_id(self, client_id):
+
+        if client_id == None or type(client_id) != int:
+            error_message = "L'identifiant client n'est pas valide"
+            raise TransactionException(error_message)
+        
         database = self.database.database_connection()
 
         if database.is_connected():
@@ -33,9 +43,14 @@ class DataAccess():
         database.close()
         return account   
 
-    def get_balance_from_user(self, current_session):
+    def get_balance_from_main_user_account(self, current_session):
+        #TODO get balance from THE account currently used
         #TODO update this method, when session object exist, current account number will be known and this method will become useless
         # print(type(current_session))
+        if current_session == None or type(current_session) != int:
+            error_message = "L'identifiant client n'est pas valide"
+            raise TransactionException(error_message)
+        
         database = self.database.database_connection()
 
         if database.is_connected():
@@ -47,9 +62,14 @@ class DataAccess():
             balance = float(cursor.fetchone()[0])
             cursor.close()
         database.close()
-        return balance   
+        return balance 
     
     def get_balance_from_account(self, account_id):
+
+        if account_id == None or type(account_id) != int:
+            error_message = "L'identifiant du compte bancaire n'est pas valide"
+            raise TransactionException(error_message)
+        
         database = self.database.database_connection()
 
         if database.is_connected():

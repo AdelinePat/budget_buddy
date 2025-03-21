@@ -73,6 +73,9 @@ class TransactionView(Interface):
             self.transaction_info.set_receiver(self.transaction_frame.receiver_box.get("0.0", "end").strip())
 
         try:
+            if hasattr(self.transaction_frame, 'error_message_text'):
+            # if bool(self.transaction_frame.error_message_text):
+                self.transaction_frame.error_message_text.destroy()
             self.controller.manage_transaction(self.transaction_info)
             self.build_transaction_result("Transaction réussie")
         except TransactionException as e:
