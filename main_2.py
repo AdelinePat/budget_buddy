@@ -15,18 +15,12 @@ from model.server import ServerDatabase
 server_connection = ServerDatabase()
 server_connection.server_connection()
 server_connection.create_database()
-# server_connection.create_client_table()
-# server_connection.create_account_table()
-# server_connection.create_transactions_table()
 
-# login_view = TransactionView("Transactions", 0, 2) # window_title, column_number, current_session (id_user)
-# login_view.mainloop()
+view = LogInOut("Connexion Client", 0)
 
 # view_test = TransactionManager("Transactions", 0, 2) # window_title, column_number, current_session (id_user)
-view_test = TransactionView("Transactions", 0, 2)
-view_test.mainloop()
-# view_test.run()
-# login_view = TransactionView("Transactions", 0)
+# view_test = TransactionView("Transactions", 0, 2)
+view.mainloop()
 login_view = Historic("HIHIAHHEIAHIIFEZHFEZ", 1)
 
 login_view.interface_frame = Interface_frames(login_view, bg_color=DARK_BLUE, fg_color=LIGHT_BLUE, width=200, corner_radius=20)

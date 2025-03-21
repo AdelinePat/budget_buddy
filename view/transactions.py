@@ -156,7 +156,7 @@ class TransactionView(Interface):
 
     #     self.chose_date.grid(row=row2,column=0, padx=30, pady=10, sticky='sew')
     def build_date_entry(self, row1, row2):
-        self.deal_date_text = customtkinter.CTkLabel(master=self, text="Choisissez la date de votre transactions :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
+        self.deal_date_text = customtkinter.CTkLabel(master=self, text="Choisissez la date de votre transaction :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
         self.deal_date_text.grid(row=row1, column=0, sticky="sew", padx=20, pady=5)
         self.chose_date = DateEntry(master=self, date_pattern="yyyy-mm-dd",
             font=self.text_font, text_color=DARK_BLUE, bg_color=DARK_BLUE, fg_color=SOFT_YELLOW,
@@ -169,7 +169,7 @@ class TransactionView(Interface):
         self.chose_date.grid(row=row2, column=0, sticky="sew", padx=20, pady=5)
 
     def build_calendar(self, row1, row2):
-        self.deal_date_text = customtkinter.CTkLabel(master=self, text="Choisissez la date de votre transactions :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
+        self.deal_date_text = customtkinter.CTkLabel(master=self, text="Choisissez la date de votre transaction :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
         self.deal_date_text.grid(row=row1, column=0, sticky="sew", padx=20, pady=5)
 
         self.chose_date = Calendar(master=self, selectmode='day', font=self.text_font,
