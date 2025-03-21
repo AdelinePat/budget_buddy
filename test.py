@@ -3,15 +3,34 @@ from datetime import datetime
 from model.transactioninfo import TransactionInfo
 
 test = TransactionInfo(1, "Retrait", "2025-06-97", 1, None, "Ceci est une description", "Pot-de-vin", 42.45)
+database = ServerDatabase()
 
-print(test.get_amount())
+# print(test.get_amount())
+email = 'john.doe@gmail.com'
+if email != None or email != "":
+        
+        
+    my_database = database.database_connection()
+
+    if my_database.is_connected():
+        cursor = my_database.cursor()
+        query = """SELECT MIN(id_account) FROM Bank_account
+                    JOIN Users u USING(id_user) 
+                    WHERE u.email = %s;"""
+
+        cursor.execute(query, (email,))
+    
+        
+        account = cursor.fetchone()
+        cursor.close()
+    my_database.close()     
+    
+    print(account)
     
 # account = 'jolyne.mangeot@laplateforme.io'
 # current_session = 2
 
-# database = ServerDatabase()
 
-# my_database = database.database_connection()
 # account_id = 1
 
 # if my_database.is_connected():
