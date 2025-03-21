@@ -62,7 +62,12 @@ class ServerDatabase():
         if database.is_connected():
             self.cursor = database.cursor()
             self.cursor.execute("DROP TABLE IF EXISTS Users;")
-            self.cursor.execute("CREATE TABLE Users (id_user INT AUTO_INCREMENT NOT NULL, lastname VARCHAR(255) NOT NULL, firstname VARCHAR(255) NOT NULL, email VARCHAR(255) UNIQUE NOT NULL, password VARCHAR(255) NOT NULL, PRIMARY KEY (id_user));")
+            self.cursor.execute("CREATE TABLE Users"
+            "(id_user INT AUTO_INCREMENT NOT NULL, lastname VARCHAR(255) NOT NULL,"
+            "firstname VARCHAR(255) NOT NULL,"
+            " email VARCHAR(255) UNIQUE NOT NULL,"
+            "password VARCHAR(255) NOT NULL,"
+            "PRIMARY KEY (id_user));")
             self.cursor.close()
         database.close()
 
@@ -72,7 +77,14 @@ class ServerDatabase():
         if database.is_connected():
             self.cursor = database.cursor() 
             self.cursor.execute("DROP TABLE IF EXISTS Bank_account;")
-            self.cursor.execute("CREATE TABLE Bank_account (id_account INT PRIMARY KEY AUTO_INCREMENT NOT NULL, id_user INT NOT NULL, account_type VARCHAR(100) NOT NULL, account_name VARCHAR(100) NULL, balance DECIMAL(13, 2) NOT NULL, min_balance INT UNSIGNED NOT NULL, FOREIGN KEY (id_user) REFERENCES Users(id_user) ON DELETE CASCADE);")
+            self.cursor.execute("CREATE TABLE Bank_account"
+            "(id_account INT PRIMARY KEY AUTO_INCREMENT NOT NULL,"
+            "id_user INT NOT NULL,"
+            "account_type VARCHAR(100) NOT NULL,"
+            "account_name VARCHAR(100) NULL,"
+            "balance DECIMAL(13, 2) NOT NULL,"
+            "min_balance INT UNSIGNED NOT NULL,"
+            "FOREIGN KEY (id_user) REFERENCES Users(id_user) ON DELETE CASCADE);")
             self.cursor.close()
         database.close()
 
@@ -82,9 +94,23 @@ class ServerDatabase():
         if database.is_connected():
             self.cursor = database.cursor() 
             self.cursor.execute("DROP TABLE IF EXISTS Transactions;")
-            self.cursor.execute("CREATE TABLE Transactions (id_transaction INT PRIMARY KEY AUTO_INCREMENT NOT NULL, id_account_emitter INT NULL, id_account_receiver INT NULL, deal_description VARCHAR(100) NOT NULL, amount DECIMAL(13, 2) UNSIGNED NOT NULL, deal_date DATE NOT NULL, deal_type VARCHAR(100) NOT NULL, frequency INT UNSIGNED NULL, category VARCHAR(100) NOT NULL, charges DECIMAL(13, 2) NULL, FOREIGN KEY (id_account_emitter) REFERENCES Bank_account(id_account), FOREIGN KEY (id_account_receiver) REFERENCES Bank_account(id_account));")
+            self.cursor.execute("CREATE TABLE Transactions"
+            "(id_transaction INT PRIMARY KEY AUTO_INCREMENT NOT NULL,"
+            "id_account_emitter INT NULL,"
+            "id_account_receiver INT NULL,"
+            "deal_description VARCHAR(100) NOT NULL, amount DECIMAL(13, 2) UNSIGNED NOT NULL,"
+            "deal_date DATE NOT NULL,"
+            "deal_type VARCHAR(100) NOT NULL,"
+            "frequency INT UNSIGNED NULL,"
+            "category VARCHAR(100) NULL,"
+            "charges DECIMAL(13, 2) NULL,"
+            "FOREIGN KEY (id_account_emitter) REFERENCES Bank_account(id_account),"
+            "FOREIGN KEY (id_account_receiver) REFERENCES Bank_account(id_account));")
             self.cursor.close()
         database.close()
     
     def update_database_data(self):
+        pass
+
+    def get_update_database(self):
         pass

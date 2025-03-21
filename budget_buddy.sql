@@ -1,6 +1,8 @@
 -- Active: 1741679024806@@127.0.0.1@3306@budget_buddy
 
 DROP DATABASE IF EXISTS Budget_Buddy;
+
+DROP DATABASE IF EXISTS budget_buddy;
 CREATE DATABASE IF NOT EXISTS Budget_Buddy;
 
 SHOW DATABASES;
@@ -213,3 +215,41 @@ WHERE
     u.id_user = (SELECT id_user FROM Users WHERE lastname = 'Mangeot' AND firstname = 'Jolyne') AND
     t.amount > 100
 ORDER BY t.amount DESC;
+
+
+SELECT MIN(id_account) FROM bank_account
+JOIN Users u USING(id_user)
+WHERE u.email = 'jolyne.mangeot@laplateforme.io';
+
+SELECT * FROM bank_account;
+SELECT * from users;
+-- SELECT id_account FROM bank_account WHERE (SELECT id_user FROM users WHERE email = 'jolyne.mangeot@laplateforme.io');
+
+SELECT balance FROM bank_account
+JOIN Users u USING(id_user)
+WHERE id_user = 2
+
+
+INSERT INTO bank_account
+    (id_user, account_type, balance, min_balance)
+VALUES
+    (2,
+    'Livret A',
+    300,
+    0);
+
+SELECT id_account, balance FROM bank_account
+JOIN Users u USING(id_user)
+WHERE id_account = (SELECT MIN(id_account) FROM bank_account WHERE id_user = 2);
+
+UPDATE `Bank_account` SET balance = 100
+WHERE id_account = 1;
+
+TABLE Bank_account;
+TABLE Transactions;
+
+SELECT balance FROM Bank_account WHERE id_account = 2;
+
+UPDATE `Bank_account` SET balance = 1200 WHERE id_account = 2;
+
+SELECT deal_date FROM Transactions WHERE id_account_emitter = 2;
