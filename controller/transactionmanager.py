@@ -2,7 +2,7 @@
 from model.transactionquery import TransactionQuery
 from data_access.account_data_access import DataAccess
 import re
-import datetime
+from datetime import datetime
 
 class TransactionManager():
     def __init__(self):
@@ -14,14 +14,23 @@ class TransactionManager():
         # self.view = TransactionView(window_title, column_number, current_session)
         # self.view.screen_build()
     
-    def __check_date(self, date):
-        pass
-        date_string = date.split("-")
-        year = date_string[0]
-        month = date_string[1]
-        day = date_string[2]
+    def __check_date(self, deal_date):
+        deal_date_string = deal_date.split("-")
+        year = deal_date_string[0]
+        month = deal_date_string[1]
+        day = deal_date_string[2]
 
-        current_time = datetime
+        current_time = datetime.now().strftime('%Y-%m-%d')
+        current_time = current_time.split("-")
+
+        if year < int(current_time[0]):
+            return "Vous ne pouvez pas faire une transaction dans le passé"
+        else:
+            if month < int(current_time[1]):
+                return "Vous ne pouvez pas faire une transaction dans le passé"
+            else:
+                if day < int(current_time[2]):
+                    return "Vous ne pouvez pas faire une transaction dans le passé"
 
     def __get_account_number_from_email(self, email): #transaction_info.receiver
         account_number = self.data_access.get_account_number_from_email(email)
@@ -92,7 +101,9 @@ class TransactionManager():
     #     pass
 
     def manage_transaction(self, transaction_info):
-        # check if transaction_info.amount > 0, else error !!! Regex already take care of it ??? 
+        # check if transaction_info.amount > 0, else error !!! Regex already take care of it ???
+        # self.error_message = self.__check_date(transaction_info.date)
+
         print(f"TYPE EN DEBUT DE MANAGE TRANACTION {transaction_info.type}")
         if transaction_info.type == 'Transfert':     
             self.__manage_entry_for_transfer(transaction_info)
