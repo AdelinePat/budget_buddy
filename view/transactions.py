@@ -17,7 +17,7 @@ class TransactionView(Interface):
         super().__init__(window_title, column_number)
         self.deal_type_list = ['Retrait', 'Dépôt', 'Transfert']
         self.category_list = ['Alimentaire', 'Loisirs', 'Prélèvement', 'Transport', 'Santé', 'Dealing', 'Activités illicites', 'Consommation de café']
-        self.transaction_info = TransactionInfo(current_session, "", "", "", "", "", "", "")
+        self.transaction_info = TransactionInfo(current_session, "", "", None, None, "", "", "")
         # self.transaction_info.type = ""
         # self.transaction_info.date = ""
         # # self.current_session = current_session
@@ -70,13 +70,14 @@ class TransactionView(Interface):
         self.transaction_info.amount = self.amount_box.get("0.0", "end")
         self.transaction_info.category = self.category_choice.get()
         if self.transaction_info.type == 'Transfert':
-            
             self.transaction_info.receiver = self.receiver_box.get("0.0", "end").strip()
             # self.controller.manage_entry(self.transaction_info)
             # self.query.transfer_transaction(self.current_session, self.receiver, self.amount) #current_session, email_account, amount
-            message_error = self.controller.manage_transfer(self.transaction_info)
-            print(message_error)
-            self.controller.error_message = ""
+            # message_error = self.controller.manage_transfer(self.transaction_info)
+            
+        message_error = self.controller.manage_transaction(self.transaction_info)
+        print(message_error)
+        self.controller.error_message = ""
         
         
         
@@ -94,9 +95,9 @@ class TransactionView(Interface):
     def get_fields_deposit_withdrawal(self):
         if self.transaction_info.type == 'Dépôt':
             self.transaction_info.receiver = self.transaction_info.current_session
-            self.transaction_info.emitter = ""
+            self.transaction_info.emitter = None
         else:
-            self.transaction_info.receiver = ""
+            self.transaction_info.receiver = None
             self.transaction_info.emitter = self.transaction_info.current_session
             
 # id_account_emitter, OK

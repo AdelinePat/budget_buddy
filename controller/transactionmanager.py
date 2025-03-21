@@ -27,7 +27,7 @@ class TransactionManager():
         else:
             return False
         
-    def __manage_entry(self, transaction_info):
+    def __manage_entry_for_transfer(self, transaction_info):
         transaction_info.receiver = self.__get_account_number_from_email(transaction_info.receiver)
 
         if transaction_info.receiver == transaction_info.emitter:
@@ -45,7 +45,25 @@ class TransactionManager():
             return 
 
 
-    
+    def __manage_entry_for_withdrawal(self, transaction_info): #emitter and no receiver
+        
+        print(f"emetteur : {transaction_info.emitter}")
+        self.balance_emitter = self.data_access.get_balance_from_account(transaction_info.emitter) #convert balance into float
+        transaction_info.amount = self.__convert_amount(transaction_info.amount)
+        if transaction_info.amount == False:
+            self.error_message = "Vous devez entrer un montant en chiffre"
+            # print("Vous devez entrer un montant en chiffre")
+            return
+        
+    def __manage_entry_for_deposit(self, transaction_info): #receiver and no emitter
+        self.balance_receiver = self.data_access.get_balance_from_account(transaction_info.receiver)
+        transaction_info.amount = self.__convert_amount(transaction_info.amount)
+        if transaction_info.amount == False:
+            self.error_message = "Vous devez entrer un montant en chiffre"
+            # print("Vous devez entrer un montant en chiffre")
+            return
+
+
     # def __get_account_number_email(self, cursor, email):
     #     cursor.execute("SELECT MIN(id_account) FROM Bank_account " +
     #                     "JOIN Users u USING(id_user) " +
@@ -61,14 +79,40 @@ class TransactionManager():
         except:
             return False
     
-      
+    # def __manage_deposit(self, transaction_info):
+    #     pass
 
-        
-
+    # def __manage_withdrawal(self, transaction_info):
+    #     pass
     
+    # def __manage_transfer(self, transaction_info):
+    #     pass
+
+    def manage_transaction(self, transaction_info):
+        # check if transaction_info.amount > 0, else error !!! Regex already take care of it ??? 
+        print(f"TYPE EN DEBUT DE MANAGE TRANACTION {transaction_info.type}")
+        if transaction_info.type == 'Transfert':     
+            self.__manage_entry_for_transfer(transaction_info)
+            if self.error_message == "":
+                return self.query.transfer_transaction(transaction_info, self.balance_emitter, self.balance_receiver)
+            else:
+                return self.error_message
+        elif transaction_info.type == 'Retrait':
+            self.__manage_entry_for_withdrawal(transaction_info)
+            if self.error_message == "":
+                print(f"balance_emitter in manage transaction = {self.balance_emitter}")
+                return self.query.withdrawal_transaction(transaction_info, self.balance_emitter)
+            else:
+                return self.error_message
+        else:
+            self.__manage_entry_for_deposit(transaction_info)
+            if self.error_message == "":
+                return self.query.deposit_transaction(transaction_info, self.balance_receiver)
+            else:
+                return self.error_message
 
     def manage_transfer(self, transaction_info):
-        self.__manage_entry(transaction_info)
+        self.__manage_entry_for_transfer(transaction_info)
         if self.error_message == "":
             return self.query.transfer_transaction(transaction_info, self.balance_emitter, self.balance_receiver)
         else:
