@@ -158,14 +158,14 @@ class TransactionView(Interface):
     def build_date_entry(self, row1, row2):
         self.deal_date_text = customtkinter.CTkLabel(master=self, text="Choisissez la date de votre transactions :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
         self.deal_date_text.grid(row=row1, column=0, sticky="sew", padx=20, pady=5)
+        
         self.chose_date = DateEntry(master=self, date_pattern="yyyy-mm-dd",
             font=self.text_font, text_color=DARK_BLUE, bg_color=DARK_BLUE, fg_color=SOFT_YELLOW,
-            dropdown_fg_color = SOFT_YELLOW, dropdown_text_color = DARK_BLUE,
-            dropdown_font= self.text_font,
             borderwidth=2, bordercolor=DARK_BLUE,
             background=DARK_BLUE, foreground=SOFT_YELLOW, headersbackground=PINK,
             selectbackground=PINK, normalbackground=LIGHT_BLUE, weekendbackground=SOFT_BLUE, corner_radius=10,
             othermonthbackground=SOFT_BLUE2, othermonthwebackground=SOFT_BLUE3, othermonthforeground=DARK_BLUE, othermonthweforeground=DARK_BLUE)
+        
         self.chose_date.grid(row=row2, column=0, sticky="sew", padx=20, pady=5)
 
     def build_calendar(self, row1, row2):
