@@ -29,17 +29,6 @@ class TransactionQuery():
 
         if database.is_connected():
             cursor = database.cursor()
-            # cursor.execute("INSERT INTO Transactions " +
-            # "(id_account_emitter, id_account_receiver, " +
-            # "deal_description, amount, " +
-            # "deal_date, deal_type, " +
-            # "category) " +
-            # "VALUES " +
-            # f"({transaction_info.emitter}, {transaction_info.receiver}, " +
-            # f"{transaction_info.description}, {transaction_info.amount }, " +
-            # f"{transaction_info.date}, {transaction_info.type}, " +
-            # f"{transaction_info.category});")
-
             query = """INSERT INTO Transactions
             (id_account_emitter, id_account_receiver,
             deal_description, amount, 
@@ -50,24 +39,36 @@ class TransactionQuery():
             %s, %s,
             %s);"""
 
-            # Define the data to be inserted into the table
             values = (transaction_info.emitter, transaction_info.receiver,
                       transaction_info.description, transaction_info.amount,
                       transaction_info.date, transaction_info.type,
                       transaction_info.category)
 
-            # Executing the query with the provided data
             cursor.execute(query, values)
    
             database.commit()
             cursor.close()
         database.close()
+    
+    def withdrawal_transaction(self, transaction_info, balance_emitter):
+        print(f"amount : {transaction_info.amount}")
+        print(f"balance_emitter = {balance_emitter}")
+        final_balance = balance_emitter - transaction_info.amount
+        print(f"final balance = {final_balance}")
 
+        if self.__is_balance_valid(final_balance):
+            self.__update_balance_query(transaction_info.emitter, final_balance)
+            self.__insert_transactions(transaction_info)
+        else:
+            return "Vous ne pouvez pas faire une transaction qui vous mettra à découvert."
+        
+    def deposit_transaction(self, transaction_info, balance_receiver):
+        final_balance = balance_receiver + transaction_info.amount
+
+        self.__update_balance_query(transaction_info.receiver, final_balance)
+        self.__insert_transactions(transaction_info)
 
     def transfer_transaction(self, transaction_info, balance_emitter, balance_receiver):
-        # check if email exist => use main account for transfert
-        # check if amount < balance¨+ check if balance - amount < 0
-
         final_balance = balance_emitter - transaction_info.amount
 
         if self.__is_balance_valid(final_balance):
@@ -78,46 +79,6 @@ class TransactionQuery():
             print("transactions réussie")
         else:
             return "Vous ne pouvez pas faire une transaction qui vous mettra à découvert."
-
-        # database = self.database.database_connection()
-
-        # if database.is_connected():
-        #     cursor = database.cursor()
-        #     receiver_account_number = self.__get_account_number(cursor, transaction_info.receiver)
-        #     print(f"compte récepteur : n° {receiver_account_number}")
-        #     print(type(receiver_account_number))
-
-        #     if self.__is_account(receiver_account_number):
-        #         balance = self.__get_balance_from_user(cursor, transaction_info.current_session)
-        #         print(f"balance = {balance} €")
-
-        #         if bool(self.__convert_amount(transaction_info.amount)) == True:
-        #             transaction_info.amount = self.__convert_amount(transaction_info.amount)
-        #             final_balance = float(balance) - transaction_info.amount
-
-        #             if self.__is_balance_valid(final_balance):
-        #                 self.__update_balance_query(cursor, transaction_info.current_session, final_balance)
-        #                 # print(f"après la transaction : {final_balance}")
-        #                 # cursor.close()
-        #                 # cursor = database.cursor()
-
-        #                 receiver_balance = self.__get_balance_from_account(cursor, receiver_account_number)
-        #                 new_receiver_balance = float(receiver_balance) + transaction_info.amount
-        #                 self.__update_balance_query(cursor, receiver_account_number, new_receiver_balance)
-        #                 database.commit()
-        #                 # cursor.execute()
-        #                 print("transaction réussie")
-        #             else:
-        #                 print("Vous ne pouvez pas faire une transaction qui vous mettra à découvert.")
-        #                 return "Vous ne pouvez pas faire une transaction qui vous mettra à découvert."
-        #         else:
-        #             print("Vous devez entrer un montant en chiffre")
-        #             return "Vous devez entrer un montant en chiffre"
-                
-        #     cursor.close()
-        # database.close()
-             
-
             
 
             
