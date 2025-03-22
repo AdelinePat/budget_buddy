@@ -12,9 +12,6 @@ from data_access.account_data_access import DataAccess
 from view.transactions_frame import Scrollable_frame
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, SOFT_BLUE2, SOFT_BLUE3, DARK_PINK
 
-
-
-
 class TransactionView(Interface): 
     def __init__(self,window_title, column_number, current_session, current_account):
         super().__init__(window_title, column_number)
@@ -34,17 +31,11 @@ class TransactionView(Interface):
         # self.transaction_info.description = ""
         # self.transaction_info.category = ""
         self.__accounts_list = self.__data_access.get_all_accounts_from_user(self.transaction_info.get_current_session())
+        self.__accounts_list_string = self.get_accounts_list_string()
         self.last_choice = ""
-        # self.transaction_info.amount = 0
-        # self.query = TransactionQuery()
-        
-        # self.get_fields_deposit_withdrawal()
-
         self.screen_build()
 
-    def get_accounts_list_string(self):
-        # accounts = self.__data_access.get_all_accounts_from_user(self.transaction_info.get_current_session())
-        
+    def get_accounts_list_string(self):        
         account_str_list = []
         for account in self.__accounts_list:
             string = f"[{str(account[0])}] {account[1]}"
@@ -53,40 +44,12 @@ class TransactionView(Interface):
         return account_str_list
     
     def deal_type_callback(self, choice):
-        # if self.last_choice == 'Virement' and self.transaction_info.get_type() != 'Virement':
-        #     self.transaction_frame.receiver_text.destroy()
-        #     self.transaction_frame.receiver_box.destroy()
         self.last_choice = self.transaction_info.get_type()
-
-        # if self.transaction_info.get_type != 'Virement':
-        #     if hasattr(self.transaction_frame, 'receiver_text'):
-        #         self.transaction_frame.receiver_text.destroy()
-        #         self.transaction_frame.receiver_box.destroy()
-        # elif self.transaction_info.get_type != 'Transfert':
-        #     if hasattr(self.transaction_frame, 'receiver_choice'):
-        #         self.transaction_frame.receiver_label.destroy()
-        #         self.transaction_frame.receiver_choice.destroy()
-
         self.transaction_info.set_type(choice)
         self.display_field_from_type(self.transaction_info.get_type())
 
-        # if self.transaction_info.get_type() == 'Virement':
-        #     self.build_receiver_field(6, 7)
-        # elif self.transaction_info.get_type == 'Tranfert':
-        #     self.build_internal_receiver_field(6, 7)
-        # else:
-        #     if self.transaction_info.get_type != 'Virement':
-        #         if hasattr(self.transaction_frame, 'receiver_text'):
-        #             self.transaction_frame.receiver_text.destroy()
-        #             self.transaction_frame.receiver_box.destroy()
-        #     elif self.transaction_info.get_type != 'Transfert':
-        #         if hasattr(self.transaction_frame, 'receiver_choice'):
-        #             self.transaction_frame.receiver_label.destroy()
-        #             self.transaction_frame.receiver_choice.destroy()
-
-            # if bool(self.transaction_frame.receiver_text):
-            #     self.transaction_frame.receiver_text.destroy()
-            #     self.transaction_frame.receiver_box.destroy()
+    def deal_receiver_callback(self, choice):
+        self.transaction_info.set_receiver(choice)
 
     def display_field_from_type(self, deal_type):
 
@@ -101,16 +64,11 @@ class TransactionView(Interface):
                 self.transaction_frame.receiver_box.destroy()
             self.build_internal_receiver_field(6, 7)
         else:
-            # if deal_type != 'Virement':
-            # if hasattr(self.transaction_frame, 'receiver_text'):
             if self.last_choice == 'Virement':
                 self.transaction_frame.receiver_text.destroy()
                 self.transaction_frame.receiver_box.destroy()
                 print("devrait détruire le bénéficiaire du virement")
             elif self.last_choice == 'Transfert':
-            # elif hasattr(self.transaction_frame, 'receiver_label'):
-        # elif deal_type != 'Transfert':
-        #     if hasattr(self.transaction_frame, 'receiver_choice'):
                 self.transaction_frame.receiver_label.destroy()
                 self.transaction_frame.receiver_choice.destroy()
                 print("devrait détruire le bénéficiaire du transfert")
@@ -139,7 +97,6 @@ class TransactionView(Interface):
             self.transaction_info.set_receiver(self.transaction_frame.receiver_choice.get())
         try:
             if hasattr(self.transaction_frame, 'error_message_text'):
-            # if bool(self.transaction_frame.error_message_text):
                 self.transaction_frame.error_message_text.destroy()
             self.controller.manage_transaction(self.transaction_info)
             self.build_transaction_result("Transaction réussie")
@@ -239,21 +196,15 @@ class TransactionView(Interface):
         self.transaction_frame.receiver_label = customtkinter.CTkLabel(master=self.transaction_frame, text="Choisissez le compte bénéficiaire :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
         self.transaction_frame.receiver_label.grid(row=row1, column=0, sticky="sew", padx=20, pady=5)
 
-        accounts_list_string = self.get_accounts_list_string()
-
         self.transaction_frame.receiver_choice = customtkinter.CTkComboBox(master=self.transaction_frame,
-            values=accounts_list_string, state="readonly",
-            command=self.deal_type_callback, font=self.text_font, text_color=DARK_BLUE,
+            values=self.__accounts_list_string, state="readonly",
+            command=self.deal_receiver_callback, font=self.text_font, text_color=DARK_BLUE,
             bg_color=DARK_BLUE, fg_color=SOFT_YELLOW, dropdown_fg_color = SOFT_YELLOW, 
             dropdown_text_color = DARK_BLUE, dropdown_font= self.text_font,
             dropdown_hover_color = SOFT_BLUE, corner_radius=10)
 
         self.transaction_frame.receiver_choice.grid(row=row2, column=0, sticky="sew", padx=20, pady=0)
-        self.transaction_frame.receiver_choice.set(accounts_list_string[0])
-
-        self.transaction_info.set_receiver(self.transaction_frame.receiver_choice.get())
-        # print(f"dropdown type avant callback: {self.transaction_info.get_type()}")
-
+        self.transaction_frame.receiver_choice.set(self.__accounts_list_string[0])
 
     def build_amount_field(self, row1, row2):
         self.transaction_frame.amount_text = customtkinter.CTkLabel(master=self.transaction_frame, text="Montant :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
@@ -275,23 +226,6 @@ class TransactionView(Interface):
         self.get_fields_deposit_withdrawal()
 
         self.display_field_from_type(self.transaction_info.get_type())
-        # if self.transaction_info.get_type() == 'Virement':
-        #     self.build_receiver_field(6, 7)
-        # if self.last_choice == 'Virement' and self.transaction_info.get_type() != 'Virement':
-        #     self.transaction_frame.receiver_text.destroy()
-        #     self.transaction_frame.receiver_box.destroy()
-
-
-        # if self.transaction_info.get_type != 'Virement':
-        #     if hasattr(self.transaction_frame, 'receiver_text'):
-        #         self.transaction_frame.receiver_text.destroy()
-        #         self.transaction_frame.receiver_box.destroy()
-        # elif self.transaction_info.get_type != 'Transfert':
-        #     if hasattr(self.transaction_frame, 'receiver_choice'):
-        #         self.transaction_frame.receiver_label.destroy()
-        #         self.transaction_frame.receiver_choice.destroy()
-
-
 
         self.build_date_entry(8, 9)
         self.build_description(10, 11)
@@ -316,7 +250,6 @@ class TransactionView(Interface):
     def interface_screen_build(self):
         self.button = customtkinter.CTkButton(self, text="Se déconnecter".upper(), font=self.text_font, command=self.button_callbck_logout, corner_radius=10, bg_color=DARK_BLUE, fg_color = PINK)
         self.button.grid(row=1, column=0, padx=20, pady=20)
-
 
     def interface_screen_destroy(self):
         self.button.destroy()
