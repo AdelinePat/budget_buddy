@@ -28,8 +28,6 @@ class LogInOut(Interface):
         self.attributes("-topmost", True)
         self.get_all_users()
 
-
-    
     def get_user_id_from_db(self, email):
         conn = self.database.database_connection()
         cursor = conn.cursor()
@@ -39,9 +37,6 @@ class LogInOut(Interface):
         conn.close()
         
         return result[0] if result else None
-
-
-
 
     def register_user(self, firstname, lastname, email, password, confirm_password, account_type="default", account_name = "default", balance = "0.99", min_balance="0.01"):
         if not firstname or not lastname:
@@ -185,9 +180,54 @@ class LogInOut(Interface):
         self.button_create_account = customtkinter.CTkButton(self, text="Créer un compte".upper(), font=self.text_font, command=self.register_screen_build, corner_radius=7, bg_color=DARK_BLUE, fg_color=PINK)
         self.button_create_account.grid(row=8, column=0, padx=20, pady=20)
 
+        self.build_quit_button()
+    
+
+    def build_quit_button(self):
+        self.button_quit = customtkinter.CTkButton(master=self, text="Quitter".upper(), font=self.text_font, command=self.quit_app, corner_radius=7, bg_color= DARK_BLUE, fg_color = PINK) # bouton se connecter
+        self.button_quit.grid(row=18, column=0, sticky="snew", padx=20, pady=5)
+
+    def quit_app(self):
+        self.destroy()
+
+    def build_return_button(self):
+        self.button_return = customtkinter.CTkButton(master=self, text="Retour".upper(), font=self.text_font, command=self.return_app, corner_radius=7, bg_color= DARK_BLUE, fg_color = PINK) # bouton se connecter
+        self.button_return.grid(row=17, column=0, sticky="snew", padx=20, pady=5)
+
+    def return_app(self):
+        self.destroy_register_screen()
+        self.login_screen_build()
+        
+    def destroy_register_screen(self):
+        self.title_text.destroy()
+
+        self.firstname_label.destroy()
+        self.firstname_box.destroy()
+
+        self.lastname_label.destroy()
+        self.lastname_box.destroy()
+
+        self.email_label.destroy()
+        self.email_box.destroy()
+
+        self.password_label.destroy()
+        self.password_box.destroy()
+
+        self.confirm_password_label.destroy()
+        self.confirm_password_box.destroy()
+
+        self.show_password_button.destroy()
+
+        self.button_register.destroy()
+
+        self.button_return.destroy()
+
+        if hasattr(self, 'error_label'):
+            self.error_label.destroy()
+
     def register_screen_build(self):
         self.login_screen_destroy()
-        self.geometry("640x600")
+        # self.geometry("640x600")
 
         self.title_text = customtkinter.CTkLabel(self, text="Créer un compte", font=self.title_font, text_color=YELLOW, bg_color=DARK_BLUE)
         self.title_text.grid(row=1, column=0, sticky="sew", padx=20, pady=10)
@@ -241,6 +281,9 @@ class LogInOut(Interface):
 
         self.error_label = customtkinter.CTkLabel(self, text="", text_color="red")
         self.error_label.grid(row=16, column=0, padx=20, pady=5)
+
+        self.build_return_button()
+        self.build_quit_button()
 
     def register_callback(self):
         """
