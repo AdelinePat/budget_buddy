@@ -1,11 +1,11 @@
 from model.server import ServerDatabase
 from model.customexception import LogInDataException
-from data_access.read_data_access import DataAccess
+from data_access.read_user_data import UserDataAcess
 
 class LoginQuery():
     def __init__(self):
         self.database = ServerDatabase()
-        self.__data_access = DataAccess()
+        self.__data_access = UserDataAcess()
 
     def __create_user(self, login_info):
         conn = self.database.database_connection()

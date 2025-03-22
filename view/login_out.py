@@ -24,17 +24,10 @@ class LogInOut(Interface):
         self.password_visible = False 
         self.eye_open, self.eye_closed = self.util.get_eye_icons()
         self.log_info = LoginInfo()
-        # self.email = ""
-        # self.__password = ""
-        # self.lastname = ""
-        # self.firstname = ""
-        # self.current_user_id = None 
         self.database = ServerDatabase()
-        #self.create_users_table_if_not_exists()
         self.login_screen_build()
         self.lift() 
         self.attributes("-topmost", True)
-        
         self.__data_acces = UserDataAcess()
         self.__all_users = self.__data_acces.get_all_users()
 
@@ -129,7 +122,6 @@ class LogInOut(Interface):
 
     def register_screen_build(self):
         self.login_screen_destroy()
-        # self.geometry("640x600")
 
         self.title_text = customtkinter.CTkLabel(self, text="Créer un compte", font=self.title_font, text_color=YELLOW, bg_color=DARK_BLUE)
         self.title_text.grid(row=1, column=0, sticky="sew", padx=20, pady=10)
@@ -181,8 +173,8 @@ class LogInOut(Interface):
         self.button_register = customtkinter.CTkButton(self, text="S'inscrire".upper(), font=self.text_font, command=self.register_callback, corner_radius=7, bg_color=DARK_BLUE, fg_color=PINK)
         self.button_register.grid(row=14, column=0, padx=20, pady=10)
 
-        self.error_label = customtkinter.CTkLabel(self, text="", text_color="red")
-        self.error_label.grid(row=16, column=0, padx=20, pady=5)
+        # self.error_label = customtkinter.CTkLabel(self, text="", text_color="red")
+        # self.error_label.grid(row=16, column=0, padx=20, pady=5)
 
         self.build_return_button()
         self.build_quit_button()
@@ -191,17 +183,20 @@ class LogInOut(Interface):
         """
         a utiliser pour ton IHM
         """
-        firstname = self.firstname_box.get().strip()
-        lastname = self.lastname_box.get().strip()
-        email = self.email_box.get().strip()
-        password = self.password_box.get().strip()
-        confirm_password = self.confirm_password_box.get().strip()
-        # account_type = self.account_type_box.get().strip()
-        # account_name = self.account_name_box.get().strip()
-        # balance = self.balance_box.get().strip()
-        # min_balance = self.min_balance_box.get().strip()
+        if hasattr(self, 'login_text'):
+            self.login_text.destroy()
+            
+        try:
+            self.log_info.set_firstname(self.firstname_box.get().strip())
+            self.log_info.set_lastname(self.lastname_box.get().strip())
+            self.log_info.set_email(self.email_box.get().strip())
+            self.log_info.set_password(self.password_box.get().strip())
+            self.log_info.set_confirm_password(self.confirm_password_box.get().strip())
         
-        self.register_user(firstname, lastname, email, password, confirm_password)#accoun_type,account_name,balance,min_balance
+            self.controller.register_user(self.log_info)#accoun_type,account_name,balance,min_balance
+        except LogInDataException as e:
+            self.build_login_result(20, e)
+
 
 
     def toggle_password(self):
@@ -235,9 +230,6 @@ class LogInOut(Interface):
         self.login_screen_build()
         if hasattr(self, 'login_text'):
             self.login_text.destroy()
-        # if self.success_label:  
-        #     self.success_label.destroy()
-        # self.success_label = None
 
     def interface_screen_destroy(self):
         self.button.destroy()
@@ -260,13 +252,9 @@ class LogInOut(Interface):
                 self.build_logout_button()
                 self.build_login_result(10, "Vous êtes connecté !")
                 
-                # self.login_screen_destroy()
-                
                 board = Dashboard("Budget Buddy - Dashboard", 1, self.log_info)
-                # board.mainloop()
                 self.destroy()
-                # self.success_label = customtkinter.CTkLabel(self, text="Vous êtes connecté !", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
-                # self.success_label.grid(row=9, column=0, padx=20, pady=10)
+               
         except LogInDataException as e:
             self.build_login_result(20, e)
 
@@ -276,20 +264,12 @@ class LogInOut(Interface):
         self.login_text.grid(row=row1, column=0, sticky="sn", padx=20, pady=5)
     
     def print_all_users(self):
-        # users = self.get_all_users()
         if self.__all_users:
             for user in self.__all_users:
                 user_id, firstname, lastname, email, password = user  
                 print(f"ID: {user_id}, Prénom: {firstname}, Nom: {lastname}, Email: {email}, Hash: {password}")
         else:
             print("Aucun utilisateur trouvé.")
-
-        # email = "exemple@domaine.com"  
-        # user = get_user_by_email(email)
-        # if user:
-        #     print(user)  
-        # else:
-        #     print("Utilisateur non trouvé.")
 
 
     def button_callbck(self):
@@ -305,9 +285,5 @@ class LogInOut(Interface):
         self.login_screen_build()
         if hasattr(self, 'login_text'):
             self.login_text.destroy()
-        # if self.success_label: 
-        #     self.success_label.destroy()
-        # self.success_label = None
-
 
 

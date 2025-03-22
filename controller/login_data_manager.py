@@ -46,7 +46,7 @@ class LoginManager():
         self.__check_names__(login_info.get_firstname(), login_info.get_lastname())
         login_info.set_email(self.validate_email(login_info.get_email()))
 
-        login_info.set_password(self.validate_password())
+        login_info.set_password(self.validate_password(login_info.get_password()))
         if login_info.get_password() != login_info.get_confirm_password():
             error_message="Les mots de passe ne correspondent pas."
             raise LogInDataException(error_message)
@@ -61,5 +61,6 @@ class LoginManager():
 
 
         self.__query.register_user(login_info)
+        # login_info.set_confirm_password(None)
 
         
