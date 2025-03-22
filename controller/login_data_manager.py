@@ -1,4 +1,4 @@
-from data_access.read_data_access import DataAccess
+from data_access.read_user_data import UserDataAcess
 from data_access.write_loginquery import LoginQuery
 from model.customexception import LogInDataException
 import re
@@ -6,7 +6,7 @@ import bcrypt
 
 class LoginManager():
     def __init__(self):
-        self.__data_access = DataAccess()
+        self.__data_access = UserDataAcess()
         self.__query = LoginQuery()
     
     def validate_email(self, email):

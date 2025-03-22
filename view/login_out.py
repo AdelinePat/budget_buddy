@@ -5,7 +5,8 @@ from model.server import ServerDatabase
 import re
 import bcrypt
 # import sqlite3
-from data_access.read_data_access import DataAccess
+from data_access.read_user_data import UserDataAcess
+
 from controller.login_data_manager import LoginManager
 from model.login_info import LoginInfo
 from model.customexception import LogInDataException
@@ -34,7 +35,7 @@ class LogInOut(Interface):
         self.lift() 
         self.attributes("-topmost", True)
         
-        self.__data_acces = DataAccess()
+        self.__data_acces = UserDataAcess()
         self.__all_users = self.__data_acces.get_all_users()
 
 
@@ -262,7 +263,7 @@ class LogInOut(Interface):
                 # self.login_screen_destroy()
                 
                 board = Dashboard("Budget Buddy - Dashboard", 1)
-                board.mainloop()
+                # board.mainloop()
                 self.destroy()
                 # self.success_label = customtkinter.CTkLabel(self, text="Vous êtes connecté !", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
                 # self.success_label.grid(row=9, column=0, padx=20, pady=10)
