@@ -50,7 +50,7 @@ class LogInOut(Interface):
         query = "SELECT id_user FROM Users WHERE email = %s"
         cursor.execute(query, (email,))
         result = cursor.fetchone()
-        self.database.close()
+        conn.close()
         
         return result[0] if result else None
 
@@ -286,7 +286,7 @@ class LogInOut(Interface):
     def get_user_password_from_db(self, email):
         conn = self.database.database_connection()
         cursor = conn.cursor()
-        query = "SELECT password FROM users WHERE email = %s"
+        query = "SELECT password FROM Users WHERE email = %s"
         cursor.execute(query, (email,))
         result = cursor.fetchone()
         conn.close()
