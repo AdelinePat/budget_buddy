@@ -51,7 +51,7 @@ class LoginManager():
             error_message="Les mots de passe ne correspondent pas."
             raise LogInDataException(error_message)
         
-        self.__data_access.does_email_already_exist(login_info.get_firstname(), login_info.get_lastname(), login_info.get_email())
+        self.__data_access.does_email_already_exist(login_info.get_email())
 
 
     def register_user(self, login_info):
