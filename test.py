@@ -2,38 +2,51 @@ from model.server import ServerDatabase
 from datetime import datetime
 from model.transactioninfo import TransactionInfo
 import re
+from model.customexception import TransactionException
 
 test = TransactionInfo(1, 1, "Retrait", "2025-06-97", 1, None, "Ceci est une description", "Pot-de-vin", 42.45)
 database = ServerDatabase()
 user_id = 1
 
-# print(test.get_amount())
+try:
+    email = 'sachalarcher@gmail.com'
+    email_regex = r"^[\w\.\+-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,}$"
+    result = re.match(email_regex, email)
+    if result == None:
+        error_message = "Email invalide. Format attendu : exemple@domaine.com"
+        raise TransactionException(error_message)
+    final_result = result.group()
+    print(final_result)
+except TransactionException as e:
+    print(e)
 
-database = database.database_connection()
-if database.is_connected():
-    cursor = database.cursor()
-    accounts_query = "SELECT id_account, account_type FROM Bank_account WHERE id_user =%s;"
+    
 
-    cursor.execute(accounts_query, (user_id, ))
-    accounts = cursor.fetchall()
-    cursor.close()
-database.close()
-# print(accounts)
+# database = database.database_connection()
+# if database.is_connected():
+#     cursor = database.cursor()
+#     accounts_query = "SELECT id_account, account_type FROM Bank_account WHERE id_user =%s;"
 
-account_str_list = []
-for account in accounts:
-    string = f"[{str(account[0])}] {account[1]}"
-    account_str_list.append(string)
+#     cursor.execute(accounts_query, (user_id, ))
+#     accounts = cursor.fetchall()
+#     cursor.close()
+# database.close()
+# # print(accounts)
 
-print(account_str_list)
+# account_str_list = []
+# for account in accounts:
+#     string = f"[{str(account[0])}] {account[1]}"
+#     account_str_list.append(string)
 
-for account in account_str_list:
-    # print(account)
-    data = re.search("^(\[(\d)+\])", account)
-    account_id = re.search("(\d)+", data.group())
-    final_amount = account_id.group()
-    # print(account_id)
-    print(final_amount)
+# print(account_str_list)
+
+# for account in account_str_list:
+#     # print(account)
+#     data = re.search("^(\[(\d)+\])", account)
+#     account_id = re.search("(\d)+", data.group())
+#     final_amount = account_id.group()
+#     # print(account_id)
+#     print(final_amount)
 
 
 
