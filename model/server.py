@@ -9,6 +9,7 @@ class ServerDatabase():
         self.password = os.getenv("PASS")
         self.user = os.getenv("USER")
         self.database_name = "budget_buddy"
+        # self.database_connection
 
         pass
     def server_connection(self):
@@ -20,13 +21,17 @@ class ServerDatabase():
         return server
 
     def database_connection(self):
-        database_connection = mysql.connector.connect(
+        my_database_connection = mysql.connector.connect(
             host="localhost",
             user= self.user,
             password= self.password,
             database= self.database_name
         )
-        return database_connection
+        return my_database_connection
+    
+    def database_connection_close(self):
+        self.database_connection.close()
+
     
 # conn = object_server.database_connection()
 
@@ -35,7 +40,6 @@ class ServerDatabase():
 
         if server.is_connected():
             self.cursor = server.cursor()
-            # self.cursor.execute(f"DROP DATABASE IF EXISTS {self.database_name};")
             self.cursor.execute("SHOW DATABASES;")
             databases = self.cursor.fetchall()
             all_data_bases = []
@@ -49,11 +53,6 @@ class ServerDatabase():
                 self.create_client_table()
                 self.create_account_table()
                 self.create_transactions_table()
-
-
-            # self.cursor.execute(f"CREATE DATABASE IF NOT EXISTS {self.database_name};")
-            # self.cursor.execute(f"USE {self.database_name};")
-
             self.cursor.close()
         server.close()
     

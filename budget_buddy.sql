@@ -1,4 +1,4 @@
--- Active: 1741679024806@@127.0.0.1@3306@budget_buddy
+-- Active: 1742312366575@@127.0.0.1@3306@budget_buddy
 
 DROP DATABASE IF EXISTS Budget_Buddy;
 
@@ -460,3 +460,15 @@ DESCRIBE Transactions;
 --     u.id_user = (SELECT id_user FROM Users WHERE lastname = 'Mangeot' AND firstname = 'Jolyne') AND
 --     t.amount > 100
 -- ORDER BY t.amount DESC;
+
+TABLE Transactions;
+
+TABLE Users;
+
+TABLE users;
+TABLE Bank_account;
+
+SELECT id_account, account_type FROM `Bank_account`
+WHERE id_user = 2;
+
+SELECT id_user, id_account, account_type FROM `Bank_account`;
