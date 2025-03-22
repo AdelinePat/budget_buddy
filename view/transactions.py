@@ -13,7 +13,7 @@ from view.scrollable_frame import Scrollable_frame
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, SOFT_BLUE2, SOFT_BLUE3, DARK_PINK
 
 class TransactionView(Interface): 
-    def __init__(self,window_title, column_number, current_session, current_account):
+    def __init__(self, window_title, column_number, current_session, current_account):
         super().__init__(window_title, column_number)
         self.controller = TransactionManager()
         self.__data_access = DataAccess()
