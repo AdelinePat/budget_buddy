@@ -18,8 +18,8 @@ server_connection.create_database()
 # view.mainloop()
 
 # interface = Interface("Budget Buddy", 1)
-dashboard = Dashboard("Budget Buddy", 0)
-dashboard.build_dashboard()
+dashboard = Dashboard("Budget Buddy - Dashboard", 1)
+# dashboard.build_dashboard()
 # transaction = TransactionView(dashboard)
 
 
