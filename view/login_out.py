@@ -1,11 +1,13 @@
 import customtkinter
 # import tkinter
 # import time
+from model.server import ServerDatabase
 import re
-# import bcrypt
-import sqlite3
+import bcrypt
+# import sqlite3
 
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK
+from model.server import ServerDatabase
 # from view.utiltool import UtilTool
 from view.interface import Interface
 
@@ -16,47 +18,42 @@ class LogInOut(Interface):
         self.eye_open, self.eye_closed = self.util.get_eye_icons()
         self.email = ""
         self.__password = ""
-        self.last_name = ""
-        self.first_name = ""
-        self.create_users_table_if_not_exists()
+        self.lastname = ""
+        self.firstname = ""
+        self.current_user_id = None 
+        self.database = ServerDatabase()
+        #self.create_users_table_if_not_exists()
         self.login_screen_build()
         self.lift() 
-        self.attributes("-topmost", True) 
+        self.attributes("-topmost", True)
+        self.get_all_users()
 
-    def create_users_table_if_not_exists(self):
-        """Crée la table users si elle n'existe pas."""
-        conn = sqlite3.connect('users.sql')
+
+    
+    def get_user_id_from_db(self, email):
+        conn = self.database.database_connection()
         cursor = conn.cursor()
-        cursor.execute("""
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            first_name TEXT NOT NULL,
-            last_name TEXT NOT NULL,
-            email TEXT UNIQUE NOT NULL,
-            hashed_password TEXT NOT NULL
-        );
-        """)
-        conn.commit()
+        query = "SELECT id_user FROM Users WHERE email = %s"
+        cursor.execute(query, (email,))
+        result = cursor.fetchone()
         conn.close()
+        
+        return result[0] if result else None
 
-    conn = sqlite3.connect('users.sql')
-    cursor = conn.cursor()
-    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-    tables = cursor.fetchall()
-    print(tables)  
-    conn.close()
 
-    def register_user(self, first_name, last_name, email, password, confirm_password):
-        if not first_name or not last_name:
+
+
+    def register_user(self, firstname, lastname, email, password, confirm_password, account_type="default", account_name = "default", balance = "0.99", min_balance="0.01"):
+        if not firstname or not lastname:
             self.error_label.configure(text="Le prénom et le nom sont obligatoires.")
             return
-        
+
         if not bool(self.validate_email(email)):
             self.error_label.configure(text="Email invalide. Format attendu : exemple@domaine.com")
             return
 
         if not self.validate_password(password):
-            self.error_label.configure(text=( 
+            self.error_label.configure(text=(
                 "Mot de passe invalide. Il doit contenir :\n"
                 "- Une majuscule\n"
                 "- Un chiffre\n"
@@ -64,7 +61,7 @@ class LogInOut(Interface):
                 "- Au moins 8 caractères"
             ))
             return
-        
+
         if password != confirm_password:
             self.error_label.configure(text="Les mots de passe ne correspondent pas.")
             return
@@ -72,15 +69,78 @@ class LogInOut(Interface):
         hashed_password = self.hash_password(password)
 
         try:
-            conn = sqlite3.connect('users.sql')
+            conn = self.database.database_connection()
             cursor = conn.cursor()
-            cursor.execute("INSERT INTO users (first_name, last_name, email, hashed_password) VALUES (?, ?, ?, ?)", 
-                        (first_name, last_name, email, hashed_password))
-            conn.commit()
+
+
+            cursor.execute(
+                "SELECT COUNT(*) FROM Users WHERE firstname = %s AND lastname = %s AND email = %s",
+                (firstname, lastname, email)
+            )
+            result = cursor.fetchone()
+            count = result[0]
+            if count == 0:
+
+                cursor.execute(
+                    "INSERT INTO Users (firstname, lastname, email, password) VALUES (%s, %s, %s, %s)",
+                    (firstname, lastname, email, hashed_password)
+                )
+                conn.commit()
+
+                cursor.execute(
+                    "SELECT id_user FROM Users WHERE firstname = %s AND lastname = %s AND email = %s",
+                    (firstname, lastname, email)
+                )
+                result = cursor.fetchone()
+                id_user = result[0]
+
+                if id_user is None:
+                    print("L'utilisateur n'existe pas. Impossible de créer un compte bancaire.")
+                else:
+                    cursor.execute(
+                        "INSERT INTO Bank_account (id_user, account_type, account_name, balance, min_balance) "
+                        "VALUES (%s, %s, %s, %s, %s)",
+                        (id_user, account_type, account_name, balance, min_balance)
+                    )
+                    conn.commit()
+                    print(f"L'utilisateur a été créé avec succès et un compte bancaire lui a été associé (ID: {id_user}).")
+
+                self.error_label.configure(text="Compte créé avec succès !", text_color="green")
+            
+            else:
+                print("L'utilisateur existe déjà !!")
+                self.error_label.configure(text="Cet email est déjà utilisé.", text_color="red")
+
             conn.close()
-            self.error_label.configure(text="Compte créé avec succès !", text_color="green")
-        except sqlite3.IntegrityError:
-            self.error_label.configure(text="Cet email est déjà utilisé.", text_color="red")
+        
+        except Exception as error:
+            print(f"[LogInOut][register_user] Erreur : {error}")
+            self.error_label.configure(text="Une erreur s'est produite. Réessayez.", text_color="red")
+
+    def print_all_users_and_accounts(self):
+        conn = self.database.database_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT id_user, firstname, lastname, email FROM Users")
+        users = cursor.fetchall()  # Récupère tous les utilisateurs
+        if users:
+            for user in users:
+                user_id, firstname, lastname, email = user
+                print(f"Utilisateur: ID: {user_id}, Prénom: {firstname}, Nom: {lastname}, Email: {email}")
+
+                # Récupère et affiche les comptes associés à cet utilisateur
+                cursor.execute("SELECT account_type, account_name, balance FROM Bank_account WHERE id_user = %s", (user_id,))
+                accounts = cursor.fetchall()
+                if accounts:
+                    for account in accounts:
+                        account_type, account_name, balance = account
+                        print(f"\tCompte: Type: {account_type}, Nom: {account_name}, Solde: {balance}")
+                else:
+                    print("\tAucun compte bancaire associé.")
+        else:
+            print("Aucun utilisateur trouvé.")
+        cursor.close()
+        conn.close()
+
 
     def login_screen_build(self):
         self.title_text = customtkinter.CTkLabel(master=self, text="Budget Buddy", font=self.title_font, text_color=YELLOW, bg_color=DARK_BLUE)
@@ -132,17 +192,17 @@ class LogInOut(Interface):
         self.title_text = customtkinter.CTkLabel(self, text="Créer un compte", font=self.title_font, text_color=YELLOW, bg_color=DARK_BLUE)
         self.title_text.grid(row=1, column=0, sticky="sew", padx=20, pady=10)
 
-        self.first_name_label = customtkinter.CTkLabel(self, text="Prénom :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
-        self.first_name_label.grid(row=2, column=0, sticky="sew", padx=20, pady=5)
+        self.firstname_label = customtkinter.CTkLabel(self, text="Prénom :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
+        self.firstname_label.grid(row=2, column=0, sticky="sew", padx=20, pady=5)
 
-        self.first_name_box = customtkinter.CTkEntry(self, font=self.text_font, width=200, height=30)
-        self.first_name_box.grid(row=3, column=0, sticky="sew", padx=20, pady=5)
+        self.firstname_box = customtkinter.CTkEntry(self, font=self.text_font, width=200, height=30)
+        self.firstname_box.grid(row=3, column=0, sticky="sew", padx=20, pady=5)
 
-        self.last_name_label = customtkinter.CTkLabel(self, text="Nom :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
-        self.last_name_label.grid(row=4, column=0, sticky="sew", padx=20, pady=5)
+        self.lastname_label = customtkinter.CTkLabel(self, text="Nom :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
+        self.lastname_label.grid(row=4, column=0, sticky="sew", padx=20, pady=5)
 
-        self.last_name_box = customtkinter.CTkEntry(self, font=self.text_font, width=200, height=30)
-        self.last_name_box.grid(row=5, column=0, sticky="sew", padx=20, pady=5)
+        self.lastname_box = customtkinter.CTkEntry(self, font=self.text_font, width=200, height=30)
+        self.lastname_box.grid(row=5, column=0, sticky="sew", padx=20, pady=5)
 
         self.email_label = customtkinter.CTkLabel(self, text="Email :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
         self.email_label.grid(row=6, column=0, sticky="sew", padx=20, pady=5)
@@ -183,13 +243,20 @@ class LogInOut(Interface):
         self.error_label.grid(row=16, column=0, padx=20, pady=5)
 
     def register_callback(self):
-        first_name = self.first_name_box.get().strip()
-        last_name = self.last_name_box.get().strip()
+        """
+        a utiliser pour ton IHM
+        """
+        firstname = self.firstname_box.get().strip()
+        lastname = self.lastname_box.get().strip()
         email = self.email_box.get().strip()
         password = self.password_box.get().strip()
         confirm_password = self.confirm_password_box.get().strip()
+        # account_type = self.account_type_box.get().strip()
+        # account_name = self.account_name_box.get().strip()
+        # balance = self.balance_box.get().strip()
+        # min_balance = self.min_balance_box.get().strip()
         
-        self.register_user(first_name, last_name, email, password, confirm_password)
+        self.register_user(firstname, lastname, email, password, confirm_password)#accoun_type,account_name,balance,min_balance
 
 
     def toggle_password(self):
@@ -229,14 +296,15 @@ class LogInOut(Interface):
         self.button.destroy()
 
     def button_callback(self):
-        email = self.email_box.get("1.0", "end").strip()  
-        password = self.password_box.get().strip()  
+        email = self.email_box.get("1.0", "end").strip()
+        password = self.password_box.get().strip()
+
         if not self.validate_email(email):
             self.error_label.configure(text="Email invalide. Format attendu : exemple@domaine.com")
             return
-        
+
         if not self.validate_password(password):
-            self.error_label.configure(text=( 
+            self.error_label.configure(text=(
                 "Mot de passe invalide. Il doit contenir :\n"
                 "- Une majuscule\n"
                 "- Un chiffre\n"
@@ -245,10 +313,15 @@ class LogInOut(Interface):
             ))
             return
 
-        stored_hashed_password = self.get_user_password_from_db(email)  # Call the method using self
-        if stored_hashed_password and self.check_password(stored_hashed_password, password): 
+        stored_hashed_password = self.get_user_password_from_db(email)
+        if stored_hashed_password and self.check_password(stored_hashed_password, password):
             print("Connexion réussie")
-            self.error_label.configure(text="")  
+            self.error_label.configure(text="")
+
+            # Stocke l'ID utilisateur après connexion
+            self.current_user_id = self.get_user_id_from_db(email)
+            print(f"Utilisateur connecté : ID {self.current_user_id}")
+
             self.login_screen_destroy()
             self.interface_screen_build()
 
@@ -257,9 +330,9 @@ class LogInOut(Interface):
 
     
     def get_user_password_from_db(self, email):
-        conn = sqlite3.connect('users.sql')
+        conn = self.database.database_connection()
         cursor = conn.cursor()
-        query = "SELECT hashed_password FROM users WHERE email = ?"
+        query = "SELECT password FROM Users WHERE email = %s"
         cursor.execute(query, (email,))
         result = cursor.fetchone()
         conn.close()
@@ -269,23 +342,23 @@ class LogInOut(Interface):
     
 
 
-    def get_all_users():
-        conn = sqlite3.connect('users.sql')  
+    def get_all_users(self):
+        conn = self.database.database_connection()
         cursor = conn.cursor()
-        
-        cursor.execute("SELECT id, first_name, last_name, email, hashed_password FROM users")  
+        cursor.execute("SELECT id_user, firstname, lastname, email, password FROM Users")
         users = cursor.fetchall()  
-        
-        conn.close()
-        
+        cursor.close()
+        conn.close()        
         return users
-    users = get_all_users()
-    if users:
-        for user in users:
-            user_id, first_name, last_name, email, hashed_password = user  
-            print(f"ID: {user_id}, Prénom: {first_name}, Nom: {last_name}, Email: {email}, Hash: {hashed_password}")
-    else:
-        print("Aucun utilisateur trouvé.")
+    
+    def print_all_users(self):
+        users = self.get_all_users()
+        if users:
+            for user in users:
+                user_id, firstname, lastname, email, password = user  
+                print(f"ID: {user_id}, Prénom: {firstname}, Nom: {lastname}, Email: {email}, Hash: {password}")
+        else:
+            print("Aucun utilisateur trouvé.")
 
         # email = "exemple@domaine.com"  
         # user = get_user_by_email(email)

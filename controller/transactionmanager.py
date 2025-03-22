@@ -1,127 +1,137 @@
-# from view.transactions import TransactionView
 from model.transactionquery import TransactionQuery
 from data_access.account_data_access import DataAccess
 import re
-import datetime
+from datetime import datetime
+from model.transactionexception import TransactionException
 
 class TransactionManager():
     def __init__(self):
-        self.query = TransactionQuery()
-        self.data_access = DataAccess()
-        self.balance_emitter = 0
-        self.balance_receiver = 0
-        self.error_message = ""
-        # self.view = TransactionView(window_title, column_number, current_session)
-        # self.view.screen_build()
-    
-    def __check_date(self, date):
-        pass
-        date_string = date.split("-")
-        year = date_string[0]
-        month = date_string[1]
-        day = date_string[2]
+        self.__query = TransactionQuery()
+        self.__data_access = DataAccess()
+        self.__balance_emitter = 0
+        self.__balance_receiver = 0
 
-        current_time = datetime
+    
+    def __check_date(self, deal_date):
+        current_time_object = datetime.now().date()
+        if deal_date < current_time_object:
+            error_message = "Vous ne pouvez pas faire une transaction dans le passé"
+            raise TransactionException(error_message)
 
     def __get_account_number_from_email(self, email): #transaction_info.receiver
-        account_number = self.data_access.get_account_number_from_email(email)
+        account_number = self.__data_access.get_account_number_from_email(email)
         if account_number != 'Null':
             return account_number[0]
         else:
             return False
         
     def __manage_entry_for_transfer(self, transaction_info):
-        transaction_info.receiver = self.__get_account_number_from_email(transaction_info.receiver)
+        transaction_info.set_receiver(self.__get_account_number_from_email(transaction_info.get_receiver()))
 
-        if transaction_info.receiver == transaction_info.emitter:
-            self.error_message = "Vous ne pouvez pas faire de transfert sur le même compte"
+        if transaction_info.get_receiver() == transaction_info.get_emitter():
+            error_message = "Vous ne pouvez pas faire de transfert sur le même compte"
+            raise TransactionException(error_message)
             # print("Vous ne pouvez pas faire de transfert sur le même compte")
-            return
 
-        self.balance_emitter = self.data_access.get_balance_from_account(transaction_info.emitter)
-        self.balance_receiver = self.data_access.get_balance_from_account(transaction_info.receiver)
+        self.__balance_emitter = self.__data_access.get_balance_from_account(transaction_info.get_emitter())
+        self.__balance_receiver = self.__data_access.get_balance_from_account(transaction_info.get_receiver())
 
-        transaction_info.amount = self.__convert_amount(transaction_info.amount)
-        if transaction_info.amount == False:
-            self.error_message = "Vous devez entrer un montant en chiffre"
-            # print("Vous devez entrer un montant en chiffre")
-            return 
+        # transaction_info.amount = self.__convert_amount(transaction_info.amount)
+        transaction_info.set_amount(self.__convert_amount(transaction_info.get_amount()))
 
+        if transaction_info.get_amount() == False:
+            error_message = "Vous devez entrer un montant en chiffre"
+            raise TransactionException(error_message)
 
     def __manage_entry_for_withdrawal(self, transaction_info): #emitter and no receiver
-        
-        print(f"emetteur : {transaction_info.emitter}")
-        self.balance_emitter = self.data_access.get_balance_from_account(transaction_info.emitter) #convert balance into float
-        transaction_info.amount = self.__convert_amount(transaction_info.amount)
-        if transaction_info.amount == False:
-            self.error_message = "Vous devez entrer un montant en chiffre"
-            # print("Vous devez entrer un montant en chiffre")
-            return
+        self.__balance_emitter = self.__data_access.get_balance_from_account(transaction_info.get_emitter()) #convert balance into float
+        # transaction_info.amount = self.__convert_amount(transaction_info.amount)
+
+        transaction_info.set_amount(self.__convert_amount(transaction_info.get_amount()))
+        print(transaction_info.get_amount())
+        if transaction_info.get_amount() == False:
+            error_message = "Vous devez entrer un montant en chiffre"
+            raise TransactionException(error_message)
         
     def __manage_entry_for_deposit(self, transaction_info): #receiver and no emitter
-        self.balance_receiver = self.data_access.get_balance_from_account(transaction_info.receiver)
-        transaction_info.amount = self.__convert_amount(transaction_info.amount)
-        if transaction_info.amount == False:
-            self.error_message = "Vous devez entrer un montant en chiffre"
-            # print("Vous devez entrer un montant en chiffre")
-            return
+        self.__balance_receiver = self.__data_access.get_balance_from_account(transaction_info.get_receiver())
+        # transaction_info.amount = self.__convert_amount(transaction_info.amount)
 
+        transaction_info.set_amount(self.__convert_amount(transaction_info.get_amount()))
 
-    # def __get_account_number_email(self, cursor, email):
-    #     cursor.execute("SELECT MIN(id_account) FROM Bank_account " +
-    #                     "JOIN Users u USING(id_user) " +
-    #                     f"WHERE u.email = '{email}';")           
-    #     return cursor.fetchone()
+        if transaction_info.get_amount() == False:
+            error_message = "Vous devez entrer un montant en chiffre"
+            raise TransactionException(error_message)
 
     def __convert_amount(self, amount):
         try:
-            # is_not_digital = re.search("[^((\d)+.?(\d)+)]", amount)
             amount_regex = re.search("((\d)+.?(\d)+)", amount)
             final_amount = amount_regex.group()
             return float(final_amount)
         except:
             return False
-    
-    # def __manage_deposit(self, transaction_info):
-    #     pass
+        
+    def __manage_entry_self_transfer(self, transaction_info):
+        # emitter= number, receiver = "[id_account] account type"
 
-    # def __manage_withdrawal(self, transaction_info):
-    #     pass
-    
-    # def __manage_transfer(self, transaction_info):
-    #     pass
+        # transaction_info.set_receiver(self.__get_account_number_from_email(transaction_info.get_receiver()))
+        receiver = transaction_info.get_receiver()
+        transaction_info.set_receiver(self.__clean_receiver_data(receiver))
+
+        if transaction_info.get_receiver() == transaction_info.get_emitter():
+            error_message = "Vous ne pouvez pas faire de transfert sur le même compte"
+            raise TransactionException(error_message)
+            # print("Vous ne pouvez pas faire de transfert sur le même compte")
+
+        self.__balance_emitter = self.__data_access.get_balance_from_account(transaction_info.get_emitter())
+        self.__balance_receiver = self.__data_access.get_balance_from_account(transaction_info.get_receiver())
+
+        # transaction_info.amount = self.__convert_amount(transaction_info.amount)
+        transaction_info.set_amount(self.__convert_amount(transaction_info.get_amount()))
+
+        if transaction_info.get_amount() == False:
+            error_message = "Vous devez entrer un montant en chiffre"
+            raise TransactionException(error_message)
+
+
+        # account_str_list = []
+        # for account in accounts:
+        #     string = f"[{str(account[0])}] {account[1]}"
+        #     account_str_list.append(string)
+
+        # print(account_str_list)
+    def __clean_receiver_data(self, data_receiver):
+        data = re.search("^(\[(\d)+\])", data_receiver)
+        account_id = re.search("(\d)+", data.group())
+        final_account_id = account_id.group()
+        print(final_account_id)
+        return int(final_account_id)
+        
+
 
     def manage_transaction(self, transaction_info):
-        # check if transaction_info.amount > 0, else error !!! Regex already take care of it ??? 
-        print(f"TYPE EN DEBUT DE MANAGE TRANACTION {transaction_info.type}")
-        if transaction_info.type == 'Transfert':     
+        # check if transaction_info.amount > 0, else error !!! Regex already take care of it ???
+        self.__check_date(transaction_info.get_date())
+        print(transaction_info.get_receiver())
+
+        print(f"TYPE EN DEBUT DE MANAGE TRANACTION {transaction_info.get_type()}")
+
+        if transaction_info.get_type() == 'Virement':     
             self.__manage_entry_for_transfer(transaction_info)
-            if self.error_message == "":
-                return self.query.transfer_transaction(transaction_info, self.balance_emitter, self.balance_receiver)
-            else:
-                return self.error_message
-        elif transaction_info.type == 'Retrait':
+            self.__query.transfer_transaction(transaction_info, self.__balance_emitter, self.__balance_receiver)
+
+        elif transaction_info.get_type() == 'Transfert':
+            self.__manage_entry_self_transfer(transaction_info)
+            self.__query.transfer_transaction(transaction_info, self.__balance_emitter, self.__balance_receiver)
+
+            
+        elif transaction_info.get_type() == 'Retrait':
             self.__manage_entry_for_withdrawal(transaction_info)
-            if self.error_message == "":
-                print(f"balance_emitter in manage transaction = {self.balance_emitter}")
-                return self.query.withdrawal_transaction(transaction_info, self.balance_emitter)
-            else:
-                return self.error_message
+            self.__query.withdrawal_transaction(transaction_info, self.__balance_emitter)
         else:
             self.__manage_entry_for_deposit(transaction_info)
-            if self.error_message == "":
-                return self.query.deposit_transaction(transaction_info, self.balance_receiver)
-            else:
-                return self.error_message
+            self.__query.deposit_transaction(transaction_info, self.__balance_receiver)
 
     def manage_transfer(self, transaction_info):
         self.__manage_entry_for_transfer(transaction_info)
-        if self.error_message == "":
-            return self.query.transfer_transaction(transaction_info, self.balance_emitter, self.balance_receiver)
-        else:
-            return self.error_message
-
-    def run(self):
-        # self.manage_transfer()
-        self.view.mainloop()
-        
+        self.__query.transfer_transaction(transaction_info, self.__balance_emitter, self.__balance_receiver)
