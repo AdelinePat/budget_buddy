@@ -102,5 +102,3 @@ class DataAccess():
             cursor.close()
         database.close()
         return accounts
-    
-    ### Florence methods

@@ -5,10 +5,12 @@ from view.interface import Interface
 from view.historic import Historic
 from view.interface_frames import Interface_frames
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK
+from view.transactions import TransactionView
 
 class Dashboard(Interface):
-    def __init__(self, window_title, column_number):
+    def __init__(self, window_title, column_number, login_info):
         super().__init__(window_title, column_number)
+        self.login_info = login_info
         # self.master = master
         # self.master = self
         
@@ -58,7 +60,11 @@ class Dashboard(Interface):
         self.historic = Historic(self, self.list_accounts, self.display_accounts, self.account_id)
     
     def init_transaction(self):
-        pass
+        # window_title, column_number, current_session, current_account
+        transaction = TransactionView("Budget Buddy - Transaction",\
+                                    0,\
+                                    self.login_info.get_user_id(),\
+                                    self.login_info.get_current_account())
 
     def flip_account(self, choice):
         self.historic.flip_historic_account(choice)

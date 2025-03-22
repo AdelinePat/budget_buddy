@@ -7,6 +7,7 @@ from view.login_out import LogInOut
 from view.interface import Interface
 from view.dashboard import Dashboard
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK
+from view.transactions import TransactionView
 
 from model.server import ServerDatabase
 
@@ -21,6 +22,8 @@ view.mainloop()
 # dashboard = Dashboard("Budget Buddy - Dashboard", 1)
 # dashboard.build_dashboard()
 # transaction = TransactionView(dashboard)
+# view = TransactionView("Budget Buddy - Transaction", 0, 6, 7)
+# view.mainloop()
 
 
 # dashboard.mainloop()
