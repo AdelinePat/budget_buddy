@@ -12,19 +12,19 @@ class Historic_Transaction(customtkinter.CTkFrame):
     
     def build(self):
         self.transaction_description = customtkinter.CTkLabel(
-            self, bg_color=LIGHT_BLUE, text=self.transaction_infos[3],
+            self, bg_color=LIGHT_BLUE, text=self.transaction_infos[0],
             font=self.interface.text_font, anchor="w"
         )
         self.transaction_amount = customtkinter.CTkLabel(
-            self, bg_color=LIGHT_BLUE, text=str(self.transaction_infos[4])+" €",
+            self, bg_color=LIGHT_BLUE, text=str(self.transaction_infos[1])+" €",
             font=self.interface.text_font, anchor="e"
         )
         self.transaction_date = customtkinter.CTkLabel(
-            self, bg_color=LIGHT_BLUE, text=self.transaction_infos[5],
+            self, bg_color=LIGHT_BLUE, text=self.transaction_infos[2],
             font=self.interface.text_font, anchor="w"
         )
         self.transaction_category = customtkinter.CTkLabel(
-            self, bg_color=LIGHT_BLUE, text=self.transaction_infos[8],
+            self, bg_color=LIGHT_BLUE, text=self.transaction_infos[3],
             font=self.interface.text_font
         )
         self.transaction_description.grid(row=0,column=0, padx=10, sticky="w")
