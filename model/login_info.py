@@ -6,6 +6,7 @@ class LoginInfo():
         self.__lastname = lastname
         self.__firstname = firstname
         self.__current_account = None
+        self.__confirm_password = None
 
     def get_user_id(self):
         return self.__id_user
@@ -15,6 +16,9 @@ class LoginInfo():
     
     def get_password(self):
         return self.__password
+    
+    def get_confirm_password(self):
+        return self.__confirm_password
     
     def get_lastname(self):
         return self.__lastname
@@ -34,6 +38,9 @@ class LoginInfo():
     def set_password(self, new_value):
         self.__password = new_value
 
+    def set_confirm_password(self, new_value):
+        self.__confirm_password = new_value
+        
     def set_lastname(self, new_value):
         self.__lastname = new_value
 
