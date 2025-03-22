@@ -262,7 +262,7 @@ class LogInOut(Interface):
                 
                 # self.login_screen_destroy()
                 
-                board = Dashboard("Budget Buddy - Dashboard", 1)
+                board = Dashboard("Budget Buddy - Dashboard", 1, self.log_info)
                 # board.mainloop()
                 self.destroy()
                 # self.success_label = customtkinter.CTkLabel(self, text="Vous êtes connecté !", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
