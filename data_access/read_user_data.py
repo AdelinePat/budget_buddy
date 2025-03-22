@@ -49,13 +49,13 @@ class UserDataAcess():
         conn.close()        
         return users
     
-    def does_email_already_exist(self, firstname, lastname, email):
+    def does_email_already_exist(self, email):
         conn = self.database.database_connection()
         if conn.is_connected():
             cursor = conn.cursor()
             cursor.execute(
-                "SELECT COUNT(*) FROM Users WHERE firstname = %s AND lastname = %s AND email = %s",
-                (firstname, lastname, email)
+                "SELECT COUNT(*) FROM Users WHERE email = %s",
+                (email,)
             )
             result = cursor.fetchone()
             count = result[0]
