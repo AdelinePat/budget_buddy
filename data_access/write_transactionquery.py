@@ -1,5 +1,5 @@
 from model.server import ServerDatabase
-from model.transactionexception import TransactionException
+from model.customexception import TransactionException
 
 # CURRENT SESSION = id_user
 

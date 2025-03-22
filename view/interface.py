@@ -13,7 +13,9 @@ class Interface(customtkinter.CTk):
         self.geometry("820x480")
         self.config(background = DARK_BLUE)
         self.title(window_title)
-        self.columnconfigure((column_number), weight=1)
+        self.column_number = column_number
+        
+        self.columnconfigure((self.column_number), weight=1)
         self.util = UtilTool()
         self.title_font = self.util.get_title_font(30)
         self.text_font = self.util.get_text_font(15)
