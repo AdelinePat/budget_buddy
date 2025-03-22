@@ -89,6 +89,7 @@ class TransactionView(Interface):
             #     self.transaction_frame.receiver_box.destroy()
 
     def display_field_from_type(self, deal_type):
+
         if deal_type == 'Virement':
             if self.last_choice == 'Transfert':
                 self.transaction_frame.receiver_label.destroy()
@@ -100,14 +101,19 @@ class TransactionView(Interface):
                 self.transaction_frame.receiver_box.destroy()
             self.build_internal_receiver_field(6, 7)
         else:
-            if deal_type != 'Virement':
-                if hasattr(self.transaction_frame, 'receiver_text'):
-                    self.transaction_frame.receiver_text.destroy()
-                    self.transaction_frame.receiver_box.destroy()
-            elif deal_type != 'Transfert':
-                if hasattr(self.transaction_frame, 'receiver_choice'):
-                    self.transaction_frame.receiver_label.destroy()
-                    self.transaction_frame.receiver_choice.destroy()
+            # if deal_type != 'Virement':
+            # if hasattr(self.transaction_frame, 'receiver_text'):
+            if self.last_choice == 'Virement':
+                self.transaction_frame.receiver_text.destroy()
+                self.transaction_frame.receiver_box.destroy()
+                print("devrait détruire le bénéficiaire du virement")
+            elif self.last_choice == 'Transfert':
+            # elif hasattr(self.transaction_frame, 'receiver_label'):
+        # elif deal_type != 'Transfert':
+        #     if hasattr(self.transaction_frame, 'receiver_choice'):
+                self.transaction_frame.receiver_label.destroy()
+                self.transaction_frame.receiver_choice.destroy()
+                print("devrait détruire le bénéficiaire du transfert")
 
     def category_callback(self, choice):
         self.transaction_info.set_category(choice)
