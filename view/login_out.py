@@ -5,6 +5,8 @@ from model.server import ServerDatabase
 import re
 import bcrypt
 # import sqlite3
+from data_access.account_data_access import DataAccess
+from controller.login_data_manager import LoginManager
 
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK
 from model.server import ServerDatabase
@@ -14,6 +16,7 @@ from view.interface import Interface
 class LogInOut(Interface):
     def __init__(self, window_title, column_number):
         super().__init__(window_title, column_number)
+        self.controller = LoginManager()
         self.password_visible = False 
         self.eye_open, self.eye_closed = self.util.get_eye_icons()
         self.email = ""
@@ -26,28 +29,22 @@ class LogInOut(Interface):
         self.login_screen_build()
         self.lift() 
         self.attributes("-topmost", True)
-        self.get_all_users()
-
-    def get_user_id_from_db(self, email):
-        conn = self.database.database_connection()
-        cursor = conn.cursor()
-        query = "SELECT id_user FROM Users WHERE email = %s"
-        cursor.execute(query, (email,))
-        result = cursor.fetchone()
-        conn.close()
         
-        return result[0] if result else None
+        self.__data_acces = DataAccess()
+        self.__all_users = self.__data_acces.get_all_users()
+
+    
 
     def register_user(self, firstname, lastname, email, password, confirm_password, account_type="default", account_name = "default", balance = "0.99", min_balance="0.01"):
         if not firstname or not lastname:
             self.error_label.configure(text="Le prénom et le nom sont obligatoires.")
             return
 
-        if not bool(self.validate_email(email)):
+        if not bool(self.controller.validate_email(email)):
             self.error_label.configure(text="Email invalide. Format attendu : exemple@domaine.com")
             return
 
-        if not self.validate_password(password):
+        if not self.controller.validate_password(password):
             self.error_label.configure(text=(
                 "Mot de passe invalide. Il doit contenir :\n"
                 "- Une majuscule\n"
@@ -61,7 +58,7 @@ class LogInOut(Interface):
             self.error_label.configure(text="Les mots de passe ne correspondent pas.")
             return
 
-        hashed_password = self.hash_password(password)
+        hashed_password = self.controller.hash_password(password)
 
         try:
             conn = self.database.database_connection()
@@ -342,11 +339,11 @@ class LogInOut(Interface):
         email = self.email_box.get("1.0", "end").strip()
         password = self.password_box.get().strip()
 
-        if not self.validate_email(email):
+        if not self.controller.validate_email(email):
             self.error_label.configure(text="Email invalide. Format attendu : exemple@domaine.com")
             return
 
-        if not self.validate_password(password):
+        if not self.controller.validate_password(password):
             self.error_label.configure(text=(
                 "Mot de passe invalide. Il doit contenir :\n"
                 "- Une majuscule\n"
@@ -356,13 +353,13 @@ class LogInOut(Interface):
             ))
             return
 
-        stored_hashed_password = self.get_user_password_from_db(email)
-        if stored_hashed_password and self.check_password(stored_hashed_password, password):
+        stored_hashed_password = self.__data_acces.get_user_password_from_db(email)
+        if stored_hashed_password and self.controller.check_password(stored_hashed_password, password):
             print("Connexion réussie")
             self.error_label.configure(text="")
 
             # Stocke l'ID utilisateur après connexion
-            self.current_user_id = self.get_user_id_from_db(email)
+            self.current_user_id = self.__data_acces.get_user_id_from_db(email)
             print(f"Utilisateur connecté : ID {self.current_user_id}")
 
             self.login_screen_destroy()
@@ -372,32 +369,11 @@ class LogInOut(Interface):
         self.success_label.grid(row=9, column=0, padx=20, pady=10)
 
     
-    def get_user_password_from_db(self, email):
-        conn = self.database.database_connection()
-        cursor = conn.cursor()
-        query = "SELECT password FROM Users WHERE email = %s"
-        cursor.execute(query, (email,))
-        result = cursor.fetchone()
-        conn.close()
-        if result:
-            return result[0]
-        return None
-    
-
-
-    def get_all_users(self):
-        conn = self.database.database_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT id_user, firstname, lastname, email, password FROM Users")
-        users = cursor.fetchall()  
-        cursor.close()
-        conn.close()        
-        return users
     
     def print_all_users(self):
-        users = self.get_all_users()
-        if users:
-            for user in users:
+        # users = self.get_all_users()
+        if self.__all_users:
+            for user in self.__all_users:
                 user_id, firstname, lastname, email, password = user  
                 print(f"ID: {user_id}, Prénom: {firstname}, Nom: {lastname}, Email: {email}, Hash: {password}")
         else:
@@ -410,23 +386,6 @@ class LogInOut(Interface):
         # else:
         #     print("Utilisateur non trouvé.")
 
-
-
-    def validate_email(self, email):
-        email_regex = r"^[\w\.\+-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,}$"
-        return re.match(email_regex, email)
-    
-    def hash_password(self, password):
-        salt = bcrypt.gensalt()
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
-        return hashed_password.decode('utf-8')
-    
-    def check_password(self, stored_hashed_password, input_password):
-        return bcrypt.checkpw(input_password.encode('utf-8'), stored_hashed_password.encode('utf-8'))
-
-    def validate_password(self, password):
-        password_regex = r"^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_\-])[A-Za-z\d@$!%*?&_\-\_]{8,}$"
-        return re.match(password_regex, password)
 
     def button_callbck(self):
         print("Connexion réussie")

@@ -103,3 +103,48 @@ class DataAccess():
         database.close()
         return accounts
     
+    ### Florence methods
+
+    def get_user_id_from_db(self, email):
+        if email == None or type(email) != str:
+            error_message = "Le mail doit être une chaîne de caractères"
+            raise TransactionException(error_message)
+        
+        conn = self.database.database_connection()
+        if conn.is_connected():
+            cursor = conn.cursor()
+            query = "SELECT id_user FROM Users WHERE email = %s"
+            cursor.execute(query, (email,))
+            result = cursor.fetchone()
+            cursor.close()
+        conn.close()
+        
+        return result[0] if result else None
+    
+    def get_user_password_from_db(self, email):
+        if email == None or type(email) != str:
+            error_message = "Le mail doit être une chaîne de caractères"
+            raise TransactionException(error_message)
+               
+        conn = self.database.database_connection()
+        if conn.is_connected():
+            cursor = conn.cursor()
+            query = "SELECT password FROM Users WHERE email = %s"
+            cursor.execute(query, (email,))
+            result = cursor.fetchone()
+            cursor.close()
+        conn.close()
+
+        if result:
+            return result[0]
+        return None
+    
+    def get_all_users(self):
+        conn = self.database.database_connection()
+        if conn.is_connected():
+            cursor = conn.cursor()
+            cursor.execute("SELECT id_user, firstname, lastname, email, password FROM Users")
+            users = cursor.fetchall()  
+            cursor.close()
+        conn.close()        
+        return users
