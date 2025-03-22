@@ -1,17 +1,25 @@
 from model.server import ServerDatabase
+from model.transactionexception import TransactionException
 
 class DataAccess():
     def __init__(self):
         self.database = ServerDatabase()
 
     def get_account_number_from_email(self, email):
+        if email == None or email == "":
+            error_message = "Vous devez remplir le champ email"
+            raise TransactionException(error_message)
+        
         database = self.database.database_connection()
 
         if database.is_connected():
             cursor = database.cursor()
-            cursor.execute("SELECT MIN(id_account) FROM Bank_account " +
-                            "JOIN Users u USING(id_user) " +
-                            f"WHERE u.email = '{email}';")
+            query = """SELECT MIN(id_account) FROM Bank_account
+                        JOIN Users u USING(id_user) 
+                        WHERE u.email = %s;"""
+
+            cursor.execute(query, (email,))
+        
             
             account = cursor.fetchone()
             cursor.close()
@@ -20,47 +28,78 @@ class DataAccess():
         return account
 
     def get_account_number_from_id(self, client_id):
+
+        if client_id == None or type(client_id) != int:
+            error_message = "L'identifiant client n'est pas valide"
+            raise TransactionException(error_message)
+        
         database = self.database.database_connection()
 
         if database.is_connected():
             cursor = database.cursor()
-            cursor.execute("SELECT MIN(id_account) FROM Bank_account " +
-                        "JOIN Users u USING(id_user) " +
-                        f"WHERE u.id_user = {client_id}")
+            query = """SELECT MIN(id_account) FROM Bank_account
+                    JOIN Users u USING(id_user)
+                    WHERE u.id_user = %s;"""
+            
+            cursor.execute(query, (client_id,))
             
             account = cursor.fetchone()
             cursor.close()
         database.close()
         return account   
-
-    def get_balance_from_user(self, current_session):
-        #TODO update this method, when session object exist, current account number will be known and this method will become useless
-        # print(type(current_session))
+   
+    def get_balance_from_main_user_account(self, user_id): #not used ?
+        if user_id == None or type(user_id) != int:
+            error_message = "L'identifiant client n'est pas valide"
+            raise TransactionException(error_message)
+        
         database = self.database.database_connection()
 
         if database.is_connected():
             cursor = database.cursor()
-            cursor.execute("SELECT balance FROM Bank_account " +
-                            "JOIN Users u USING(id_user) " +
-                            "WHERE id_account = (SELECT MIN(id_account) " +
-                            f"FROM Bank_account WHERE id_user = {current_session});")
+            query = """SELECT balance FROM Bank_account
+                    JOIN Users u USING(id_user)
+                    WHERE id_account = (SELECT MIN(id_account)
+                    FROM Bank_account WHERE id_user = %s);"""
+            
+            cursor.execute(query, (user_id,))
             balance = float(cursor.fetchone()[0])
             cursor.close()
         database.close()
-        return balance   
+        return balance
     
     def get_balance_from_account(self, account_id):
+
+        if account_id == None or type(account_id) != int:
+            error_message = "L'identifiant du compte bancaire n'est pas valide"
+            raise TransactionException(error_message)
+        
         database = self.database.database_connection()
 
         if database.is_connected():
             cursor = database.cursor()
-            print(f"account number receiver or emitter : {account_id}")
-            balance_query = f"SELECT balance FROM Bank_account WHERE id_account = {account_id};"
-            cursor.execute(balance_query)
+            balance_query = "SELECT balance FROM Bank_account WHERE id_account = %s;"
 
+            cursor.execute(balance_query, (account_id, ))
             balance = float(cursor.fetchone()[0])
-            print(f"balance in data_access : {balance}")
             cursor.close()
         database.close()
-        return balance   
+        return balance
+    
+    def get_all_accounts_from_user(self, user_id):
+        if user_id == None or type(user_id) != int:
+            error_message = "L'identifiant du compte bancaire n'est pas valide"
+            raise TransactionException(error_message)
+        
+        database = self.database.database_connection()
+
+        if database.is_connected():
+            cursor = database.cursor()
+            accounts_query = "SELECT id_account, account_type FROM Bank_account WHERE id_user =%s;"
+
+            cursor.execute(accounts_query, (user_id, ))
+            accounts = cursor.fetchall()
+            cursor.close()
+        database.close()
+        return accounts
     
