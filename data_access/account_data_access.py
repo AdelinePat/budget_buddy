@@ -84,5 +84,22 @@ class DataAccess():
             balance = float(cursor.fetchone()[0])
             cursor.close()
         database.close()
-        return balance   
+        return balance
+    
+    def get_all_accounts_from_user(self, user_id):
+        if user_id == None or type(user_id) != int:
+            error_message = "L'identifiant du compte bancaire n'est pas valide"
+            raise TransactionException(error_message)
+        
+        database = self.database.database_connection()
+
+        if database.is_connected():
+            cursor = database.cursor()
+            accounts_query = "SELECT id_account, account_type FROM Bank_account WHERE id_user =%s;"
+
+            cursor.execute(accounts_query, (user_id, ))
+            accounts = cursor.fetchall()
+            cursor.close()
+        database.close()
+        return accounts
     
