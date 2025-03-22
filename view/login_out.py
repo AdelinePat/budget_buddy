@@ -41,24 +41,24 @@ class LogInOut(Interface):
 
 
         self.title_text = customtkinter.CTkLabel(master=self, text="Budget Buddy", font=self.title_font, text_color=YELLOW, bg_color=DARK_BLUE)
-        self.title_text.grid(row=0, column=0, sticky="sew", padx=20, pady=0)
+        self.title_text.grid(row=0, column=0, sticky="sew", padx=20, pady=(20,10))
 
         self.subtitle_text = customtkinter.CTkLabel(master=self, text="Votre application bancaire préférée".upper(), font=self.subtitle_font, text_color=YELLOW, bg_color=DARK_BLUE)
-        self.subtitle_text.grid(row=1, column=0, sticky="sew", padx=20, pady=0)
+        self.subtitle_text.grid(row=1, column=0, sticky="sew", padx=20, pady=(5,20))
 
 
         self.email_entry = customtkinter.CTkLabel(master=self, text="Votre adresse email :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
-        self.email_entry.grid(row=2, column=0, sticky="sew", padx=20, pady=5)
+        self.email_entry.grid(row=2, column=0, sticky="sew", padx=20, pady=(5,2))
 
         self.email_box = customtkinter.CTkTextbox(master=self, font=self.text_font, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE)
-        self.email_box.grid(row=3, column=0, sticky="sew", padx=20, pady=0)
+        self.email_box.grid(row=3, column=0, sticky="sew", padx=20, pady=(2,5))
         self.email_box.insert("0.0", "")
 
         self.password_entry = customtkinter.CTkLabel(master=self, text="Votre mot de passe :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
-        self.password_entry.grid(row=4, column=0, sticky="sew", padx=20, pady=5)
+        self.password_entry.grid(row=4, column=0, sticky="sew", padx=20, pady=(5,2))
 
         self.password_box = customtkinter.CTkEntry(master=self, font=self.text_font, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE, show="*")
-        self.password_box.grid(row=5, column=0, sticky="sew", padx=20, pady=0)
+        self.password_box.grid(row=5, column=0, sticky="sew", padx=20, pady=(2,5))
 
         self.show_password_button = customtkinter.CTkButton(
             self, 
@@ -75,27 +75,27 @@ class LogInOut(Interface):
         self.show_password_button.grid(row=5, column=2, padx=10)
 
         self.button = customtkinter.CTkButton(self, text="Se connecter".upper(), font=self.text_font, command=self.button_callback, corner_radius=7, bg_color=DARK_BLUE, fg_color=PINK)
-        self.button.grid(row=7, column=0, padx=20, pady=20)
+        self.button.grid(row=6, column=0, padx=20, pady=(10,5))
 
-        self.error_label = customtkinter.CTkLabel(self, text="", text_color="red")
-        self.error_label.grid(row=6, column=0, padx=20, pady=5)
+        # self.error_label = customtkinter.CTkLabel(self, text="", text_color="red")
+        # self.error_label.grid(row=6, column=0, padx=20, pady=5)
 
         self.button_create_account = customtkinter.CTkButton(self, text="Créer un compte".upper(), font=self.text_font, command=self.register_screen_build, corner_radius=7, bg_color=DARK_BLUE, fg_color=PINK)
-        self.button_create_account.grid(row=8, column=0, padx=20, pady=20)
+        self.button_create_account.grid(row=7, column=0, padx=20, pady=5)
 
         self.build_quit_button()
     
 
     def build_quit_button(self):
         self.button_quit = customtkinter.CTkButton(master=self, text="Quitter".upper(), font=self.text_font, command=self.quit_app, corner_radius=7, bg_color= DARK_BLUE, fg_color = PINK) # bouton se connecter
-        self.button_quit.grid(row=18, column=0, sticky="snew", padx=20, pady=5)
+        self.button_quit.grid(row=18, column=0, sticky="", padx=20, pady=(5,10))
 
     def quit_app(self):
         self.destroy()
 
     def build_return_button(self):
         self.button_return = customtkinter.CTkButton(master=self, text="Retour".upper(), font=self.text_font, command=self.return_app, corner_radius=7, bg_color= DARK_BLUE, fg_color = PINK) # bouton se connecter
-        self.button_return.grid(row=17, column=0, sticky="snew", padx=20, pady=5)
+        self.button_return.grid(row=17, column=0, sticky="", padx=20, pady=5)
 
     def return_app(self):
         self.destroy_register_screen()
@@ -132,37 +132,37 @@ class LogInOut(Interface):
         self.login_screen_destroy()
 
         self.title_text = customtkinter.CTkLabel(self, text="Créer un compte", font=self.title_font, text_color=YELLOW, bg_color=DARK_BLUE)
-        self.title_text.grid(row=1, column=0, sticky="sew", padx=20, pady=10)
+        self.title_text.grid(row=1, column=0, sticky="sew", padx=20, pady=(20,10))
 
         self.firstname_label = customtkinter.CTkLabel(self, text="Prénom :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
-        self.firstname_label.grid(row=2, column=0, sticky="sew", padx=20, pady=5)
+        self.firstname_label.grid(row=2, column=0, sticky="sew", padx=20, pady=(5,2))
 
         self.firstname_box = customtkinter.CTkEntry(self, font=self.text_font, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE)
-        self.firstname_box.grid(row=3, column=0, sticky="sew", padx=20, pady=5)
+        self.firstname_box.grid(row=3, column=0, sticky="sew", padx=20, pady=(2,5))
 
         self.lastname_label = customtkinter.CTkLabel(self, text="Nom :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
-        self.lastname_label.grid(row=4, column=0, sticky="sew", padx=20, pady=5)
+        self.lastname_label.grid(row=4, column=0, sticky="sew", padx=20, pady=(5,2))
 
         self.lastname_box = customtkinter.CTkEntry(self, font=self.text_font, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE)
-        self.lastname_box.grid(row=5, column=0, sticky="sew", padx=20, pady=5)
+        self.lastname_box.grid(row=5, column=0, sticky="sew", padx=20, pady=(2,5))
 
         self.email_label = customtkinter.CTkLabel(self, text="Email :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
-        self.email_label.grid(row=6, column=0, sticky="sew", padx=20, pady=5)
+        self.email_label.grid(row=6, column=0, sticky="sew", padx=20, pady=(5,2))
 
         self.email_box = customtkinter.CTkEntry(self, font=self.text_font, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE)
-        self.email_box.grid(row=7, column=0, sticky="sew", padx=20, pady=5)
+        self.email_box.grid(row=7, column=0, sticky="sew", padx=20, pady=(2,5))
 
         self.password_label = customtkinter.CTkLabel(self, text="Mot de passe :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
-        self.password_label.grid(row=8, column=0, sticky="sew", padx=20, pady=5)
+        self.password_label.grid(row=8, column=0, sticky="sew", padx=20, pady=(5,2))
 
         self.password_box = customtkinter.CTkEntry(self, font=self.text_font, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE, show="*")
-        self.password_box.grid(row=9, column=0, sticky="sew", padx=20, pady=5)
+        self.password_box.grid(row=9, column=0, sticky="sew", padx=20, pady=(2,5))
 
         self.confirm_password_label = customtkinter.CTkLabel(self, text="Confirmez le mot de passe :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
-        self.confirm_password_label.grid(row=10, column=0, sticky="sew", padx=20, pady=5)
+        self.confirm_password_label.grid(row=10, column=0, sticky="sew", padx=20, pady=(5,2))
 
         self.confirm_password_box = customtkinter.CTkEntry(self, font=self.text_font, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE, show="*")
-        self.confirm_password_box.grid(row=11, column=0, sticky="sew", padx=20, pady=5)
+        self.confirm_password_box.grid(row=11, column=0, sticky="sew", padx=20, pady=(2,5))
 
         self.show_password_button = customtkinter.CTkButton(
             self, 
