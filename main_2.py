@@ -5,7 +5,7 @@ import secrets
 # from view.interface import Interface
 from view.login_out import LogInOut
 from view.transactions import TransactionView
-from controller.transactionmanager import TransactionManager
+# from controller.transactionmanager import TransactionManager
 from view.interface_frames import Interface_frames
 from view.historic import Historic
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK
@@ -16,12 +16,12 @@ server_connection = ServerDatabase()
 server_connection.server_connection()
 server_connection.create_database()
 
-# view = LogInOut("Connexion Client", 0)
-# view.mainloop()
+view = LogInOut("Connexion Client", 0)
+view.mainloop()
 
-# view_test = TransactionManager("Transactions", 0, 2) # window_title, column_number, current_session (id_user), current_account (id_account)
-view_test = LogInOut("Connexion Client", 0) # window_title, column_number, current_session (id_user), current_account (id_account)
-view_test.mainloop()
+# view_test = TransactionView("Transactions", 0, 6, 7) # window_title, column_number, current_session (id_user), current_account (id_account)
+# view_test.mainloop()
+
 # login_view = Historic("HIHIAHHEIAHIIFEZHFEZ", 1)
 
 # login_view.interface_frame = Interface_frames(login_view, bg_color=DARK_BLUE, fg_color=LIGHT_BLUE, width=200, corner_radius=20)
