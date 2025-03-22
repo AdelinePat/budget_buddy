@@ -5,6 +5,12 @@ from model.server import ServerDatabase
 import re
 import bcrypt
 # import sqlite3
+from data_access.read_user_data import UserDataAcess
+
+from controller.login_data_manager import LoginManager
+from model.login_info import LoginInfo
+from model.customexception import LogInDataException
+from view.dashboard import Dashboard
 
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK
 from model.server import ServerDatabase
@@ -14,132 +20,23 @@ from view.interface import Interface
 class LogInOut(Interface):
     def __init__(self, window_title, column_number):
         super().__init__(window_title, column_number)
+        self.controller = LoginManager()
         self.password_visible = False 
         self.eye_open, self.eye_closed = self.util.get_eye_icons()
-        self.email = ""
-        self.__password = ""
-        self.lastname = ""
-        self.firstname = ""
-        self.current_user_id = None 
+        self.log_info = LoginInfo()
+        # self.email = ""
+        # self.__password = ""
+        # self.lastname = ""
+        # self.firstname = ""
+        # self.current_user_id = None 
         self.database = ServerDatabase()
         #self.create_users_table_if_not_exists()
         self.login_screen_build()
         self.lift() 
         self.attributes("-topmost", True)
-        self.get_all_users()
-
-
-    
-    def get_user_id_from_db(self, email):
-        conn = self.database.database_connection()
-        cursor = conn.cursor()
-        query = "SELECT id_user FROM Users WHERE email = %s"
-        cursor.execute(query, (email,))
-        result = cursor.fetchone()
-        conn.close()
         
-        return result[0] if result else None
-
-
-
-
-    def register_user(self, firstname, lastname, email, password, confirm_password, account_type="default", account_name = "default", balance = "0.99", min_balance="0.01"):
-        if not firstname or not lastname:
-            self.error_label.configure(text="Le prénom et le nom sont obligatoires.")
-            return
-
-        if not bool(self.validate_email(email)):
-            self.error_label.configure(text="Email invalide. Format attendu : exemple@domaine.com")
-            return
-
-        if not self.validate_password(password):
-            self.error_label.configure(text=(
-                "Mot de passe invalide. Il doit contenir :\n"
-                "- Une majuscule\n"
-                "- Un chiffre\n"
-                "- Un caractère spécial (!@#$%^&*.._.)\n"
-                "- Au moins 8 caractères"
-            ))
-            return
-
-        if password != confirm_password:
-            self.error_label.configure(text="Les mots de passe ne correspondent pas.")
-            return
-
-        hashed_password = self.hash_password(password)
-
-        try:
-            conn = self.database.database_connection()
-            cursor = conn.cursor()
-
-
-            cursor.execute(
-                "SELECT COUNT(*) FROM Users WHERE firstname = %s AND lastname = %s AND email = %s",
-                (firstname, lastname, email)
-            )
-            result = cursor.fetchone()
-            count = result[0]
-            if count == 0:
-
-                cursor.execute(
-                    "INSERT INTO Users (firstname, lastname, email, password) VALUES (%s, %s, %s, %s)",
-                    (firstname, lastname, email, hashed_password)
-                )
-                conn.commit()
-
-                cursor.execute(
-                    "SELECT id_user FROM Users WHERE firstname = %s AND lastname = %s AND email = %s",
-                    (firstname, lastname, email)
-                )
-                result = cursor.fetchone()
-                id_user = result[0]
-
-                if id_user is None:
-                    print("L'utilisateur n'existe pas. Impossible de créer un compte bancaire.")
-                else:
-                    cursor.execute(
-                        "INSERT INTO Bank_account (id_user, account_type, account_name, balance, min_balance) "
-                        "VALUES (%s, %s, %s, %s, %s)",
-                        (id_user, account_type, account_name, balance, min_balance)
-                    )
-                    conn.commit()
-                    print(f"L'utilisateur a été créé avec succès et un compte bancaire lui a été associé (ID: {id_user}).")
-
-                self.error_label.configure(text="Compte créé avec succès !", text_color="green")
-            
-            else:
-                print("L'utilisateur existe déjà !!")
-                self.error_label.configure(text="Cet email est déjà utilisé.", text_color="red")
-
-            conn.close()
-        
-        except Exception as error:
-            print(f"[LogInOut][register_user] Erreur : {error}")
-            self.error_label.configure(text="Une erreur s'est produite. Réessayez.", text_color="red")
-
-    def print_all_users_and_accounts(self):
-        conn = self.database.database_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT id_user, firstname, lastname, email FROM Users")
-        users = cursor.fetchall()  # Récupère tous les utilisateurs
-        if users:
-            for user in users:
-                user_id, firstname, lastname, email = user
-                print(f"Utilisateur: ID: {user_id}, Prénom: {firstname}, Nom: {lastname}, Email: {email}")
-
-                # Récupère et affiche les comptes associés à cet utilisateur
-                cursor.execute("SELECT account_type, account_name, balance FROM Bank_account WHERE id_user = %s", (user_id,))
-                accounts = cursor.fetchall()
-                if accounts:
-                    for account in accounts:
-                        account_type, account_name, balance = account
-                        print(f"\tCompte: Type: {account_type}, Nom: {account_name}, Solde: {balance}")
-                else:
-                    print("\tAucun compte bancaire associé.")
-        else:
-            print("Aucun utilisateur trouvé.")
-        cursor.close()
-        conn.close()
+        self.__data_acces = UserDataAcess()
+        self.__all_users = self.__data_acces.get_all_users()
 
 
     def login_screen_build(self):
@@ -185,9 +82,54 @@ class LogInOut(Interface):
         self.button_create_account = customtkinter.CTkButton(self, text="Créer un compte".upper(), font=self.text_font, command=self.register_screen_build, corner_radius=7, bg_color=DARK_BLUE, fg_color=PINK)
         self.button_create_account.grid(row=8, column=0, padx=20, pady=20)
 
+        self.build_quit_button()
+    
+
+    def build_quit_button(self):
+        self.button_quit = customtkinter.CTkButton(master=self, text="Quitter".upper(), font=self.text_font, command=self.quit_app, corner_radius=7, bg_color= DARK_BLUE, fg_color = PINK) # bouton se connecter
+        self.button_quit.grid(row=18, column=0, sticky="snew", padx=20, pady=5)
+
+    def quit_app(self):
+        self.destroy()
+
+    def build_return_button(self):
+        self.button_return = customtkinter.CTkButton(master=self, text="Retour".upper(), font=self.text_font, command=self.return_app, corner_radius=7, bg_color= DARK_BLUE, fg_color = PINK) # bouton se connecter
+        self.button_return.grid(row=17, column=0, sticky="snew", padx=20, pady=5)
+
+    def return_app(self):
+        self.destroy_register_screen()
+        self.login_screen_build()
+        
+    def destroy_register_screen(self):
+        self.title_text.destroy()
+
+        self.firstname_label.destroy()
+        self.firstname_box.destroy()
+
+        self.lastname_label.destroy()
+        self.lastname_box.destroy()
+
+        self.email_label.destroy()
+        self.email_box.destroy()
+
+        self.password_label.destroy()
+        self.password_box.destroy()
+
+        self.confirm_password_label.destroy()
+        self.confirm_password_box.destroy()
+
+        self.show_password_button.destroy()
+
+        self.button_register.destroy()
+
+        self.button_return.destroy()
+
+        if hasattr(self, 'error_label'):
+            self.error_label.destroy()
+
     def register_screen_build(self):
         self.login_screen_destroy()
-        self.geometry("640x600")
+        # self.geometry("640x600")
 
         self.title_text = customtkinter.CTkLabel(self, text="Créer un compte", font=self.title_font, text_color=YELLOW, bg_color=DARK_BLUE)
         self.title_text.grid(row=1, column=0, sticky="sew", padx=20, pady=10)
@@ -242,6 +184,9 @@ class LogInOut(Interface):
         self.error_label = customtkinter.CTkLabel(self, text="", text_color="red")
         self.error_label.grid(row=16, column=0, padx=20, pady=5)
 
+        self.build_return_button()
+        self.build_quit_button()
+
     def register_callback(self):
         """
         a utiliser pour ton IHM
@@ -281,80 +226,59 @@ class LogInOut(Interface):
         self.subtitle_text.destroy()
         self.title_text.destroy()
 
-    def interface_screen_build(self):
+    def build_logout_button(self):
         self.button = customtkinter.CTkButton(self, text="Se déconnecter".upper(), font=self.text_font, command=self.button_callbck_logout, corner_radius=10, bg_color=DARK_BLUE, fg_color=PINK)
         self.button.grid(row=1, column=0, padx=20, pady=20)
 
     def logout(self):
         self.interface_screen_destroy()
         self.login_screen_build()
-        if self.success_label:  
-            self.success_label.destroy()
-        self.success_label = None
+        if hasattr(self, 'login_text'):
+            self.login_text.destroy()
+        # if self.success_label:  
+        #     self.success_label.destroy()
+        # self.success_label = None
 
     def interface_screen_destroy(self):
         self.button.destroy()
 
     def button_callback(self):
+        if hasattr(self, 'login_text'):
+            self.login_text.destroy()
+
         email = self.email_box.get("1.0", "end").strip()
         password = self.password_box.get().strip()
+        try:
+            self.controller.validate_email(email)
+            self.log_info.set_id_user(self.__data_acces.get_user_id_from_email(email))
 
-        if not self.validate_email(email):
-            self.error_label.configure(text="Email invalide. Format attendu : exemple@domaine.com")
-            return
+            self.controller.validate_password(password)
+            stored_hashed_password = self.__data_acces.get_password_from_id_user(self.log_info.get_user_id())
 
-        if not self.validate_password(password):
-            self.error_label.configure(text=(
-                "Mot de passe invalide. Il doit contenir :\n"
-                "- Une majuscule\n"
-                "- Un chiffre\n"
-                "- Un caractère spécial (!@#$%^&*.._.)\n"
-                "- Au moins 8 caractères"
-            ))
-            return
-
-        stored_hashed_password = self.get_user_password_from_db(email)
-        if stored_hashed_password and self.check_password(stored_hashed_password, password):
-            print("Connexion réussie")
-            self.error_label.configure(text="")
-
-            # Stocke l'ID utilisateur après connexion
-            self.current_user_id = self.get_user_id_from_db(email)
-            print(f"Utilisateur connecté : ID {self.current_user_id}")
-
-            self.login_screen_destroy()
-            self.interface_screen_build()
-
-        self.success_label = customtkinter.CTkLabel(self, text="Vous êtes connecté !", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
-        self.success_label.grid(row=9, column=0, padx=20, pady=10)
-
-    
-    def get_user_password_from_db(self, email):
-        conn = self.database.database_connection()
-        cursor = conn.cursor()
-        query = "SELECT password FROM Users WHERE email = %s"
-        cursor.execute(query, (email,))
-        result = cursor.fetchone()
-        conn.close()
-        if result:
-            return result[0]
-        return None
-    
+            if self.controller.check_password(stored_hashed_password, password):
+                self.login_screen_destroy()
+                self.build_logout_button()
+                self.build_login_result(10, "Vous êtes connecté !")
+                
+                # self.login_screen_destroy()
+                
+                board = Dashboard("Budget Buddy - Dashboard", 1, self.log_info)
+                # board.mainloop()
+                self.destroy()
+                # self.success_label = customtkinter.CTkLabel(self, text="Vous êtes connecté !", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
+                # self.success_label.grid(row=9, column=0, padx=20, pady=10)
+        except LogInDataException as e:
+            self.build_login_result(20, e)
 
 
-    def get_all_users(self):
-        conn = self.database.database_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT id_user, firstname, lastname, email, password FROM Users")
-        users = cursor.fetchall()  
-        cursor.close()
-        conn.close()        
-        return users
+    def build_login_result(self, row1, error_message):
+        self.login_text = customtkinter.CTkLabel(master=self, text=error_message, font=self.text_font, text_color=SOFT_BLUE, bg_color=DARK_BLUE)
+        self.login_text.grid(row=row1, column=0, sticky="sn", padx=20, pady=5)
     
     def print_all_users(self):
-        users = self.get_all_users()
-        if users:
-            for user in users:
+        # users = self.get_all_users()
+        if self.__all_users:
+            for user in self.__all_users:
                 user_id, firstname, lastname, email, password = user  
                 print(f"ID: {user_id}, Prénom: {firstname}, Nom: {lastname}, Email: {email}, Hash: {password}")
         else:
@@ -368,36 +292,22 @@ class LogInOut(Interface):
         #     print("Utilisateur non trouvé.")
 
 
-
-    def validate_email(self, email):
-        email_regex = r"^[\w\.\+-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,}$"
-        return re.match(email_regex, email)
-    
-    def hash_password(self, password):
-        salt = bcrypt.gensalt()
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
-        return hashed_password.decode('utf-8')
-    
-    def check_password(self, stored_hashed_password, input_password):
-        return bcrypt.checkpw(input_password.encode('utf-8'), stored_hashed_password.encode('utf-8'))
-
-    def validate_password(self, password):
-        password_regex = r"^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_\-])[A-Za-z\d@$!%*?&_\-\_]{8,}$"
-        return re.match(password_regex, password)
-
     def button_callbck(self):
         print("Connexion réussie")
         self.login_screen_destroy()
-        self.interface_screen_build()
+        self.build_logout_button()
         self.confirmed = True
+        
 
     def button_callbck_logout(self):
         print("Déconnexion réussie")
         self.interface_screen_destroy()
         self.login_screen_build()
-        if self.success_label: 
-            self.success_label.destroy()
-        self.success_label = None
+        if hasattr(self, 'login_text'):
+            self.login_text.destroy()
+        # if self.success_label: 
+        #     self.success_label.destroy()
+        # self.success_label = None
 
 
 

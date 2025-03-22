@@ -1,5 +1,5 @@
 from model.server import ServerDatabase
-from model.transactionexception import TransactionException
+from model.customexception import TransactionException
 
 class DataAccess():
     def __init__(self):
@@ -102,4 +102,3 @@ class DataAccess():
             cursor.close()
         database.close()
         return accounts
-    
