@@ -26,14 +26,15 @@ class LoginManager():
         return bcrypt.checkpw(input_password.encode('utf-8'), stored_hashed_password.encode('utf-8'))
 
     def validate_password(self, password):
-        password_regex = r"^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_\-])[A-Za-z\d@$!%*?&_\-\_]{8,}$"
+        password_regex = r"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&_\-])[A-Za-z\d@$!%*?&_\-\_]{10,}$"
         result_password = re.match(password_regex, password)
         if result_password == None:
-            error_message = "Mot de passe invalide. Il doit contenir :\n\
-                - Une majuscule\n\
+            error_message = """Mot de passe invalide. Il doit contenir au moins:\n
+                - Une majuscule\n
+                - Une minuscule\n
                 - Un chiffre\n\
-                - Un caractère spécial (!@#$%^&*.._.)\n\
-                - Au moins 8 caractères"
+                - Un caractère spécial (!@#$%^&*.._.)\n
+                - 10 caractères"""
             raise LogInDataException(error_message)
         return result_password.group()
     
@@ -44,9 +45,13 @@ class LoginManager():
 
     def __clean_register_user_data__(self, login_info):
         self.__check_names__(login_info.get_firstname(), login_info.get_lastname())
-        login_info.set_email(self.validate_email(login_info.get_email()))
+        
+        valid_email = self.validate_email(login_info.get_email())
+        login_info.set_email(valid_email)
 
-        login_info.set_password(self.validate_password(login_info.get_password()))
+        valid_password = self.validate_password(login_info.get_password())
+        login_info.set_password(valid_password)
+
         if login_info.get_password() != login_info.get_confirm_password():
             error_message="Les mots de passe ne correspondent pas."
             raise LogInDataException(error_message)
