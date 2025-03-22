@@ -7,8 +7,10 @@ from view.interface_frames import Interface_frames
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK
 
 class Dashboard(Interface):
-    def __init__(self, master):
-        self.master = master
+    def __init__(self, window_title, column_number):
+        super().__init__(window_title, column_number)
+        # self.master = master
+        self.master = self
         self.account_id = "0"
         self.list_accounts : list = [
             (0,1,"Tous les comptes", "NULL", 0,0),

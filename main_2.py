@@ -14,12 +14,13 @@ server_connection = ServerDatabase()
 server_connection.server_connection()
 server_connection.create_database()
 
-view = LogInOut("Connexion Client", 0)
-view.mainloop()
-interface = Interface("Budget Buddy", 1)
-dashboard = Dashboard(interface)
+# view = LogInOut("Connexion Client", 0)
+# view.mainloop()
+
+# interface = Interface("Budget Buddy", 1)
+dashboard = Dashboard("Budget Buddy", 0)
 dashboard.build_dashboard()
 # transaction = TransactionView(dashboard)
 
 
-interface.mainloop()
+dashboard.mainloop()
