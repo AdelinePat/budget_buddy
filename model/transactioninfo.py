@@ -1,6 +1,7 @@
 class TransactionInfo():
-    def __init__(self, current_session, deal_type, date, emitter, receiver, description, category, amount):
-        self.__current_session = current_session
+    def __init__(self, current_session, current_account, deal_type, date, emitter, receiver, description, category, amount):
+        self.__current_session = current_session # user_id
+        self.__current_account = current_account # account currently used
         self.__type = deal_type
         self.__date = date
         self.__emitter = emitter
@@ -11,6 +12,9 @@ class TransactionInfo():
     
     def get_current_session(self):
         return self.__current_session
+    
+    def get_current_account(self):
+        return self.__current_account
 
     def get_type(self):
         return self.__type

@@ -1,32 +1,42 @@
 from model.server import ServerDatabase
 from datetime import datetime
 from model.transactioninfo import TransactionInfo
+import re
 
-test = TransactionInfo(1, "Retrait", "2025-06-97", 1, None, "Ceci est une description", "Pot-de-vin", 42.45)
+test = TransactionInfo(1, 1, "Retrait", "2025-06-97", 1, None, "Ceci est une description", "Pot-de-vin", 42.45)
 database = ServerDatabase()
+user_id = 1
 
 # print(test.get_amount())
-email = 'john.doe@gmail.com'
-if email != None or email != "":
-        
-        
-    my_database = database.database_connection()
 
-    if my_database.is_connected():
-        cursor = my_database.cursor()
-        query = """SELECT MIN(id_account) FROM Bank_account
-                    JOIN Users u USING(id_user) 
-                    WHERE u.email = %s;"""
+database = database.database_connection()
+if database.is_connected():
+    cursor = database.cursor()
+    accounts_query = "SELECT id_account, account_type FROM Bank_account WHERE id_user =%s;"
 
-        cursor.execute(query, (email,))
-    
-        
-        account = cursor.fetchone()
-        cursor.close()
-    my_database.close()     
-    
-    print(account)
-    
+    cursor.execute(accounts_query, (user_id, ))
+    accounts = cursor.fetchall()
+    cursor.close()
+database.close()
+# print(accounts)
+
+account_str_list = []
+for account in accounts:
+    string = f"[{str(account[0])}] {account[1]}"
+    account_str_list.append(string)
+
+print(account_str_list)
+
+for account in account_str_list:
+    # print(account)
+    data = re.search("^(\[(\d)+\])", account)
+    account_id = re.search("(\d)+", data.group())
+    final_amount = account_id.group()
+    # print(account_id)
+    print(final_amount)
+
+
+
 # account = 'jolyne.mangeot@laplateforme.io'
 # current_session = 2
 

@@ -466,3 +466,9 @@ TABLE Transactions;
 TABLE Users;
 
 TABLE users;
+TABLE Bank_account;
+
+SELECT id_account, account_type FROM `Bank_account`
+WHERE id_user = 2;
+
+SELECT id_user, id_account, account_type FROM `Bank_account`;
