@@ -9,9 +9,10 @@ from data_access.read_data_access import DataAccess
 from view.transactions import TransactionView
 
 class Dashboard(Interface):
-    def __init__(self, window_title, column_number, login_info):
+    def __init__(self, master, window_title, column_number, login_info):
         super().__init__(window_title, column_number)
-        self.login_info = login_info[1]
+        self.login_info = login_info
+        self.master = master
         self.database = DataAccess()
         self.list_accounts : list = self.database.get_all_accounts_from_user(self.login_info.get_user_id())
         self.list_accounts.insert(0, (0, "Tous les comptes"))
@@ -19,7 +20,7 @@ class Dashboard(Interface):
         # self.master = self
         
         self.account_id = "0"
-        self.interface_frame = Interface_frames(self, bg_color=DARK_BLUE, fg_color=LIGHT_BLUE, width=400,corner_radius=20)
+        self.interface_frame = Interface_frames(self.master, bg_color=DARK_BLUE, fg_color=LIGHT_BLUE, width=400,corner_radius=20)
         self.interface_frame.columnconfigure(0, weight=1)
         self.interface_frame.grid(row=0, column=0, padx=20, pady=20, sticky="snew")
 
@@ -51,7 +52,7 @@ class Dashboard(Interface):
         self.interface_frame.account_choice.grid(row=1, column=0, padx=10, pady=20, sticky="ew")
         self.interface_frame.transaction_button.grid(row=2, column=0, padx=10, pady=5, sticky="ew")
 
-        self.historic = Historic(self, self.list_accounts, self.display_accounts, self.account_id)
+        self.historic = Historic(self.master, self.list_accounts, self.display_accounts, self.account_id)
     
     def init_transaction(self):
         # window_title, column_number, current_session, current_account
