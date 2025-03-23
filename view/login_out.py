@@ -149,8 +149,8 @@ class LogInOut(Interface):
 
         # if hasattr(self, 'error_label'):
         #     self.error_label.destroy()
-        # if hasattr(self, 'login_text'):
-        #     self.login_text.destroy()
+        if hasattr(self, 'login_text'):
+            self.login_text.destroy()
 
     def register_screen_build(self):
         self.login_screen_destroy()
