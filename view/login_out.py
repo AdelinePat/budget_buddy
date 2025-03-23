@@ -205,10 +205,10 @@ class LogInOut(Interface):
         return my_label
 
     def set_scrollable_bar(self):
-        self.scrollable_frame = Scrollable_frame(self, bg_color=DARK_BLUE, fg_color=DARK_BLUE)
+        self.scrollable_frame = Scrollable_frame(self, bg_color=DARK_BLUE, fg_color=DARK_BLUE, height=650)
         self.scrollable_frame.columnconfigure(0, weight=1)
         # self.scrollable_frame.pack(fill='both', expand=1)
-        self.scrollable_frame.grid(sticky="snew")
+        self.scrollable_frame.grid(row=0, column=0, sticky="snew")
 
     def set_interface_frame(self):
         self.interface_frame = Interface_frames(self, bg_color=DARK_BLUE, fg_color=DARK_BLUE)
@@ -328,16 +328,16 @@ class LogInOut(Interface):
             self.scrollable_frame.show_password_button.configure(image=self.eye_closed)
 
     def toggle_password(self):
-        if self.password_box.cget('show') == '*':
-            self.password_box.configure(show="")
+        if self.interface_frame.password_box.cget('show') == '*':
+            self.interface_frame.password_box.configure(show="")
             if hasattr(self, 'confirm_password_box'):
-                self.confirm_password_box.configure(show="")
-            self.show_password_button.configure(image=self.eye_open)
+                self.interface_frame.confirm_password_box.configure(show="")
+            self.interface_frame.show_password_button.configure(image=self.eye_open)
         else:
-            self.password_box.configure(show="*")
+            self.interface_frame.password_box.configure(show="*")
             if hasattr(self, 'confirm_password_box'):
-                self.confirm_password_box.configure(show="*")
-            self.show_password_button.configure(image=self.eye_closed)
+                self.interface_frame.confirm_password_box.configure(show="*")
+            self.interface_frame.show_password_button.configure(image=self.eye_closed)
 
     def login_screen_destroy(self):
         # destroy titles
@@ -379,8 +379,8 @@ class LogInOut(Interface):
         if hasattr(self, 'login_text'):
             self.login_text.destroy()
 
-        email = self.email_box.get("1.0", "end").strip()
-        password = self.password_box.get().strip()
+        email = self.interface_frame.email_box.get("1.0", "end").strip()
+        password = self.interface_frame.password_box.get().strip()
         try:
             self.controller.validate_email(email)
             self.log_info.set_id_user(self.__data_acces.get_user_id_from_email(email))
