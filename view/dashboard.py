@@ -10,7 +10,7 @@ from view.transactions import TransactionView
 class Dashboard(Interface):
     def __init__(self, window_title, column_number, login_info):
         super().__init__(window_title, column_number)
-        self.login_info = login_info
+        self.login_info = login_info[1]
         # self.master = master
         # self.master = self
         

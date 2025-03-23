@@ -10,18 +10,17 @@ from data_access.read_user_data import UserDataAcess
 from controller.login_data_manager import LoginManager
 from model.login_info import LoginInfo
 from model.customexception import LogInDataException
-from view.dashboard import Dashboard
-
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK
 from model.server import ServerDatabase
 # from view.utiltool import UtilTool
 from view.interface import Interface
 
 class LogInOut(Interface):
-    def __init__(self, window_title, column_number):
+    def __init__(self, window_title, column_number, connected):
         super().__init__(window_title, column_number)
         self.controller = LoginManager()
-        self.password_visible = False 
+        self.password_visible = False
+        self.connected = connected
         self.eye_open, self.eye_closed = self.util.get_eye_icons()
         self.log_info = LoginInfo()
         self.database = ServerDatabase()
@@ -264,8 +263,9 @@ class LogInOut(Interface):
                 self.login_screen_destroy()
                 self.build_logout_button()
                 self.build_login_result(10, "Vous êtes connecté !")
+                self.connected[0] = True
+                self.connected[1] = self.log_info
                 
-                board = Dashboard("Budget Buddy - Dashboard", 1, self.log_info)
                 self.destroy()
                
         except LogInDataException as e:
