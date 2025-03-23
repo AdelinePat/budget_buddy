@@ -7,7 +7,7 @@ import bcrypt
 # import sqlite3
 from data_access.read_user_data import UserDataAcess
 
-from view.scrollable_frame import Scrollable_frame
+# from view.scrollable_frame import Scrollable_frame
 
 from controller.login_data_manager import LoginManager
 from model.login_info import LoginInfo
@@ -26,10 +26,11 @@ class LogInOut(Interface):
         self.eye_open, self.eye_closed = self.util.get_eye_icons()
         self.log_info = LoginInfo()
         self.database = ServerDatabase()
+        
 
-        self.scrollable_frame = Scrollable_frame(self, bg_color=DARK_BLUE, fg_color=DARK_BLUE)
-        self.scrollable_frame.columnconfigure(0, weight=1)
-        self.scrollable_frame.pack(fill='both', expand=1)
+        # self.scrollable_frame = Scrollable_frame(self, bg_color=DARK_BLUE, fg_color=DARK_BLUE)
+        # self.scrollable_frame.columnconfigure(0, weight=1)
+        # self.scrollable_frame.pack(fill='both', expand=1)
 
         self.login_screen_build()
         self.lift() 
