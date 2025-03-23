@@ -9,7 +9,7 @@ from controller.transactionmanager import TransactionManager
 from model.transactioninfo import TransactionInfo
 from model.customexception import TransactionException
 from data_access.read_data_access import DataAccess
-# from view.scrollable_frame import Scrollable_frame
+from view.scrollable_frame import Scrollable_frame
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, SOFT_BLUE2, SOFT_BLUE3, DARK_PINK
 
 class TransactionView(Interface): 
@@ -18,9 +18,9 @@ class TransactionView(Interface):
         self.controller = TransactionManager()
         self.__data_access = DataAccess()
 
-        # self.scrollable_frame = Scrollable_frame(self, bg_color=DARK_BLUE, fg_color=DARK_BLUE)
-        # self.scrollable_frame.columnconfigure(0, weight=1)
-        # self.scrollable_frame.pack(fill='both', expand=1)
+        self.scrollable_frame = Scrollable_frame(self, bg_color=DARK_BLUE, fg_color=DARK_BLUE)
+        self.scrollable_frame.columnconfigure(0, weight=1)
+        self.scrollable_frame.pack(fill='both', expand=1)
 
         self.deal_type_list = ['Retrait', 'Dépôt', 'Transfert', 'Virement']
         self.category_list = ['Alimentaire', 'Loisirs', 'Prélèvement', 'Transport', 'Santé', 'Dealing', 'Activités illicites', 'Consommation de café']

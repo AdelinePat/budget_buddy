@@ -20,9 +20,9 @@ class Interface(customtkinter.CTk):
         
         self.columnconfigure((self.column_number), weight=1)
 
-        self.scrollable_frame = customtkinter.CTkScrollableFrame(self, bg_color=DARK_BLUE, fg_color=DARK_BLUE)
-        self.scrollable_frame.columnconfigure(0, weight=1)
-        self.scrollable_frame.pack(fill='both', expand=1)
+        # self.scrollable_frame = customtkinter.CTkScrollableFrame(self, bg_color=DARK_BLUE, fg_color=DARK_BLUE)
+        # self.scrollable_frame.columnconfigure(0, weight=1)
+        # self.scrollable_frame.pack(fill='both', expand=1)
 
         self.util = UtilTool()
         self.title_font = self.util.get_title_font(30)
