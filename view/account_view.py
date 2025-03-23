@@ -6,10 +6,9 @@ from model.historic_transaction_model import Historic_Transaction
 from data_access.write_historic_query import HistoricQuery
 
 class Account_view:
-    def __init__(self, list_args):
-        self.account_id, self.user_id, self.account_type, self.account_name, self.account_amount, self.account_minimum = list_args
+    def __init__(self, account_id):
+        self.account_id = account_id
         self.database = HistoricQuery()
-        self.database.init_historic_queries()
         self.build_factors_block_dict : dict = {
             "Voir tout" : self.build_all,
             "Par catégorie" : self.build_category,
@@ -22,6 +21,7 @@ class Account_view:
             "Par type" : self.destroy_type,
             "Par dates" : self.destroy_dates,
         }
+        self.current_filter = "Voir tout"
     
     def build(self, master, title, interface):
         self.master = master
@@ -42,6 +42,7 @@ class Account_view:
             ], command=self.flip_filters
         )
         master.filters.grid(row=3, column=0, padx=10, pady=10, sticky="ew")
+        self.destroy_factors_block_dict[self.current_filter]()
         self.current_filter = "Voir tout"
         self.current_factor = None
         self.build_historic()
@@ -54,10 +55,12 @@ class Account_view:
 
         self.list_transactions = self.database.historic_queries_dict[self.current_filter](self.account_id, self.current_factor)
 
+        self.account_transactions = []
         for index, transaction in enumerate(self.list_transactions):
             if transaction[1] == self.account_id or transaction[2] == self.account_id:
                 transaction_element = Historic_Transaction(self.master.transactions_frame, transaction, self.interface, fg_color=LIGHT_BLUE, height=60)
                 transaction_element.grid(row=index, column=0, sticky="ew", pady=5, padx=2)
+                self.account_transactions.append(transaction_element)
     
     def destroy_historic(self):
         self.destroy_factors_block_dict[self.current_filter]()

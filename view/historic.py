@@ -19,14 +19,13 @@ class Historic(Interface):
         self.master.historic_frame.columnconfigure(0, weight=1)
         self.master.historic_frame.grid(row=0, column=1, padx=20, pady=20, sticky="ew")
         self.build_historic_interface()
-    
+
     def build_historic_interface(self):
         self.master.historic_frame.historic_title = customtkinter.CTkLabel(
             self.master.historic_frame, text="Historique".upper(), font=self.master.subtitle_font,
             height=50, fg_color=SOFT_BLUE, text_color=LIGHT_BLUE
         )
         self.master.historic_frame.historic_title.grid(row=0, column=0, pady=20, sticky="ew")
-        # self.recover_accounts()
 
         self.historic_dict_account[self.shown_historic].build(
             self.master.historic_frame,
@@ -37,13 +36,14 @@ class Historic(Interface):
     def recover_accounts(self):
         self.historic_dict_account : dict = {}
         for index, account in enumerate(self.list_accounts):
-            historic_account = Account_view(self.list_accounts[index])
+            historic_account = Account_view(self.list_accounts[index][0])
             self.historic_dict_account.update(
                 {str(account[0]) : historic_account}
             )
 
     def flip_historic_account(self, choice):
         self.historic_dict_account[self.shown_historic].destroy(self.master.historic_frame)
+        self.historic_dict_account[self.shown_historic].destroy_factors_block_dict[self.historic_dict_account[self.shown_historic].current_filter]()
         self.shown_historic = choice[0]
         self.historic_dict_account[self.shown_historic].build(
             self.master.historic_frame,
