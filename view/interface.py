@@ -3,6 +3,8 @@ from view.utiltool import UtilTool
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK
 from view.interface_frames import Interface_frames
 
+# from view.scrollable_frame import Scrollable_frame
+
 
 from model.server import ServerDatabase
 
@@ -17,6 +19,11 @@ class Interface(customtkinter.CTk):
         self.column_number = column_number
         
         self.columnconfigure((self.column_number), weight=1)
+
+        self.scrollable_frame = customtkinter.CTkScrollableFrame(self, bg_color=DARK_BLUE, fg_color=DARK_BLUE)
+        self.scrollable_frame.columnconfigure(0, weight=1)
+        self.scrollable_frame.pack(fill='both', expand=1)
+
         self.util = UtilTool()
         self.title_font = self.util.get_title_font(30)
         self.text_font = self.util.get_text_font(15)
