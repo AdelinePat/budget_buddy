@@ -11,6 +11,7 @@ from model.customexception import TransactionException
 from data_access.read_data_access import DataAccess
 from view.scrollable_frame import Scrollable_frame
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, SOFT_BLUE2, SOFT_BLUE3, DARK_PINK
+import re
 
 class TransactionView(Interface): 
     def __init__(self, window_title, column_number, current_session, current_account):
@@ -25,17 +26,21 @@ class TransactionView(Interface):
         self.deal_type_list = ['Retrait', 'Dépôt', 'Transfert', 'Virement']
         self.category_list = ['Alimentaire', 'Loisirs', 'Prélèvement', 'Transport', 'Santé', 'Dealing', 'Activités illicites', 'Consommation de café']
         self.transaction_info = TransactionInfo(current_session, current_account, "", "", None, None, "", "", "")
-        # self.transaction_info.type = ""
-        # self.transaction_info.date = ""
-        # # self.current_session = current_session
-        # self.transaction_info.emitter = ""
-        # self.transaction_info.receiver = ""
-        # self.transaction_info.description = ""
-        # self.transaction_info.category = ""
+        self.get_actual_account_id_from_string()
+        
         self.__accounts_list = self.__data_access.get_all_accounts_from_user(self.transaction_info.get_current_session())
         self.__accounts_list_string = self.get_accounts_list_string()
         self.last_choice = ""
         self.screen_build()
+
+    def get_actual_account_id_from_string(self):
+        id = self.transaction_info.get_current_account()
+
+        id_regex = re.search("(\d)+", id)
+        final_id = id_regex.group()
+        final_id = int(final_id)
+
+        self.transaction_info.set_current_account(final_id)
 
     def get_accounts_list_string(self):        
         account_str_list = []

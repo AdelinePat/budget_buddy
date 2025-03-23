@@ -48,4 +48,4 @@ class LoginInfo():
         self.__firstname = new_value
     
     def set_current_account(self, new_value):
-        self.__lastname = new_value
+        self.__current_account = new_value
