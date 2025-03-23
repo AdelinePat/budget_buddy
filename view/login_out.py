@@ -7,7 +7,7 @@ import bcrypt
 # import sqlite3
 from data_access.read_user_data import UserDataAcess
 
-# from view.scrollable_frame import Scrollable_frame
+from view.scrollable_frame import Scrollable_frame
 
 from controller.login_data_manager import LoginManager
 from model.login_info import LoginInfo
@@ -28,9 +28,9 @@ class LogInOut(Interface):
         self.database = ServerDatabase()
         
 
-        # self.scrollable_frame = Scrollable_frame(self, bg_color=DARK_BLUE, fg_color=DARK_BLUE)
-        # self.scrollable_frame.columnconfigure(0, weight=1)
-        # self.scrollable_frame.pack(fill='both', expand=1)
+        self.scrollable_frame = Scrollable_frame(self, bg_color=DARK_BLUE, fg_color=DARK_BLUE)
+        self.scrollable_frame.columnconfigure(0, weight=1)
+        self.scrollable_frame.pack(fill='both', expand=1)
 
         self.login_screen_build()
         self.lift() 
@@ -289,7 +289,7 @@ class LogInOut(Interface):
         self.scrollable_frame.title_text.destroy()
 
     def build_logout_button(self):
-        self.scrollable_frame.button = customtkinter.CTkButton(master=self.scrollable_frame, text="Se déconnecter".upper(), font=self.text_font, command=self.scrollable_frame.button_callbck_logout, corner_radius=10, bg_color=DARK_BLUE, fg_color=PINK)
+        self.scrollable_frame.button = customtkinter.CTkButton(master=self.scrollable_frame, text="Se déconnecter".upper(), font=self.text_font, command=self.button_callbck_logout, corner_radius=10, bg_color=DARK_BLUE, fg_color=PINK)
         self.scrollable_frame.button.grid(row=1, column=0, padx=20, pady=20)
 
     def logout(self):
