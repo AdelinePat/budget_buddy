@@ -66,13 +66,13 @@ class LogInOut(Interface):
             width=40, 
             image=self.eye_closed,  
             command=self.toggle_password,
-            fg_color="transparent",  
+            fg_color=SOFT_YELLOW,  
             hover = False,
             border_width=0,
-            corner_radius=0
+            corner_radius=0,
         )
 
-        self.show_password_button.grid(row=5, column=2, padx=10)
+        self.show_password_button.grid(row=5, column=0, padx=30, sticky="e")
 
         self.button = customtkinter.CTkButton(self, text="Se connecter".upper(), font=self.text_font, command=self.button_callback, corner_radius=7, bg_color=DARK_BLUE, fg_color=PINK)
         self.button.grid(row=6, column=0, padx=20, pady=(10,5))
@@ -127,6 +127,8 @@ class LogInOut(Interface):
 
         if hasattr(self, 'error_label'):
             self.error_label.destroy()
+        if hasattr(self, 'login_text'):
+            self.login_text.destroy()
 
     def register_screen_build(self):
         self.login_screen_destroy()
@@ -170,13 +172,14 @@ class LogInOut(Interface):
             width=40, 
             image=self.eye_closed,  
             command=self.toggle_password,
-            fg_color="transparent",  
+            fg_color=SOFT_YELLOW,  
             hover = False,
             border_width=0,
-            corner_radius=0
+            corner_radius=0,
         )
 
-        self.show_password_button.grid(row=9, column=1, padx=10)
+        self.show_password_button.grid(row=9, column=0, padx=30, sticky="e")
+        
 
         self.button_register = customtkinter.CTkButton(self, text="S'inscrire".upper(), font=self.text_font, command=self.register_callback, corner_radius=7, bg_color=DARK_BLUE, fg_color=PINK)
         self.button_register.grid(row=14, column=0, padx=20, pady=10)
@@ -210,11 +213,13 @@ class LogInOut(Interface):
     def toggle_password(self):
         if self.password_box.cget('show') == '*':
             self.password_box.configure(show="")
-            self.confirm_password_box.configure(show="")
+            if hasattr(self, 'confirm_password_box'):
+                self.confirm_password_box.configure(show="")
             self.show_password_button.configure(image=self.eye_open)
         else:
             self.password_box.configure(show="*")
-            self.confirm_password_box.configure(show="*")
+            if hasattr(self, 'confirm_password_box'):
+                self.confirm_password_box.configure(show="*")
             self.show_password_button.configure(image=self.eye_closed)
 
 
