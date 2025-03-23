@@ -14,6 +14,3 @@ DARK_PINK = '#BE6882'
 ## FONTS
 TITLE_FONT_PATH = './assets/fonts/LeckerliOne-Regular.ttf'
 TEXT_FONT_PATH = './assets/fonts/JosefinSans-Regular.ttf'
-
-
-
