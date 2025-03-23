@@ -18,14 +18,14 @@ from model.server import ServerDatabase
 from view.interface import Interface
 
 class LogInOut(Interface):
-    def __init__(self, window_title, column_number, connected):
+    def __init__(self, window_title, column_number):
         super().__init__(window_title, column_number)
         self.controller = LoginManager()
         self.password_visible = False
-        self.connected = connected
         self.eye_open, self.eye_closed = self.util.get_eye_icons()
         self.log_info = LoginInfo()
         self.database = ServerDatabase()
+        self.connected = False
         
 
         self.scrollable_frame = Scrollable_frame(self, bg_color=DARK_BLUE, fg_color=DARK_BLUE)
@@ -318,9 +318,7 @@ class LogInOut(Interface):
                 self.login_screen_destroy()
                 self.build_logout_button()
                 self.build_login_result(10, "Vous êtes connecté !")
-                self.connected[0] = True
-                self.connected[1] = self.log_info
-                
+                self.connected = True
                 self.destroy()
                
         except LogInDataException as e:
