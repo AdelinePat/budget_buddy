@@ -267,12 +267,12 @@ class LogInOut(Interface):
     def toggle_password(self):
         if self.scrollable_frame.password_box.cget('show') == '*':
             self.scrollable_frame.password_box.configure(show="")
-            if hasattr(self, 'confirm_password_box'):
+            if hasattr(self.scrollable_frame, 'confirm_password_box'):
                 self.scrollable_frame.confirm_password_box.configure(show="")
             self.scrollable_frame.show_password_button.configure(image=self.eye_open)
         else:
             self.scrollable_frame.password_box.configure(show="*")
-            if hasattr(self, 'confirm_password_box'):
+            if hasattr(self.scrollable_frame, 'confirm_password_box'):
                 self.scrollable_frame.confirm_password_box.configure(show="*")
             self.scrollable_frame.show_password_button.configure(image=self.eye_closed)
 

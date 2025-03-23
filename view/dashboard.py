@@ -55,6 +55,8 @@ class Dashboard(Interface):
     
     def init_transaction(self):
         # window_title, column_number, current_session, current_account
+        self.login_info.set_current_account(self.interface_frame.account_choice.get())
+        
         transaction = TransactionView(
             "Budget Buddy - Transaction",
             0,
