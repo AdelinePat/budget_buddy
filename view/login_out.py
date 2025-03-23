@@ -52,24 +52,25 @@ class LogInOut(Interface):
 
         # self.scrollable_frame.title_text = customtkinter.CTkLabel(master=self, text="Votre application bancaire préférée", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
         # self.scrollable_frame.title_text.grid(row=1, column=0, sticky="sew", padx=20, pady=0)
+        
 
 
-        self.title_text = customtkinter.CTkLabel(master=self, text="Budget Buddy", font=self.title_font, text_color=YELLOW, bg_color=DARK_BLUE)
-        self.title_text.grid(row=0, column=0, sticky="sew", padx=20, pady=(20,10))
+        self.title_text = self.build_label("Budget Buddy", 0, color=YELLOW, custom_font=self.title_font, padvertical=(20,10), justify="center")
+        # customtkinter.CTkLabel(master=self, text="Budget Buddy", font=self.title_font, text_color=YELLOW, bg_color=DARK_BLUE)
+        # self.title_text.grid(row=0, column=0, sticky="sew", padx=20, pady=(20,10))
 
-        self.title_text = customtkinter.CTkLabel(master=self, text="Votre application bancaire préférée".upper(), font=self.subtitle_font, text_color=YELLOW, bg_color=DARK_BLUE)
-        self.title_text.grid(row=1, column=0, sticky="sew", padx=20, pady=(5,20))
+        self.subtitle_text = self.build_label("Votre application bancaire préférée".upper(), 1, color=YELLOW, custom_font=self.subtitle_font, padvertical=(5,20), justify="center")
+        # customtkinter.CTkLabel(master=self, text="Votre application bancaire préférée".upper(), font=self.subtitle_font, text_color=YELLOW, bg_color=DARK_BLUE)
+        # self.title_text.grid(row=1, column=0, sticky="sew", padx=20, pady=(5,20))
 
 
-        self.email_entry = customtkinter.CTkLabel(master=self, text="Votre adresse email :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
-        self.email_entry.grid(row=2, column=0, sticky="sew", padx=20, pady=(5,2))
+        self.email_entry = self.build_label("Votre adresse email :", 2)
 
         self.email_box = customtkinter.CTkTextbox(master=self, font=self.text_font, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE)
         self.email_box.grid(row=3, column=0, sticky="sew", padx=20, pady=(2,5))
         self.email_box.insert("0.0", "")
 
-        self.password_entry = customtkinter.CTkLabel(master=self, text="Votre mot de passe :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
-        self.password_entry.grid(row=4, column=0, sticky="sew", padx=20, pady=(5,2))
+        self.password_entry = self.build_label("Votre mot de passe :", 4)
 
         self.password_box = customtkinter.CTkEntry(master=self, font=self.text_font, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE, show="*")
         self.password_box.grid(row=5, column=0, sticky="sew", padx=20, pady=(2,5))
@@ -176,49 +177,59 @@ class LogInOut(Interface):
         if hasattr(self, 'login_text'):
             self.login_text.destroy()
 
-    def build_label(self, label_text, row_number):
-        my_label = customtkinter.CTkLabel(self.scrollable_frame, text=label_text, font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
-        my_label.grid(row=row_number, column=0, sticky="ew", padx=20, pady=(5,2))
+    def build_label_scrollable_frame(self, label_text, row_number, color=SOFT_YELLOW, custom_font=None, padvertical=(5,2), justify="left", anchor="w"):
+        if custom_font == None:
+            custom_font = self.text_font
+        if justify != "left":
+            anchor="center"
+
+        my_label = customtkinter.CTkLabel(self.scrollable_frame, text=label_text, font=custom_font, text_color=color, bg_color=DARK_BLUE, justify=justify, anchor=anchor)
+        my_label.grid(row=row_number, column=0, sticky="ew", padx=20, pady=padvertical)
         return my_label
 
-    def set_scrollabal_bar(self):
+    def build_label(self, label_text, row_number, color=SOFT_YELLOW, custom_font=None, padvertical=(5,2), justify="left", anchor="w"):
+        if custom_font == None:
+            custom_font = self.text_font
+
+        if justify != "left":
+            anchor="center"
+
+        my_label = customtkinter.CTkLabel(self, text=label_text, font=custom_font, text_color=color, bg_color=DARK_BLUE, justify=justify, anchor=anchor)
+        my_label.grid(row=row_number, column=0, sticky="ew", padx=20, pady=padvertical)
+        return my_label
+
+    def set_scrollable_bar(self):
         self.scrollable_frame = Scrollable_frame(self, bg_color=DARK_BLUE, fg_color=DARK_BLUE)
         self.scrollable_frame.columnconfigure(0, weight=1)
         self.scrollable_frame.pack(fill='both', expand=1)
         
     def register_screen_build(self):
         self.login_screen_destroy()
-        self.set_scrollabal_bar()
-
+        self.set_scrollable_bar()
 
         # Titre
-        self.scrollable_frame.title_text = customtkinter.CTkLabel(master=self.scrollable_frame, text="Créer un compte", font=self.title_font, text_color=YELLOW, bg_color=DARK_BLUE)
-        self.scrollable_frame.title_text.grid(row=0, column=0, sticky="ew", padx=20, pady=(20,10))
+        self.scrollable_frame.title_text = self.build_label_scrollable_frame("Créer un compte", 0, color=YELLOW, custom_font=self.title_font, padvertical=(20,10), justify="center")
 
         # Nom
-        self.scrollable_frame.lastname_label = customtkinter.CTkLabel(self.scrollable_frame, text="Nom :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
-        self.scrollable_frame.lastname_label.grid(row=1, column=0, sticky="ew", padx=20, pady=(5,2))
+        self.scrollable_frame.lastname_label = self.build_label_scrollable_frame("Nom :", 1)
 
         self.scrollable_frame.lastname_box = customtkinter.CTkEntry(self.scrollable_frame, font=self.text_font, height=48, corner_radius=10, bg_color=DARK_BLUE, fg_color=SOFT_YELLOW, text_color=DARK_BLUE)
         self.scrollable_frame.lastname_box.grid(row=2, column=0, sticky="ew", padx=20, pady=(2,5))
 
         # Prénom
-        self.scrollable_frame.firstname_label = customtkinter.CTkLabel(self.scrollable_frame, text="Prénom :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
-        self.scrollable_frame.firstname_label.grid(row=3, column=0, sticky="ew", padx=20, pady=(5,2))
+        self.scrollable_frame.firstname_label = self.build_label_scrollable_frame("Prénom :", 3)
 
         self.scrollable_frame.firstname_box = customtkinter.CTkEntry(self.scrollable_frame, font=self.text_font, height=48, corner_radius=10, bg_color=DARK_BLUE, fg_color=SOFT_YELLOW, text_color=DARK_BLUE)
         self.scrollable_frame.firstname_box.grid(row=4, column=0, sticky="ew", padx=20, pady=(2,5))
 
         # Email
-        self.scrollable_frame.email_label = customtkinter.CTkLabel(self.scrollable_frame, text="Email :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
-        self.scrollable_frame.email_label.grid(row=5, column=0, sticky="ew", padx=20, pady=(5,2))
+        self.scrollable_frame.email_label = self.build_label_scrollable_frame("Email :", 5)
 
         self.scrollable_frame.email_box = customtkinter.CTkEntry(self.scrollable_frame, font=self.text_font, height=48, corner_radius=10, bg_color=DARK_BLUE, fg_color=SOFT_YELLOW, text_color=DARK_BLUE)
         self.scrollable_frame.email_box.grid(row=6, column=0, sticky="ew", padx=20, pady=(2,5))
 
         # Mot de passe
-        self.scrollable_frame.password_label = customtkinter.CTkLabel(self.scrollable_frame, text="Mot de passe :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
-        self.scrollable_frame.password_label.grid(row=7, column=0, sticky="ew", padx=20, pady=(5,2))
+        self.scrollable_frame.password_label = self.build_label_scrollable_frame("Mot de passe :", 7)
 
         self.scrollable_frame.password_box = customtkinter.CTkEntry(self.scrollable_frame, font=self.text_font, height=48, corner_radius=10, bg_color=DARK_BLUE, fg_color=SOFT_YELLOW, text_color=DARK_BLUE, show="*")
         self.scrollable_frame.password_box.grid(row=8, column=0, sticky="ew", padx=20, pady=(2,5))
@@ -238,13 +249,7 @@ class LogInOut(Interface):
         self.scrollable_frame.show_password_button.grid(row=8, column=0, padx=20, pady=(2,5), sticky="e")
 
         # Confirmer le mot de passe
-        self.scrollable_frame.confirm_password_label = customtkinter.CTkLabel(self.scrollable_frame,
-                                                        text="Confirmez le mot de passe :",
-                                                        font=self.text_font,
-                                                        text_color=SOFT_YELLOW,
-                                                        bg_color=DARK_BLUE)
-        
-        self.scrollable_frame.confirm_password_label.grid(row=9, column=0, sticky="ew", padx=20, pady=(5,2))
+        self.scrollable_frame.confirm_password_label = self.build_label_scrollable_frame("Confirmez le mot de passe :", 9)
 
         self.scrollable_frame.confirm_password_box = customtkinter.CTkEntry(self.scrollable_frame, font=self.text_font, height=48, corner_radius=10, bg_color=DARK_BLUE, fg_color=SOFT_YELLOW, text_color=DARK_BLUE, show="*")
         self.scrollable_frame.confirm_password_box.grid(row=10, column=0, sticky="ew", padx=20, pady=(2,5))
