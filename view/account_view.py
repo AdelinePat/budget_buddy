@@ -1,7 +1,7 @@
 import customtkinter
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK
 
-# from view.scrollable_frame import Scrollable_frame
+from view.scrollable_frame import Scrollable_frame
 from model.historic_transaction_model import Historic_Transaction
 from data_access.write_historic_query import HistoricQuery
 

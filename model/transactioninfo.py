@@ -38,6 +38,9 @@ class TransactionInfo():
         return self.__amount
     
 
+    def set_current_account(self, new_value):
+        self.__current_account = new_value
+
     def set_type(self, new_value):
         self.__type = new_value
 
