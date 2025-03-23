@@ -205,7 +205,7 @@ class LogInOut(Interface):
         return my_label
 
     def set_scrollable_bar(self):
-        self.scrollable_frame = Scrollable_frame(self, bg_color=DARK_BLUE, fg_color=DARK_BLUE, height=650)
+        self.scrollable_frame = Scrollable_frame(self, bg_color=DARK_BLUE, fg_color=DARK_BLUE, height=440)
         self.scrollable_frame.columnconfigure(0, weight=1)
         # self.scrollable_frame.pack(fill='both', expand=1)
         self.scrollable_frame.grid(row=0, column=0, sticky="snew")
