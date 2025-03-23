@@ -10,6 +10,8 @@ server_connection.create_database()
 
 # connected = [False, None]
 view = LogInOut("Budget Buddy - Connexion Client", 0)
+# if view.connected == True:
+#     view.dashboard.build_dashboard()
 view.mainloop()
 
 # if connected[0]:

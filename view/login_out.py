@@ -16,6 +16,7 @@ from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YEL
 from model.server import ServerDatabase
 # from view.utiltool import UtilTool
 from view.interface import Interface
+from view.dashboard import Dashboard
 
 class LogInOut(Interface):
     def __init__(self, window_title, column_number):
@@ -26,11 +27,12 @@ class LogInOut(Interface):
         self.log_info = LoginInfo()
         self.database = ServerDatabase()
         self.connected = False
+        self.dashboard = self.create_dashboard()
         
 
-        self.scrollable_frame = Scrollable_frame(self, bg_color=DARK_BLUE, fg_color=DARK_BLUE)
-        self.scrollable_frame.columnconfigure(0, weight=1)
-        self.scrollable_frame.pack(fill='both', expand=1)
+        # self.scrollable_frame = Scrollable_frame(self, bg_color=DARK_BLUE, fg_color=DARK_BLUE)
+        # self.scrollable_frame.columnconfigure(0, weight=1)
+        # self.scrollable_frame.pack(fill='both', expand=1)
 
         self.login_screen_build()
         self.lift() 
@@ -38,6 +40,11 @@ class LogInOut(Interface):
         self.__data_acces = UserDataAcess()
         self.__all_users = self.__data_acces.get_all_users()
 
+    def create_dashboard(self):
+        if self.connected == True:
+            self.dashboard = Dashboard(self, "Budget Buddy - Dashboard", 1, self.log_info)
+        else:
+            self.dashboard = None
 
     def login_screen_build(self):
         # self.title_text = customtkinter.CTkLabel(master=self, text="Budget Buddy", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
@@ -47,28 +54,28 @@ class LogInOut(Interface):
         # self.scrollable_frame.title_text.grid(row=1, column=0, sticky="sew", padx=20, pady=0)
 
 
-        self.scrollable_frame.title_text = customtkinter.CTkLabel(master=self.scrollable_frame, text="Budget Buddy", font=self.title_font, text_color=YELLOW, bg_color=DARK_BLUE)
-        self.scrollable_frame.title_text.grid(row=0, column=0, sticky="sew", padx=20, pady=(20,10))
+        self.title_text = customtkinter.CTkLabel(master=self, text="Budget Buddy", font=self.title_font, text_color=YELLOW, bg_color=DARK_BLUE)
+        self.title_text.grid(row=0, column=0, sticky="sew", padx=20, pady=(20,10))
 
-        self.scrollable_frame.title_text = customtkinter.CTkLabel(master=self.scrollable_frame, text="Votre application bancaire préférée".upper(), font=self.subtitle_font, text_color=YELLOW, bg_color=DARK_BLUE)
-        self.scrollable_frame.title_text.grid(row=1, column=0, sticky="sew", padx=20, pady=(5,20))
+        self.title_text = customtkinter.CTkLabel(master=self, text="Votre application bancaire préférée".upper(), font=self.subtitle_font, text_color=YELLOW, bg_color=DARK_BLUE)
+        self.title_text.grid(row=1, column=0, sticky="sew", padx=20, pady=(5,20))
 
 
-        self.scrollable_frame.email_entry = customtkinter.CTkLabel(master=self.scrollable_frame, text="Votre adresse email :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
-        self.scrollable_frame.email_entry.grid(row=2, column=0, sticky="sew", padx=20, pady=(5,2))
+        self.email_entry = customtkinter.CTkLabel(master=self, text="Votre adresse email :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
+        self.email_entry.grid(row=2, column=0, sticky="sew", padx=20, pady=(5,2))
 
-        self.scrollable_frame.email_box = customtkinter.CTkTextbox(master=self.scrollable_frame, font=self.text_font, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE)
-        self.scrollable_frame.email_box.grid(row=3, column=0, sticky="sew", padx=20, pady=(2,5))
-        self.scrollable_frame.email_box.insert("0.0", "")
+        self.email_box = customtkinter.CTkTextbox(master=self, font=self.text_font, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE)
+        self.email_box.grid(row=3, column=0, sticky="sew", padx=20, pady=(2,5))
+        self.email_box.insert("0.0", "")
 
-        self.scrollable_frame.password_entry = customtkinter.CTkLabel(master=self.scrollable_frame, text="Votre mot de passe :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
-        self.scrollable_frame.password_entry.grid(row=4, column=0, sticky="sew", padx=20, pady=(5,2))
+        self.password_entry = customtkinter.CTkLabel(master=self, text="Votre mot de passe :", font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
+        self.password_entry.grid(row=4, column=0, sticky="sew", padx=20, pady=(5,2))
 
-        self.scrollable_frame.password_box = customtkinter.CTkEntry(master=self.scrollable_frame, font=self.text_font, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE, show="*")
-        self.scrollable_frame.password_box.grid(row=5, column=0, sticky="sew", padx=20, pady=(2,5))
+        self.password_box = customtkinter.CTkEntry(master=self, font=self.text_font, width=200, height=48, corner_radius=10, bg_color= DARK_BLUE, fg_color= SOFT_YELLOW, text_color = DARK_BLUE, show="*")
+        self.password_box.grid(row=5, column=0, sticky="sew", padx=20, pady=(2,5))
 
-        self.scrollable_frame.show_password_button = customtkinter.CTkButton(
-            master=self.scrollable_frame, 
+        self.show_password_button = customtkinter.CTkButton(
+            master=self, 
             text="",  
             width=40, 
             image=self.eye_closed,  
@@ -79,21 +86,27 @@ class LogInOut(Interface):
             corner_radius=0,
         )
 
-        self.scrollable_frame.show_password_button.grid(row=5, column=0, padx=30, sticky="e")
+        self.show_password_button.grid(row=5, column=0, padx=30, sticky="e")
 
-        self.scrollable_frame.button = customtkinter.CTkButton(master=self.scrollable_frame, text="Se connecter".upper(), font=self.text_font, command=self.button_callback, corner_radius=7, bg_color=DARK_BLUE, fg_color=PINK)
-        self.scrollable_frame.button.grid(row=6, column=0, padx=20, pady=(10,5))
+        self.button = customtkinter.CTkButton(master=self,
+                                                text="Se connecter".upper(),
+                                                font=self.text_font,
+                                                command=self.login_button_callback,
+                                                corner_radius=7,
+                                                bg_color=DARK_BLUE,
+                                                fg_color=PINK)
+        
+        self.button.grid(row=6, column=0, padx=20, pady=(10,5))
 
         # self.error_label = customtkinter.CTkLabel(self, text="", text_color="red")
         # self.error_label.grid(row=6, column=0, padx=20, pady=5)
 
-        self.scrollable_frame.button_create_account = customtkinter.CTkButton(master=self.scrollable_frame, text="Créer un compte".upper(), font=self.text_font, command=self.register_screen_build, corner_radius=7, bg_color=DARK_BLUE, fg_color=PINK)
-        self.scrollable_frame.button_create_account.grid(row=7, column=0, padx=20, pady=5)
+        self.button_create_account = customtkinter.CTkButton(master=self, text="Créer un compte".upper(), font=self.text_font, command=self.register_screen_build, corner_radius=7, bg_color=DARK_BLUE, fg_color=PINK)
+        self.button_create_account.grid(row=7, column=0, padx=20, pady=5)
 
         self.build_quit_button()
     
-
-    def build_quit_button(self):
+    def build_quit_button_srollable_frame(self):
         self.scrollable_frame.button_quit = customtkinter.CTkButton(master=self.scrollable_frame,
                                             text="Quitter".upper(),
                                             font=self.text_font,
@@ -103,6 +116,17 @@ class LogInOut(Interface):
                                             fg_color = PINK) # button for quitting app
         
         self.scrollable_frame.button_quit.grid(row=18, column=0, sticky="", padx=20, pady=(5,10))
+
+    def build_quit_button(self):
+        self.button_quit = customtkinter.CTkButton(master=self,
+                                            text="Quitter".upper(),
+                                            font=self.text_font,
+                                            command=self.quit_app,
+                                            corner_radius=7,
+                                            bg_color= DARK_BLUE,
+                                            fg_color = PINK) # button for quitting app
+        
+        self.button_quit.grid(row=18, column=0, sticky="", padx=20, pady=(5,10))
 
     def quit_app(self):
         self.destroy()
@@ -152,14 +176,20 @@ class LogInOut(Interface):
         if hasattr(self, 'login_text'):
             self.login_text.destroy()
 
+    def build_label(self, label_text, row_number):
+        my_label = customtkinter.CTkLabel(self.scrollable_frame, text=label_text, font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE)
+        my_label.grid(row=row_number, column=0, sticky="ew", padx=20, pady=(5,2))
+        return my_label
+
+    def set_scrollabal_bar(self):
+        self.scrollable_frame = Scrollable_frame(self, bg_color=DARK_BLUE, fg_color=DARK_BLUE)
+        self.scrollable_frame.columnconfigure(0, weight=1)
+        self.scrollable_frame.pack(fill='both', expand=1)
+        
     def register_screen_build(self):
         self.login_screen_destroy()
+        self.set_scrollabal_bar()
 
-        # self.scrollable_frame = customtkinter.CTkScrollableFrame(self, width=400, height=500)  
-        # self.scrollable_frame.grid(row=0, column=0, sticky="nsew", padx=20, pady=20)
-        
-
-        # self.scrollable_frame.grid_columnconfigure(0, weight=1)
 
         # Titre
         self.scrollable_frame.title_text = customtkinter.CTkLabel(master=self.scrollable_frame, text="Créer un compte", font=self.title_font, text_color=YELLOW, bg_color=DARK_BLUE)
@@ -264,7 +294,7 @@ class LogInOut(Interface):
 
 
 
-    def toggle_password(self):
+    def toggle_password_scrollable_frame(self):
         if self.scrollable_frame.password_box.cget('show') == '*':
             self.scrollable_frame.password_box.configure(show="")
             if hasattr(self.scrollable_frame, 'confirm_password_box'):
@@ -276,17 +306,28 @@ class LogInOut(Interface):
                 self.scrollable_frame.confirm_password_box.configure(show="*")
             self.scrollable_frame.show_password_button.configure(image=self.eye_closed)
 
+    def toggle_password(self):
+        if self.password_box.cget('show') == '*':
+            self.password_box.configure(show="")
+            if hasattr(self, 'confirm_password_box'):
+                self.confirm_password_box.configure(show="")
+            self.show_password_button.configure(image=self.eye_open)
+        else:
+            self.password_box.configure(show="*")
+            if hasattr(self, 'confirm_password_box'):
+                self.confirm_password_box.configure(show="*")
+            self.show_password_button.configure(image=self.eye_closed)
 
     def login_screen_destroy(self):
-        self.scrollable_frame.email_entry.destroy()
-        self.scrollable_frame.email_box.destroy()
-        self.scrollable_frame.password_entry.destroy()
-        self.scrollable_frame.password_box.destroy()
-        self.scrollable_frame.show_password_button.destroy()  
-        self.scrollable_frame.button.destroy()
-        self.scrollable_frame.button_create_account.destroy()
-        self.scrollable_frame.title_text.destroy()
-        self.scrollable_frame.title_text.destroy()
+        self.email_entry.destroy()
+        self.email_box.destroy()
+        self.password_entry.destroy()
+        self.password_box.destroy()
+        self.show_password_button.destroy()  
+        self.button.destroy()
+        self.button_create_account.destroy()
+        self.title_text.destroy()
+        self.title_text.destroy()
 
     def build_logout_button(self):
         self.scrollable_frame.button = customtkinter.CTkButton(master=self.scrollable_frame, text="Se déconnecter".upper(), font=self.text_font, command=self.button_callbck_logout, corner_radius=10, bg_color=DARK_BLUE, fg_color=PINK)
@@ -299,14 +340,14 @@ class LogInOut(Interface):
             self.login_text.destroy()
 
     def interface_screen_destroy(self):
-        self.scrollable_frame.button.destroy()
+        self.button.destroy()
 
-    def button_callback(self):
+    def login_button_callback(self):
         if hasattr(self, 'login_text'):
             self.login_text.destroy()
 
-        email = self.scrollable_frame.email_box.get("1.0", "end").strip()
-        password = self.scrollable_frame.password_box.get().strip()
+        email = self.email_box.get("1.0", "end").strip()
+        password = self.password_box.get().strip()
         try:
             self.controller.validate_email(email)
             self.log_info.set_id_user(self.__data_acces.get_user_id_from_email(email))
@@ -316,17 +357,22 @@ class LogInOut(Interface):
 
             if self.controller.check_password(stored_hashed_password, password):
                 self.login_screen_destroy()
-                self.build_logout_button()
-                self.build_login_result(10, "Vous êtes connecté !")
+                # self.build_logout_button()
+                # self.build_login_result(10, "Vous êtes connecté !")
                 self.connected = True
-                self.destroy()
+                if hasattr(self, 'scrollable_frame'):
+                    delattr(self, 'scrollable_frame')
+                self.create_dashboard()
+                self.dashboard.build_dashboard()
+                    
+                # self.destroy()
                
         except LogInDataException as e:
             self.build_login_result(20, e)
 
 
     def build_login_result(self, row1, error_message):
-        self.login_text = customtkinter.CTkLabel(master=self.scrollable_frame, text=error_message, font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
+        self.login_text = customtkinter.CTkLabel(master=self, text=error_message, font=self.text_font, text_color=SOFT_YELLOW, bg_color=DARK_BLUE, justify="left", anchor="w")
         self.login_text.grid(row=row1, column=0, sticky="sn", padx=20, pady=5)
     
     def print_all_users(self):
