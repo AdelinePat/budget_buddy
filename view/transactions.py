@@ -17,9 +17,11 @@ class TransactionView(Interface):
         super().__init__(window_title, column_number)
         self.controller = TransactionManager()
         self.__data_access = DataAccess()
+        
         self.transaction_frame = Scrollable_frame(self, bg_color=DARK_BLUE, fg_color=DARK_BLUE)
         self.transaction_frame.columnconfigure(0, weight=1)
         self.transaction_frame.pack(fill='both', expand=1)
+
         self.deal_type_list = ['Retrait', 'Dépôt', 'Transfert', 'Virement']
         self.category_list = ['Alimentaire', 'Loisirs', 'Prélèvement', 'Transport', 'Santé', 'Dealing', 'Activités illicites', 'Consommation de café']
         self.transaction_info = TransactionInfo(current_session, current_account, "", "", None, None, "", "", "")
