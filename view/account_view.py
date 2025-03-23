@@ -3,12 +3,12 @@ from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YEL
 
 from view.scrollable_frame import Scrollable_frame
 from model.historic_transaction_model import Historic_Transaction
-from data_access.account_data_access import DataAccess
+from data_access.write_historic_query import HistoricQuery
 
 class Account_view:
     def __init__(self, list_args):
         self.account_id, self.user_id, self.account_type, self.account_name, self.account_amount, self.account_minimum = list_args
-        self.database = DataAccess()
+        self.database = HistoricQuery()
         self.database.init_historic_queries()
         self.build_factors_block_dict : dict = {
             "Voir tout" : self.build_all,
