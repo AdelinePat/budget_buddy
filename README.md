@@ -2,7 +2,7 @@
 
 # Financial Management Tool
 
-![preview main](budget_buddy_dashboard.jp)
+![preview main](budget_buddy_dashboard.jpg)
 
 **Project Description**
 
