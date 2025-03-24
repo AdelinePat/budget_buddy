@@ -62,18 +62,28 @@ class Dashboard():
         welcome_message = "Bienvenue " + user_name
         self.interface_frame.box = customtkinter.CTkLabel(
             self.interface_frame, text=welcome_message.upper(), 
-            height=50, width=350, bg_color=DARK_BLUE,
+            height=50, width=350, bg_color=SOFT_BLUE,
             fg_color=SOFT_BLUE, text_color=LIGHT_BLUE,
             font=self.master.subtitle_font
         )
         self.interface_frame.account_choice = customtkinter.CTkComboBox(
-            self.interface_frame, corner_radius=15, values=self.display_accounts, command=self.flip_account,
-            font=self.master.text_font
+            self.interface_frame,
+            values=self.display_accounts,
+            command=self.flip_account,
+            font=self.master.text_font,
+            text_color=DARK_BLUE,
+            dropdown_text_color = DARK_BLUE,
+            bg_color=LIGHT_BLUE,
+            fg_color=SOFT_YELLOW,
+            dropdown_fg_color = SOFT_YELLOW, 
+            dropdown_font= self.master.text_font,
+            dropdown_hover_color = SOFT_BLUE,
+            corner_radius=15
         )
         self.interface_frame.transaction_button = customtkinter.CTkButton(
             self.interface_frame, text="Initier un virement depuis ce compte",
             height=60, bg_color=SOFT_BLUE,
-            fg_color=SOFT_BLUE, text_color=LIGHT_BLUE,
+            fg_color=SOFT_BLUE, text_color=DARK_BLUE,
             font=self.master.text_font, command=self.init_transaction
         )
         self.interface_frame.box.grid(row=1, column=0, pady=20, sticky="ew")
@@ -83,7 +93,7 @@ class Dashboard():
         self.interface_frame.create_bank_account_button = customtkinter.CTkButton(
             self.interface_frame, text="Création d'un nouveau compte bancaire",
             height=60, bg_color=SOFT_BLUE,
-            fg_color=SOFT_BLUE, text_color=LIGHT_BLUE,
+            fg_color=SOFT_BLUE, text_color=DARK_BLUE,
             font=self.master.text_font, command=self.create_account_callback
         )
         self.interface_frame.create_bank_account_button.grid(row=4, column=0, padx=10, pady=5, sticky="ew")
@@ -127,10 +137,16 @@ class Dashboard():
 
         self.interface_frame.account_type_choice = customtkinter.CTkComboBox(master=self.interface_frame,
             values=self.account_type_list, state="readonly",
-            command=self.account_combobox_callback, font=self.master.text_font, text_color=DARK_BLUE,
-            bg_color=DARK_BLUE, fg_color=SOFT_YELLOW, dropdown_fg_color = SOFT_YELLOW, 
-            dropdown_text_color = DARK_BLUE, dropdown_font= self.master.text_font,
-            dropdown_hover_color = SOFT_BLUE, corner_radius=10)
+            command=self.account_combobox_callback,
+            font=self.master.text_font,
+            text_color=DARK_BLUE,
+            dropdown_text_color = DARK_BLUE,
+            bg_color=LIGHT_BLUE,
+            fg_color=SOFT_YELLOW,
+            dropdown_fg_color = SOFT_YELLOW, 
+            dropdown_font= self.master.text_font,
+            dropdown_hover_color = SOFT_BLUE,
+            corner_radius=10)
 
         self.interface_frame.account_type_choice.grid(row=5, column=0, sticky="sew", padx=20, pady=0)
         self.interface_frame.account_type_choice.set(self.account_type_list[0])
@@ -142,19 +158,19 @@ class Dashboard():
         self.interface_frame.create_account_message = self.build_label("Compte créer avec succès", 5)
         self.interface_frame.account_type_choice.destroy()
        
-    def build_label(self, label_text, row_number, master=None, color=DARK_BLUE, bg_color=LIGHT_BLUE, custom_font=None, padvertical=(5,2), justify="left", anchor="w"):
+    def build_label(self, label_text, row_number, master=None, color=DARK_BLUE, bg_color=LIGHT_BLUE, custom_font=None, padvertical=(5,2), justify="center", anchor="center"):
         if custom_font == None:
             custom_font = self.master.text_font
 
-        if justify != "left":
-            anchor="center"
+        if justify != "center":
+            anchor=justify
         if master==None:
             master = self.interface_frame
 
         if bg_color != LIGHT_BLUE:
             bg_color = bg_color
         
-        my_label = customtkinter.CTkLabel(master,
+        my_label = customtkinter.CTkLabel(master=self.main_frame,
                                           text=label_text,
                                           font=custom_font, 
                                           text_color=color, 

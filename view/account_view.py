@@ -42,7 +42,8 @@ class Account_view:
             master, bg_color=LIGHT_BLUE, font=self.util.text_font, corner_radius=15,
             values=[
                 "Voir tout", "Par catégorie", "Par type", "Par dates"
-            ], command=self.flip_filters
+            ], command=self.flip_filters,
+            
         )
         master.filters.grid(row=3, column=0, padx=10, pady=10, sticky="ew")
         self.destroy_factors_block_dict[self.current_filter]()
@@ -79,19 +80,37 @@ class Account_view:
     
     def build_category(self):
         self.master.category = customtkinter.CTkComboBox(
-            self.master, bg_color=LIGHT_BLUE, corner_radius=15, font=self.interface.text_font,
+            self.master,
             values=[
                 'Alimentaire', 'Loisirs', 'Prélèvement', 'Transport', 'Santé', 'Dealing', 'Activités illicites', 'Consommation de café'
-            ]
+            ],
+            font=self.interface.text_font,
+            text_color=DARK_BLUE,
+            dropdown_text_color = DARK_BLUE,
+            bg_color=LIGHT_BLUE,
+            fg_color=SOFT_YELLOW,
+            dropdown_fg_color = SOFT_YELLOW, 
+            dropdown_font= self.interface.text_font,
+            dropdown_hover_color = SOFT_BLUE,
+            corner_radius=15
         )
         self.master.category.grid(column=0, row=4, padx=10, pady=10, sticky="ew")
 
     def build_type(self):
         self.master.type = customtkinter.CTkComboBox(
-            self.master, bg_color=LIGHT_BLUE, corner_radius=15, font=self.util.text_font,
+            self.master,
             values=[
                 'Alimentaire', 'Loisirs', 'Prélèvement', 'Transport', 'Santé', 'Dealing', 'Activités illicites', 'Consommation de café'
-            ]
+            ],
+            font=self.util.text_font,
+            text_color=DARK_BLUE,
+            dropdown_text_color = DARK_BLUE,
+            bg_color=LIGHT_BLUE,
+            fg_color=SOFT_YELLOW,
+            dropdown_fg_color = SOFT_YELLOW, 
+            dropdown_font= self.util.text_font,
+            dropdown_hover_color = SOFT_BLUE,
+            corner_radius=15
         )
         self.master.type.grid(column=0, row=4, padx=10, pady=10, sticky="ew")
 
