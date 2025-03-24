@@ -39,8 +39,6 @@ class UserDataAcess():
             raise LogInDataException("Le nom et prénom n'ont pas été trouvé")
         fullname = result[0] + " " + result[1]
         return fullname
-        
-        # return result[0] if result else None
     
     def get_password_from_id_user(self, id_user):
         if id_user == None or type(id_user) != int:
@@ -105,13 +103,13 @@ class UserDataAcess():
         conn = self.database.database_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT id_user, firstname, lastname, email FROM Users")
-        users = cursor.fetchall()  # Récupère tous les utilisateurs
+        users = cursor.fetchall()  # fetch all users
         if users:
             for user in users:
                 user_id, firstname, lastname, email = user
                 print(f"Utilisateur: ID: {user_id}, Prénom: {firstname}, Nom: {lastname}, Email: {email}")
 
-                # Récupère et affiche les comptes associés à cet utilisateur
+                # Fetch and display all account associated to this user
                 cursor.execute("SELECT account_type, account_name, balance FROM Bank_account WHERE id_user = %s", (user_id,))
                 accounts = cursor.fetchall()
                 if accounts:

@@ -1,7 +1,4 @@
-
 from view.login_out import LogInOut
-from view.dashboard import Dashboard
-
 from model.server import ServerDatabase
 
 server_connection = ServerDatabase()

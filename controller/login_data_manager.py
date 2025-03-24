@@ -64,8 +64,6 @@ class LoginManager():
 
         login_info.set_password(self.__hash_password__(login_info.get_password())) # hash password
 
-
         self.__query.register_user(login_info)
-        # login_info.set_confirm_password(None)
 
         

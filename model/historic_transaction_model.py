@@ -1,5 +1,5 @@
 import customtkinter
-from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK
+from view.__settings__ import LIGHT_BLUE
 
 class Historic_Transaction(customtkinter.CTkFrame):
     def __init__(self, master, transaction_infos, interface, **kwargs):
