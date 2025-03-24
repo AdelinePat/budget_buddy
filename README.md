@@ -113,19 +113,39 @@ budget_buddy/
 │   ├── font/            
 │   └── img/             
 │
-├── controller/          
+├── controller/    
+|     ├── dashboard_data_manager.py     
+│     ├── login_data_manager.py      
+│     └── transactionmanager.py  
+|
+├── data_access/    
+|     ├── read_data_access.py     
+│     ├── read_user_data.py  
+|     ├── write_historic_query.py  
+|     ├── write_loginquery.py    
+│     └── write_transactionquery.py  
 │
 ├── models/               
-│   └── server.py         
+│    ├── customexception.py     
+│    ├── histotic_transaction_model.py  
+|    ├── login_info.py  
+|    ├── server.py    
+│    └── wtransactioninfo.py          
 │
 ├── view/               
-│   ├── interface.py     
-│   ├── login_out.py      
-│   ├── transactions.py    
-│   └── __settings__.py   
+│   ├── __settings__.py     
+│   ├── account_view.py  
+|   ├── dashboard.py  
+|   ├── historic.py   
+│   ├── interface_frames.py   
+|   ├── interface.py  
+|   ├── login_out.py  
+|   ├── scrollable_frame.py  
+|   ├── transactions.py     
+│   └── utiltool.py   
 │
 ├── .gitignore            
-├── main_2.py             
+├── main.py             
 └── README.md             
 
    
