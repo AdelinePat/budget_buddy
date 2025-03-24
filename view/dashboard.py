@@ -14,7 +14,7 @@ class Dashboard():
         self.login_info = login_info
         self.master = master
         self.database = DataAccess()
-        self.list_accounts : list = self.database.get_all_accounts_from_user(self.login_info.get_user_id())
+        self.list_accounts = self.database.get_all_accounts_from_user(self.login_info.get_user_id())
         self.list_accounts.insert(0, (0, "Tous les comptes"))
         self.controller = DashboardManager()
         self.account_type_list = ACCOUNT_TYPE_LIST
@@ -40,11 +40,33 @@ class Dashboard():
         self.historic_frame.columnconfigure(0, weight=1)
         self.historic_frame.grid(row=2, column=1, padx=20, pady=20, sticky="snew")
 
-        
-
-        self.list_all_accounts()
+        self.display_accounts = self.list_all_accounts()
         self.build_dashboard()
-    
+
+    def build_account_choice_combobox(self):
+        if self.display_accounts != self.list_all_accounts():
+            self.display_accounts = self.list_all_accounts()
+            self.interface_frame.account_choice.destroy()
+            self.historic_frame.list_accounts = self.list_all_accounts()
+
+        self.interface_frame.account_choice = customtkinter.CTkComboBox(
+            self.interface_frame,
+            values=self.display_accounts,
+            command=self.flip_account,
+            font=self.master.text_font,
+            text_color=DARK_BLUE,
+            dropdown_text_color = DARK_BLUE,
+            bg_color=LIGHT_BLUE,
+            fg_color=SOFT_YELLOW,
+            dropdown_fg_color = SOFT_YELLOW, 
+            dropdown_font= self.master.text_font,
+            dropdown_hover_color = SOFT_BLUE,
+            corner_radius=15
+        )
+
+        self.interface_frame.account_choice.grid(row=3, column=0, padx=10, pady=20, sticky="ew")
+
+        
     def build_dashboard(self):
         self.title = self.build_label("Budget Buddy",
                                              0,
@@ -68,20 +90,9 @@ class Dashboard():
             fg_color=SOFT_BLUE, text_color=LIGHT_BLUE,
             font=self.master.subtitle_font
         )
-        self.interface_frame.account_choice = customtkinter.CTkComboBox(
-            self.interface_frame,
-            values=self.display_accounts,
-            command=self.flip_account,
-            font=self.master.text_font,
-            text_color=DARK_BLUE,
-            dropdown_text_color = DARK_BLUE,
-            bg_color=LIGHT_BLUE,
-            fg_color=SOFT_YELLOW,
-            dropdown_fg_color = SOFT_YELLOW, 
-            dropdown_font= self.master.text_font,
-            dropdown_hover_color = SOFT_BLUE,
-            corner_radius=15
-        )
+
+        self.build_account_choice_combobox()
+        
         self.interface_frame.transaction_button = customtkinter.CTkButton(
             self.interface_frame, text="Initier un virement depuis ce compte",
             height=60, bg_color=SOFT_BLUE,
@@ -89,7 +100,7 @@ class Dashboard():
             font=self.master.text_font, command=self.init_transaction
         )
         self.interface_frame.box.grid(row=2, column=0, pady=20, sticky="ew")
-        self.interface_frame.account_choice.grid(row=3, column=0, padx=10, pady=20, sticky="ew")
+        
         self.interface_frame.transaction_button.grid(row=4, column=0, padx=10, pady=5, sticky="ew")
 
         self.interface_frame.create_bank_account_button = customtkinter.CTkButton(
@@ -101,7 +112,8 @@ class Dashboard():
         self.interface_frame.create_bank_account_button.grid(row=5, column=0, padx=10, pady=5, sticky="ew")
         
         self.create_logout_button(7) ### if create_bank_account -> row_position 5 already taken ###
-
+        
+        self.list_accounts = self.list_all_accounts()
         self.historic = Historic(self.historic_frame, self.list_accounts, self.display_accounts, self.account_id)
 
     def create_logout_button(self, row_position):
@@ -158,8 +170,10 @@ class Dashboard():
         id_user = self.login_info.get_user_id()
         self.controller.create_account_from_user_id(id_user, account_type)
         self.interface_frame.account_type_choice.destroy()
-        self.interface_frame.create_account_message = self.build_label("Compte créer avec succès", 6, self.interface_frame)
+        self.interface_frame.create_account_message = self.build_label("Compte créé avec succès", 6, self.interface_frame)
         
+        self.build_account_choice_combobox()
+
     def build_label(self, label_text, row_number, master=None, color=DARK_BLUE, bg_color=LIGHT_BLUE, custom_font=None, padvertical=(5,2), justify="center", anchor="center"):
         if custom_font == None:
             custom_font = self.master.text_font
@@ -184,6 +198,11 @@ class Dashboard():
 
     def init_transaction(self):
         # window_title, column_number, current_session, current_account
+        if hasattr(self.interface_frame, 'create_account_message'):
+            self.interface_frame.create_account_message.destroy()
+
+        if hasattr(self.interface_frame, 'account_type_choice'):
+            self.interface_frame.account_type_choice.destroy()
 
         self.login_info.set_current_account(self.interface_frame.account_choice.get())
         
@@ -198,9 +217,17 @@ class Dashboard():
     def flip_account(self, choice):
         self.historic.flip_historic_account(choice)
         self.account_id = choice[0]
+        if hasattr(self.interface_frame, 'account_type_choice'):
+            self.interface_frame.account_type_choice.destroy()
 
     def list_all_accounts(self):
-        self.display_accounts : list = []
+        if self.list_accounts != self.database.get_all_accounts_from_user(self.login_info.get_user_id()):
+            self.list_accounts = self.database.get_all_accounts_from_user(self.login_info.get_user_id())
+            self.list_accounts.insert(0, (0, "Tous les comptes"))
+
+        display_accounts : list = []
         for account in self.list_accounts:
             display = str(account[0]) + " " + account[1]
-            self.display_accounts.append(display)
+            display_accounts.append(display)
+
+        return display_accounts
