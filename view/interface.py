@@ -1,13 +1,6 @@
 import customtkinter
 from view.utiltool import UtilTool
-from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK
-from view.interface_frames import Interface_frames
-
-# from view.scrollable_frame import Scrollable_frame
-
-
-from model.server import ServerDatabase
-
+from view.__settings__ import DARK_BLUE
 
 class Interface(customtkinter.CTk):
     def __init__(self, window_title, column_number):
