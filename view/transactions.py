@@ -10,7 +10,7 @@ from model.transactioninfo import TransactionInfo
 from model.customexception import TransactionException
 from data_access.read_data_access import DataAccess
 from view.scrollable_frame import Scrollable_frame
-from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, SOFT_BLUE2, SOFT_BLUE3, DARK_PINK
+from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, SOFT_BLUE2, SOFT_BLUE3, DARK_PINK, DEAL_TYPE_LIST, CATEGORY_LIST
 import re
 
 class TransactionView(Interface): 
@@ -23,8 +23,8 @@ class TransactionView(Interface):
         self.scrollable_frame.columnconfigure(0, weight=1)
         self.scrollable_frame.pack(fill='both', expand=1)
 
-        self.deal_type_list = ['Retrait', 'Dépôt', 'Transfert', 'Virement']
-        self.category_list = ['Alimentaire', 'Loisirs', 'Prélèvement', 'Transport', 'Santé', 'Dealing', 'Activités illicites', 'Consommation de café']
+        self.deal_type_list = DEAL_TYPE_LIST
+        self.category_list = CATEGORY_LIST
         self.transaction_info = TransactionInfo(current_session, current_account, "", "", None, None, "", "", "")
         self.get_actual_account_id_from_string()
         
@@ -36,7 +36,7 @@ class TransactionView(Interface):
     def get_actual_account_id_from_string(self):
         id = self.transaction_info.get_current_account()
 
-        id_regex = re.search("(\d)+", id)
+        id_regex = re.search(r"^(\d)+", id)
         final_id = id_regex.group()
         final_id = int(final_id)
 

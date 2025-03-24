@@ -13,7 +13,7 @@ class Interface(customtkinter.CTk):
     def __init__(self, window_title, column_number):
         super().__init__()
         self.current_scene = "broad_view"
-        self.geometry("820x480")
+        self.geometry("820x700")
         self.config(background = DARK_BLUE)
         self.title(window_title)
         self.column_number = column_number

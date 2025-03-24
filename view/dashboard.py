@@ -52,8 +52,18 @@ class Dashboard():
         self.interface_frame.account_choice.grid(row=1, column=0, padx=10, pady=20, sticky="ew")
         self.interface_frame.transaction_button.grid(row=2, column=0, padx=10, pady=5, sticky="ew")
 
+        self.interface_frame.transaction_button = customtkinter.CTkButton(
+            self.interface_frame, text="Création d'un nouveau compte bancaire",
+            height=60, bg_color=SOFT_BLUE,
+            fg_color=SOFT_BLUE, text_color=LIGHT_BLUE,
+            font=self.master.text_font, command=self.create_account_callback
+        )
         self.historic = Historic(self.master, self.list_accounts, self.display_accounts, self.account_id)
-    
+
+    def create_account_callback(self):
+        blabla#
+        pass
+
     def init_transaction(self):
         # window_title, column_number, current_session, current_account
 
