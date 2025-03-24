@@ -103,7 +103,7 @@ pip install mysql-connector
 1.  Running the Application:
 
 ```bash
-python main_2.py
+python main.py
 ```
 
 2.  You will be prompted to log in with your credentials or create an account if you don't have one.
