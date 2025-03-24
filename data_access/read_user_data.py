@@ -21,6 +21,27 @@ class UserDataAcess():
         
         return result[0] if result else None
     
+    def get_fullname_from_id(self, id_user): ### DASHBOARD DATA MANAGER
+        if id == None or type(id_user) != int:
+            error_message = "L'identifiant n'est pas reconnu ou est incorrect"
+            raise LogInDataException(error_message)
+        
+        conn = self.database.database_connection()
+        if conn.is_connected():
+            cursor = conn.cursor()
+            query = "SELECT lastname, firstname FROM Users WHERE id_user = %s"
+            cursor.execute(query, (id_user,))
+            result = cursor.fetchone()
+            cursor.close()
+        conn.close()
+        
+        if result == None:
+            raise LogInDataException("Le nom et prénom n'ont pas été trouvé")
+        fullname = result[0] + result[1]
+        return fullname
+        
+        # return result[0] if result else None
+    
     def get_password_from_id_user(self, id_user):
         if id_user == None or type(id_user) != int:
             error_message = "L'identifiant utilisateur n'existe pas ou n'est pas valide"

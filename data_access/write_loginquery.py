@@ -42,7 +42,9 @@ class LoginQuery():
             cursor.close()
         conn.close()
 
-
+    def get_fullname_from_id(self, user_id):
+        pass
+    
     def __create_bank_acount(self, login_info):
         conn = self.database.database_connection()
         if conn.is_connected():
