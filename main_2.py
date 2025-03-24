@@ -8,10 +8,12 @@ server_connection = ServerDatabase()
 server_connection.server_connection()
 server_connection.create_database()
 
-connected = [False, None]
-view = LogInOut("Budget Buddy - Connexion Client", 0, connected)
+# connected = [False, None]
+view = LogInOut("Budget Buddy - Connexion Client", 0)
+# if view.connected == True:
+#     view.dashboard.build_dashboard()
 view.mainloop()
 
-if connected[0]:
-    board = Dashboard("Budget Buddy - Dashboard", 1, connected)
-    board.mainloop()
+# if connected[0]:
+#     board = Dashboard("Budget Buddy - Dashboard", 1, connected)
+#     board.mainloop()

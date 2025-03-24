@@ -9,8 +9,9 @@ from controller.transactionmanager import TransactionManager
 from model.transactioninfo import TransactionInfo
 from model.customexception import TransactionException
 from data_access.read_data_access import DataAccess
-# from view.scrollable_frame import Scrollable_frame
-from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, SOFT_BLUE2, SOFT_BLUE3, DARK_PINK
+from view.scrollable_frame import Scrollable_frame
+from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, SOFT_BLUE2, SOFT_BLUE3, DARK_PINK, DEAL_TYPE_LIST, CATEGORY_LIST
+import re
 
 class TransactionView(Interface): 
     def __init__(self, window_title, column_number, current_session, current_account):
@@ -18,24 +19,28 @@ class TransactionView(Interface):
         self.controller = TransactionManager()
         self.__data_access = DataAccess()
 
-        # self.scrollable_frame = Scrollable_frame(self, bg_color=DARK_BLUE, fg_color=DARK_BLUE)
-        # self.scrollable_frame.columnconfigure(0, weight=1)
-        # self.scrollable_frame.pack(fill='both', expand=1)
+        self.scrollable_frame = Scrollable_frame(self, bg_color=DARK_BLUE, fg_color=DARK_BLUE)
+        self.scrollable_frame.columnconfigure(0, weight=1)
+        self.scrollable_frame.pack(fill='both', expand=1)
 
-        self.deal_type_list = ['Retrait', 'Dépôt', 'Transfert', 'Virement']
-        self.category_list = ['Alimentaire', 'Loisirs', 'Prélèvement', 'Transport', 'Santé', 'Dealing', 'Activités illicites', 'Consommation de café']
+        self.deal_type_list = DEAL_TYPE_LIST
+        self.category_list = CATEGORY_LIST
         self.transaction_info = TransactionInfo(current_session, current_account, "", "", None, None, "", "", "")
-        # self.transaction_info.type = ""
-        # self.transaction_info.date = ""
-        # # self.current_session = current_session
-        # self.transaction_info.emitter = ""
-        # self.transaction_info.receiver = ""
-        # self.transaction_info.description = ""
-        # self.transaction_info.category = ""
+        self.get_actual_account_id_from_string()
+        
         self.__accounts_list = self.__data_access.get_all_accounts_from_user(self.transaction_info.get_current_session())
         self.__accounts_list_string = self.get_accounts_list_string()
         self.last_choice = ""
         self.screen_build()
+
+    def get_actual_account_id_from_string(self):
+        id = self.transaction_info.get_current_account()
+
+        id_regex = re.search(r"^(\d)+", id)
+        final_id = id_regex.group()
+        final_id = int(final_id)
+
+        self.transaction_info.set_current_account(final_id)
 
     def get_accounts_list_string(self):        
         account_str_list = []
