@@ -32,14 +32,14 @@ class Dashboard():
 
         self.interface_frame = Interface_frames(self.main_frame, bg_color=DARK_BLUE, fg_color=LIGHT_BLUE, width=400,corner_radius=20)
         self.interface_frame.columnconfigure(0, weight=1)
-        self.interface_frame.grid(row=1, column=0, padx=20, pady=20, sticky="snew")
+        self.interface_frame.grid(row=2, column=0, padx=20, pady=20, sticky="snew")
         # self.interface_frame.grid_configure(columnspan=1)
         # self.interface_frame.grid_propagate(True)
 
         ### DOIT ETRE HISTORIC()
         self.historic_frame = Interface_frames(self.main_frame, fg_color=LIGHT_BLUE, width=200, bg_color=DARK_BLUE, corner_radius=20)
         self.historic_frame.columnconfigure(0, weight=1)
-        self.historic_frame.grid(row=1, column=1, padx=20, pady=20, sticky="snew")
+        self.historic_frame.grid(row=2, column=1, padx=20, pady=20, sticky="snew")
 
         
 
@@ -49,17 +49,20 @@ class Dashboard():
     def build_dashboard(self):
         self.title = self.build_label("Budget Buddy",
                                              0,
-                                             master=self.main_frame,
                                              color=YELLOW,
                                              bg_color=DARK_BLUE,
                                              custom_font=self.master.title_font,
                                              padvertical=(20,5))
         
+        
         # self.interface_frame = Interface_frames(self, bg_color=DARK_BLUE, fg_color=LIGHT_BLUE, width=400,corner_radius=20)
         # self.interface_frame.columnconfigure(0, weight=1)
         # self.interface_frame.grid(row=0, column=0, padx=20, pady=20, sticky="snew")
+        
         user_name = self.controller.get_name_from_id(self.login_info.get_user_id())
         welcome_message = "Bienvenue " + user_name
+        self.subtitle = self.build_label(f"Dashboard de {user_name}".upper(), 1, color=YELLOW, bg_color=DARK_BLUE, custom_font=self.master.subtitle_font)
+
         self.interface_frame.box = customtkinter.CTkLabel(
             self.interface_frame, text=welcome_message.upper(), 
             height=50, width=350, bg_color=SOFT_BLUE,
@@ -86,9 +89,9 @@ class Dashboard():
             fg_color=SOFT_BLUE, text_color=DARK_BLUE,
             font=self.master.text_font, command=self.init_transaction
         )
-        self.interface_frame.box.grid(row=1, column=0, pady=20, sticky="ew")
-        self.interface_frame.account_choice.grid(row=2, column=0, padx=10, pady=20, sticky="ew")
-        self.interface_frame.transaction_button.grid(row=3, column=0, padx=10, pady=5, sticky="ew")
+        self.interface_frame.box.grid(row=2, column=0, pady=20, sticky="ew")
+        self.interface_frame.account_choice.grid(row=3, column=0, padx=10, pady=20, sticky="ew")
+        self.interface_frame.transaction_button.grid(row=4, column=0, padx=10, pady=5, sticky="ew")
 
         self.interface_frame.create_bank_account_button = customtkinter.CTkButton(
             self.interface_frame, text="Création d'un nouveau compte bancaire",
@@ -96,9 +99,9 @@ class Dashboard():
             fg_color=SOFT_BLUE, text_color=DARK_BLUE,
             font=self.master.text_font, command=self.create_account_callback
         )
-        self.interface_frame.create_bank_account_button.grid(row=4, column=0, padx=10, pady=5, sticky="ew")
+        self.interface_frame.create_bank_account_button.grid(row=5, column=0, padx=10, pady=5, sticky="ew")
         
-        self.create_logout_button(6) ### if create_bank_account -> row_position 5 already taken ###
+        self.create_logout_button(7) ### if create_bank_account -> row_position 5 already taken ###
 
         self.historic = Historic(self.historic_frame, self.list_accounts, self.display_accounts, self.account_id)
 
@@ -165,7 +168,7 @@ class Dashboard():
         if justify != "center":
             anchor=justify
         if master==None:
-            master = self.interface_frame
+            master = self.master
 
         if bg_color != LIGHT_BLUE:
             bg_color = bg_color

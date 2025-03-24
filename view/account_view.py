@@ -1,5 +1,5 @@
 import customtkinter
-from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK
+from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, CATEGORY_LIST, DEAL_TYPE_LIST
 
 from view.scrollable_frame import Scrollable_frame
 from model.historic_transaction_model import Historic_Transaction
@@ -39,10 +39,19 @@ class Account_view:
             pady=20, sticky="ew"
         )
         master.filters = customtkinter.CTkComboBox(
-            master, bg_color=LIGHT_BLUE, font=self.util.text_font, corner_radius=15,
+            master,
             values=[
                 "Voir tout", "Par catégorie", "Par type", "Par dates"
             ], command=self.flip_filters,
+            font=self.util.text_font,
+            text_color=DARK_BLUE,
+            dropdown_text_color = DARK_BLUE,
+            bg_color=LIGHT_BLUE,
+            fg_color=SOFT_YELLOW,
+            dropdown_fg_color = SOFT_YELLOW, 
+            dropdown_font= self.util.text_font,
+            dropdown_hover_color = SOFT_BLUE,
+            corner_radius=15
             
         )
         master.filters.grid(row=3, column=0, padx=10, pady=10, sticky="ew")
@@ -53,16 +62,30 @@ class Account_view:
     
     def build_historic(self):
         self.build_factors_block_dict[self.current_filter]()
-        self.master.transactions_frame = Scrollable_frame(self.master, fg_color=SOFT_BLUE, bg_color=LIGHT_BLUE, corner_radius=5)
+        self.master.transactions_frame = Scrollable_frame(
+            self.master,
+            fg_color=SOFT_BLUE,
+            bg_color=LIGHT_BLUE,
+            corner_radius=5)
+        
         self.master.transactions_frame.columnconfigure((0), weight=1)
         self.master.transactions_frame.grid(row=5,column=0,padx=15, pady=5, sticky="ew")
 
-        self.list_transactions = self.database.historic_queries_dict[self.current_filter](self.account_id, self.current_factor)
+        self.list_transactions = self.database.historic_queries_dict[self.current_filter](
+            self.account_id,
+            self.current_factor)
 
         self.account_transactions = []
         for index, transaction in enumerate(self.list_transactions):
             if transaction[1] == self.account_id or transaction[2] == self.account_id:
-                transaction_element = Historic_Transaction(self.master.transactions_frame, transaction, self.interface, fg_color=LIGHT_BLUE, height=60)
+
+                transaction_element = Historic_Transaction(
+                    self.master.transactions_frame,
+                    transaction,
+                    self.interface,
+                    fg_color=LIGHT_BLUE,
+                    height=60)
+                
                 transaction_element.grid(row=index, column=0, sticky="ew", pady=5, padx=2)
                 self.account_transactions.append(transaction_element)
     
@@ -81,16 +104,14 @@ class Account_view:
     def build_category(self):
         self.master.category = customtkinter.CTkComboBox(
             self.master,
-            values=[
-                'Alimentaire', 'Loisirs', 'Prélèvement', 'Transport', 'Santé', 'Dealing', 'Activités illicites', 'Consommation de café'
-            ],
-            font=self.interface.text_font,
+            values=CATEGORY_LIST,
+            font=self.util.text_font,
             text_color=DARK_BLUE,
             dropdown_text_color = DARK_BLUE,
             bg_color=LIGHT_BLUE,
             fg_color=SOFT_YELLOW,
             dropdown_fg_color = SOFT_YELLOW, 
-            dropdown_font= self.interface.text_font,
+            dropdown_font= self.util.text_font,
             dropdown_hover_color = SOFT_BLUE,
             corner_radius=15
         )
@@ -99,9 +120,7 @@ class Account_view:
     def build_type(self):
         self.master.type = customtkinter.CTkComboBox(
             self.master,
-            values=[
-                'Alimentaire', 'Loisirs', 'Prélèvement', 'Transport', 'Santé', 'Dealing', 'Activités illicites', 'Consommation de café'
-            ],
+            values=DEAL_TYPE_LIST,
             font=self.util.text_font,
             text_color=DARK_BLUE,
             dropdown_text_color = DARK_BLUE,
