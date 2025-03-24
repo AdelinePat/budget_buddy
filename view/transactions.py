@@ -1,17 +1,16 @@
 import customtkinter
-# import tkcalendar
-# from CTkDatePicker import CTkDatePicker
 from tkcalendar import Calendar, DateEntry
-# from CTkDatePicker import CTkDatePicker
+import re
 from view.interface import Interface
-# from model.transactionquery import TransactionQuery
-from controller.transactionmanager import TransactionManager
+from view.scrollable_frame import Scrollable_frame
+from view.__settings__ import DARK_BLUE, SOFT_BLUE,\
+                            LIGHT_BLUE, YELLOW, SOFT_YELLOW,\
+                            PINK, SOFT_BLUE2, SOFT_BLUE3,\
+                            DEAL_TYPE_LIST, CATEGORY_LIST
 from model.transactioninfo import TransactionInfo
 from model.customexception import TransactionException
+from controller.transactionmanager import TransactionManager
 from data_access.read_data_access import DataAccess
-from view.scrollable_frame import Scrollable_frame
-from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, SOFT_BLUE2, SOFT_BLUE3, DARK_PINK, DEAL_TYPE_LIST, CATEGORY_LIST
-import re
 
 class TransactionView(Interface): 
     def __init__(self, window_title, column_number, current_session, current_account):

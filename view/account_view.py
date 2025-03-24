@@ -1,10 +1,11 @@
 import customtkinter
-from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, CATEGORY_LIST, DEAL_TYPE_LIST
-
+from view.utiltool import UtilTool
 from view.scrollable_frame import Scrollable_frame
+from view.__settings__ import DARK_BLUE, SOFT_BLUE,\
+                            LIGHT_BLUE, SOFT_YELLOW,\
+                            CATEGORY_LIST, DEAL_TYPE_LIST
 from model.historic_transaction_model import Historic_Transaction
 from data_access.write_historic_query import HistoricQuery
-from view.utiltool import UtilTool
 
 class Account_view:
     def __init__(self, account_id):

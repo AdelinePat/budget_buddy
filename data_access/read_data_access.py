@@ -19,8 +19,7 @@ class DataAccess():
                         WHERE u.email = %s;"""
 
             cursor.execute(query, (email,))
-        
-            
+
             account = cursor.fetchone()
             cursor.close()
         database.close()     
@@ -48,7 +47,7 @@ class DataAccess():
         database.close()
         return account   
    
-    def get_balance_from_main_user_account(self, user_id): #not used ?
+    def get_balance_from_main_user_account(self, user_id): 
         if user_id == None or type(user_id) != int:
             error_message = "L'identifiant client n'est pas valide"
             raise TransactionException(error_message)

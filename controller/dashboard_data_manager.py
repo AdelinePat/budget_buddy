@@ -1,7 +1,5 @@
 from data_access.read_user_data import UserDataAcess
 from data_access.write_loginquery import LoginQuery
-from model.customexception import LogInDataException
-import re
 
 class DashboardManager():
     def __init__(self):
