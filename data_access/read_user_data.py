@@ -37,7 +37,7 @@ class UserDataAcess():
         
         if result == None:
             raise LogInDataException("Le nom et prénom n'ont pas été trouvé")
-        fullname = result[0] + result[1]
+        fullname = result[0] + " " + result[1]
         return fullname
         
         # return result[0] if result else None

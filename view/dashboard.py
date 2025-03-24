@@ -99,12 +99,11 @@ class Dashboard():
         if master==None:
             master = self.interface_frame
         
-
         my_label = customtkinter.CTkLabel(master,
                                           text=label_text,
                                           font=custom_font, 
                                           text_color=color, 
-                                          bg_color=SOFT_BLUE, 
+                                          bg_color=LIGHT_BLUE, 
                                           justify=justify,
                                           anchor=anchor)
         my_label.grid(row=row_number, column=0, sticky="ew", padx=20, pady=padvertical)
