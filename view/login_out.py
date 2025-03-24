@@ -384,6 +384,11 @@ class LogInOut(Interface):
                     delattr(self, 'scrollable_frame')
                 self.create_dashboard()
                 self.dashboard.build_dashboard()
+            elif self.connected == False:
+                if not hasattr(self.interface_frame, 'email_entry'):
+                    self.login_screen_build()
+
+
                
         except LogInDataException as e:
             self.build_login_result(self, 3, e)
