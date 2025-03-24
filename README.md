@@ -78,7 +78,7 @@ pip install mysql-connector
 
 ---
 
-## Installastion
+## Installation
 
 1.  Clone this project to your local machine.
     ```bash
