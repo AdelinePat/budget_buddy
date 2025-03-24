@@ -3,6 +3,10 @@ from view.__settings__ import TITLE_FONT_PATH, TEXT_FONT_PATH
 from PIL import Image
 
 class UtilTool():
+    def __init__(self):
+        self.title_font = self.get_title_font(30)
+        self.text_font = self.get_text_font(15)
+        self.subtitle_font = self.get_text_font(25)
     
     def get_title_font(self, font_size):
         custom_font = customtkinter.FontManager.load_font(TITLE_FONT_PATH)
@@ -31,3 +35,5 @@ class UtilTool():
         )
 
         return eye_open, eye_closed
+
+    

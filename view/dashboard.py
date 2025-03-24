@@ -24,9 +24,24 @@ class Dashboard():
         # self.master = self
         
         self.account_id = "0"
-        self.interface_frame = Interface_frames(self.master, bg_color=DARK_BLUE, fg_color=LIGHT_BLUE, width=400,corner_radius=20)
+        
+        self.main_frame = Interface_frames(self.master, bg_color=DARK_BLUE, fg_color=DARK_BLUE)
+        self.main_frame.grid(columnspan=2, row=0, column=0, sticky="snew")
+        # self.main_frame.grid_configure(columnspan=2, row=0, column=0, padx=20, pady=20, sticky="snew")
+        
+
+        self.interface_frame = Interface_frames(self.main_frame, bg_color=DARK_BLUE, fg_color=LIGHT_BLUE, width=400,corner_radius=20)
         self.interface_frame.columnconfigure(0, weight=1)
-        self.interface_frame.grid(row=0, column=0, padx=20, pady=20, sticky="snew")
+        self.interface_frame.grid(row=1, column=0, padx=20, pady=20, sticky="snew")
+        # self.interface_frame.grid_configure(columnspan=1)
+        # self.interface_frame.grid_propagate(True)
+
+        ### DOIT ETRE HISTORIC()
+        self.historic_frame = Interface_frames(self.main_frame, fg_color=LIGHT_BLUE, width=200, bg_color=DARK_BLUE, corner_radius=20)
+        self.historic_frame.columnconfigure(0, weight=1)
+        self.historic_frame.grid(row=1, column=1, padx=20, pady=20, sticky="snew")
+
+        
 
         self.list_all_accounts()
         self.build_dashboard()
@@ -34,8 +49,9 @@ class Dashboard():
     def build_dashboard(self):
         self.title = self.build_label("Budget Buddy",
                                              0,
-                                             master=self.master,
+                                             master=self.main_frame,
                                              color=YELLOW,
+                                             bg_color=DARK_BLUE,
                                              custom_font=self.master.title_font,
                                              padvertical=(20,5))
         
@@ -74,7 +90,7 @@ class Dashboard():
         
         self.create_logout_button(6) ### if create_bank_account -> row_position 5 already taken ###
 
-        self.historic = Historic(self.master, self.list_accounts, self.display_accounts, self.account_id)
+        self.historic = Historic(self.historic_frame, self.list_accounts, self.display_accounts, self.account_id)
 
     def create_logout_button(self, row_position):
         self.interface_frame.logout_button = customtkinter.CTkButton(
@@ -88,6 +104,7 @@ class Dashboard():
 
     def logout_callback(self):
         print("Déconnexion réussie")
+        self.login_info.set_id_user(None)
         self.dashboard_screen_destroy()
         self.master.connected = False
         return
@@ -125,7 +142,7 @@ class Dashboard():
         self.interface_frame.create_account_message = self.build_label("Compte créer avec succès", 5)
         self.interface_frame.account_type_choice.destroy()
        
-    def build_label(self, label_text, row_number, master=None, color=DARK_BLUE, custom_font=None, padvertical=(5,2), justify="left", anchor="w"):
+    def build_label(self, label_text, row_number, master=None, color=DARK_BLUE, bg_color=LIGHT_BLUE, custom_font=None, padvertical=(5,2), justify="left", anchor="w"):
         if custom_font == None:
             custom_font = self.master.text_font
 
@@ -133,12 +150,15 @@ class Dashboard():
             anchor="center"
         if master==None:
             master = self.interface_frame
+
+        if bg_color != LIGHT_BLUE:
+            bg_color = bg_color
         
         my_label = customtkinter.CTkLabel(master,
                                           text=label_text,
                                           font=custom_font, 
                                           text_color=color, 
-                                          bg_color=LIGHT_BLUE, 
+                                          bg_color=bg_color, 
                                           justify=justify,
                                           anchor=anchor)
         my_label.grid(row=row_number, column=0, sticky="ew", padx=20, pady=padvertical)

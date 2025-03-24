@@ -4,10 +4,13 @@ from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YEL
 from view.scrollable_frame import Scrollable_frame
 from model.historic_transaction_model import Historic_Transaction
 from data_access.write_historic_query import HistoricQuery
+from view.utiltool import UtilTool
 
 class Account_view:
     def __init__(self, account_id):
         self.account_id = account_id
+        self.util = UtilTool()
+
         self.database = HistoricQuery()
         self.build_factors_block_dict : dict = {
             "Voir tout" : self.build_all,
@@ -27,7 +30,7 @@ class Account_view:
         self.master = master
         self.interface = interface
         master.account_title = customtkinter.CTkLabel(
-            master, text=title, font=interface.text_font,
+            master, text=title, font=self.util.text_font,
             height=50,
             fg_color=SOFT_BLUE, text_color=LIGHT_BLUE
         )
@@ -36,7 +39,7 @@ class Account_view:
             pady=20, sticky="ew"
         )
         master.filters = customtkinter.CTkComboBox(
-            master, bg_color=LIGHT_BLUE, font=interface.text_font, corner_radius=15,
+            master, bg_color=LIGHT_BLUE, font=self.util.text_font, corner_radius=15,
             values=[
                 "Voir tout", "Par catégorie", "Par type", "Par dates"
             ], command=self.flip_filters
@@ -85,7 +88,7 @@ class Account_view:
 
     def build_type(self):
         self.master.type = customtkinter.CTkComboBox(
-            self.master, bg_color=LIGHT_BLUE, corner_radius=15, font=self.interface.text_font,
+            self.master, bg_color=LIGHT_BLUE, corner_radius=15, font=self.util.text_font,
             values=[
                 'Alimentaire', 'Loisirs', 'Prélèvement', 'Transport', 'Santé', 'Dealing', 'Activités illicites', 'Consommation de café'
             ]
