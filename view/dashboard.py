@@ -35,9 +35,11 @@ class Dashboard():
         # self.interface_frame = Interface_frames(self, bg_color=DARK_BLUE, fg_color=LIGHT_BLUE, width=400,corner_radius=20)
         # self.interface_frame.columnconfigure(0, weight=1)
         # self.interface_frame.grid(row=0, column=0, padx=20, pady=20, sticky="snew")
-    
+        user_name = self.controller.get_name_from_id(self.login_info.get_user_id())
+        # user_name = self.controller.get_name_from_id(10)
+        welcome_message = "Bienvenue " + user_name
         self.interface_frame.box = customtkinter.CTkLabel(
-            self.interface_frame, text="Bienvenue".upper(), 
+            self.interface_frame, text=welcome_message.upper(), 
             height=50, width=350, bg_color=DARK_BLUE,
             fg_color=SOFT_BLUE, text_color=LIGHT_BLUE,
             font=self.master.subtitle_font
