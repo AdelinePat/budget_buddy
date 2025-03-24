@@ -1,9 +1,5 @@
 import customtkinter
-# import tkcalendar
-# from CTkDatePicker import CTkDatePicker
-from view.interface import Interface
-from view.interface_frames import Interface_frames
-from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK
+from view.__settings__ import SOFT_BLUE, LIGHT_BLUE
 from view.account_view import Account_view
 from view.utiltool import UtilTool
 
@@ -19,10 +15,6 @@ class Historic():
         self.list_accounts = account_list
         self.display_accounts = display_accounts
         self.recover_accounts()
-
-        # self.master.historic_frame = Interface_frames(self.master, fg_color=LIGHT_BLUE, width=200, bg_color=DARK_BLUE, corner_radius=20)
-        # self.master.historic_frame.columnconfigure(0, weight=1)
-        # self.master.historic_frame.grid(row=0, column=1, padx=20, pady=20, sticky="ew")
         self.build_historic_interface()
 
     def build_historic_interface(self):
@@ -57,7 +49,5 @@ class Historic():
         )
 
     def historic_destroy(self):
-        
-        # self.historic_dict_account[self.shown_historic].destroy()
         self.master.destroy()
         self.master.historic_title.destroy()

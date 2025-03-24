@@ -1,12 +1,11 @@
 import customtkinter
-
-from view.interface import Interface
-
 from view.historic import Historic
-from view.interface_frames import Interface_frames
-from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, ACCOUNT_TYPE_LIST
-from data_access.read_data_access import DataAccess
 from view.transactions import TransactionView
+from view.interface_frames import Interface_frames
+from view.__settings__ import DARK_BLUE, SOFT_BLUE,\
+                            LIGHT_BLUE, YELLOW,\
+                            SOFT_YELLOW, ACCOUNT_TYPE_LIST
+from data_access.read_data_access import DataAccess
 from controller.dashboard_data_manager import DashboardManager
 
 class Dashboard():
