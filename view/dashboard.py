@@ -19,6 +19,7 @@ class Dashboard():
         self.list_accounts.insert(0, (0, "Tous les comptes"))
         self.controller = DashboardManager()
         self.account_type_list = ACCOUNT_TYPE_LIST
+        
         # self.master = master
         # self.master = self
         
@@ -31,12 +32,17 @@ class Dashboard():
         self.build_dashboard()
     
     def build_dashboard(self):
-        # self.build_title_and_subtitle()
+        self.title = self.build_label("Budget Buddy",
+                                             0,
+                                             master=self.master,
+                                             color=YELLOW,
+                                             custom_font=self.master.title_font,
+                                             padvertical=(20,5))
+        
         # self.interface_frame = Interface_frames(self, bg_color=DARK_BLUE, fg_color=LIGHT_BLUE, width=400,corner_radius=20)
         # self.interface_frame.columnconfigure(0, weight=1)
         # self.interface_frame.grid(row=0, column=0, padx=20, pady=20, sticky="snew")
         user_name = self.controller.get_name_from_id(self.login_info.get_user_id())
-        # user_name = self.controller.get_name_from_id(10)
         welcome_message = "Bienvenue " + user_name
         self.interface_frame.box = customtkinter.CTkLabel(
             self.interface_frame, text=welcome_message.upper(), 
@@ -54,9 +60,9 @@ class Dashboard():
             fg_color=SOFT_BLUE, text_color=LIGHT_BLUE,
             font=self.master.text_font, command=self.init_transaction
         )
-        self.interface_frame.box.grid(row=0, column=0, pady=20, sticky="ew")
-        self.interface_frame.account_choice.grid(row=1, column=0, padx=10, pady=20, sticky="ew")
-        self.interface_frame.transaction_button.grid(row=2, column=0, padx=10, pady=5, sticky="ew")
+        self.interface_frame.box.grid(row=1, column=0, pady=20, sticky="ew")
+        self.interface_frame.account_choice.grid(row=2, column=0, padx=10, pady=20, sticky="ew")
+        self.interface_frame.transaction_button.grid(row=3, column=0, padx=10, pady=5, sticky="ew")
 
         self.interface_frame.create_bank_account_button = customtkinter.CTkButton(
             self.interface_frame, text="Création d'un nouveau compte bancaire",
@@ -64,9 +70,41 @@ class Dashboard():
             fg_color=SOFT_BLUE, text_color=LIGHT_BLUE,
             font=self.master.text_font, command=self.create_account_callback
         )
-        self.interface_frame.create_bank_account_button.grid(row=3, column=0, padx=10, pady=5, sticky="ew")
+        self.interface_frame.create_bank_account_button.grid(row=4, column=0, padx=10, pady=5, sticky="ew")
+        
+        self.create_logout_button(6) ### if create_bank_account -> row_position 5 already taken ###
 
         self.historic = Historic(self.master, self.list_accounts, self.display_accounts, self.account_id)
+
+    def create_logout_button(self, row_position):
+        self.interface_frame.logout_button = customtkinter.CTkButton(
+            self.interface_frame, text="Se déconnecter",
+            height=60, bg_color=SOFT_BLUE,
+            fg_color=SOFT_BLUE, text_color=LIGHT_BLUE,
+            font=self.master.text_font, command=self.logout_callback
+        )
+
+        self.interface_frame.logout_button.grid(row=row_position, column=0, padx=10, pady=5, sticky="ew")
+
+    def logout_callback(self):
+        print("Déconnexion réussie")
+        self.dashboard_screen_destroy()
+        self.master.connected = False
+        return
+        # self.interface_screen_destroy()
+        # self.login_screen_build()
+        # if hasattr(self, 'login_text'):
+        #     self.login_text.destroy()
+
+    def dashboard_screen_destroy(self):
+        self.title.destroy()
+        self.interface_frame.destroy()
+        if hasattr(self, 'historic'):
+            delattr(self, 'historic')
+        self.master.login_screen_build()
+        # self.historic.historic_destroy()
+        # self.historic.historic_frame.destroy()
+        # self.historic.destroy()
 
     def create_account_callback(self):
 
@@ -77,7 +115,7 @@ class Dashboard():
             dropdown_text_color = DARK_BLUE, dropdown_font= self.master.text_font,
             dropdown_hover_color = SOFT_BLUE, corner_radius=10)
 
-        self.interface_frame.account_type_choice.grid(row=4, column=0, sticky="sew", padx=20, pady=0)
+        self.interface_frame.account_type_choice.grid(row=5, column=0, sticky="sew", padx=20, pady=0)
         self.interface_frame.account_type_choice.set(self.account_type_list[0])
 
     def account_combobox_callback(self, choice):
@@ -86,10 +124,7 @@ class Dashboard():
         self.controller.create_account_from_user_id(id_user, account_type)
         self.interface_frame.create_account_message = self.build_label("Compte créer avec succès", 5)
         self.interface_frame.account_type_choice.destroy()
-
-    def build_title_and_subtitle(self):
-        self.title = self.build_label("Budget Buddy", 0, master=self, color=YELLOW, custom_font=self.master.title_font, padvertical=(20,5))
-
+       
     def build_label(self, label_text, row_number, master=None, color=DARK_BLUE, custom_font=None, padvertical=(5,2), justify="left", anchor="w"):
         if custom_font == None:
             custom_font = self.master.text_font

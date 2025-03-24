@@ -6,7 +6,7 @@ from view.interface_frames import Interface_frames
 from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK
 from view.account_view import Account_view
 
-class Historic(Interface):
+class Historic():
     def __init__(self, master, account_list, display_accounts, account_id):
         self.master = master
         
@@ -50,3 +50,9 @@ class Historic(Interface):
             self.display_accounts[list(self.historic_dict_account.keys()).index(self.shown_historic)],
             self.master
         )
+
+    def historic_destroy(self):
+        
+        # self.historic_dict_account[self.shown_historic].destroy()
+        self.master.historic_frame.destroy()
+        self.master.historic_frame.historic_title.destroy()
