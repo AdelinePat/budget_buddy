@@ -22,6 +22,26 @@ class LoginQuery():
             cursor.close()
         conn.close()
     
+    def create_banck_account_when_connected(self, user_id, account_type):
+        conn = self.database.database_connection()
+        if conn.is_connected():
+            cursor = conn.cursor()
+
+            query = """INSERT INTO Bank_account (id_user, account_type, account_name, balance, min_balance) 
+                    VALUES (%(id_user)s, %(account_type)s, %(account_name)s, %(balance)s, %(min_balance)s)"""
+            values = {
+                'id_user' : user_id,
+                'account_type' : account_type,
+                'account_name' : None,
+                'balance' : 0,
+                'min_balance' : 0
+            }
+            cursor.execute(query, values)
+              
+            conn.commit()
+            cursor.close()
+        conn.close()
+
 
     def __create_bank_acount(self, login_info):
         conn = self.database.database_connection()
