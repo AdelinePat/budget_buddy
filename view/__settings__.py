@@ -14,3 +14,27 @@ DARK_PINK = '#BE6882'
 ## FONTS
 TITLE_FONT_PATH = './assets/fonts/LeckerliOne-Regular.ttf'
 TEXT_FONT_PATH = './assets/fonts/JosefinSans-Regular.ttf'
+
+## LISTS
+DEAL_TYPE_LIST = ['Retrait',
+             'Dépôt',
+             'Transfert',
+             'Virement']
+
+CATEGORY_LIST = ['Alimentaire',
+                 'Loisirs',
+                 'Prélèvement',
+                 'Transport',
+                 'Santé',
+                 'Dealing',
+                 'Activités illicites',
+                 'Consommation de café']
+
+ACCOUNT_TYPE_LIST = ['Compte courant',
+                     'Livret A',
+                     'Compte secret',
+                     'Compte hihi',
+                     'Livret spécial très spécial',
+                     'Au black',
+                     'Livret rose, pour un monde meilleur']
+
