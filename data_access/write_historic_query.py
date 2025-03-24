@@ -38,12 +38,19 @@ class HistoricQuery():
 
         if database.is_connected():
             cursor = database.cursor()
-            accounts_query = """
-            SELECT deal_description, amount, deal_date, category 
-            FROM Transactions 
-            WHERE id_account_emitter =%s or id_account_receiver =%s
-            and category =%s;
-            """
+            accounts_query = ("""
+                SELECT t.deal_description, t.amount, t.deal_date, t.category
+                FROM Transactions as t
+                INNER JOIN Bank_account as emitter ON t.id_account_emitter = emitter.id_account
+                INNER JOIN Bank_account as receiver ON t.id_account_receiver = receiver.id_account
+                WHERE emitter.id_user =%s
+                OR receiver.id_user =%s and category =%s;
+                """ if account_id == 0 else """
+                SELECT deal_description, amount, deal_date, category 
+                FROM Transactions 
+                WHERE id_account_emitter =%s or id_account_receiver =%s
+                and category =%s;
+            """)
             cursor.execute(accounts_query, (account_id, account_id, category))
             accounts = cursor.fetchall()
             cursor.close()
@@ -55,12 +62,19 @@ class HistoricQuery():
 
         if database.is_connected():
             cursor = database.cursor()
-            accounts_query = """
-            SELECT deal_description, amount, deal_date, category 
-            FROM Transactions 
-            WHERE id_account_emitter =%s or id_account_receiver =%s
-            and deal_type =%s;
-            """
+            accounts_query = ("""
+                SELECT t.deal_description, t.amount, t.deal_date, t.category
+                FROM Transactions as t
+                INNER JOIN Bank_account as emitter ON t.id_account_emitter = emitter.id_account
+                INNER JOIN Bank_account as receiver ON t.id_account_receiver = receiver.id_account
+                WHERE emitter.id_user =%s
+                OR receiver.id_user =%s and category =%s;
+                """ if account_id == 0 else """
+                SELECT deal_description, amount, deal_date, category 
+                FROM Transactions 
+                WHERE id_account_emitter =%s or id_account_receiver =%s
+                and deal_type =%s;
+            """)
             cursor.execute(accounts_query, (account_id, account_id, type))
             accounts = cursor.fetchall()
             cursor.close()
@@ -72,11 +86,18 @@ class HistoricQuery():
 
         if database.is_connected():
             cursor = database.cursor()
-            accounts_query = """
-            SELECT deal_description, amount, deal_date, category 
-            FROM Transactions 
-            WHERE id_account_emitter =%s or id_account_receiver =%s;
-            """
+            accounts_query = ("""
+                SELECT t.deal_description, t.amount, t.deal_date, t.category
+                FROM Transactions as t
+                INNER JOIN Bank_account as emitter ON t.id_account_emitter = emitter.id_account
+                INNER JOIN Bank_account as receiver ON t.id_account_receiver = receiver.id_account
+                WHERE emitter.id_user =%s
+                OR receiver.id_user =%s and category =%s;
+                """ if account_id == 0 else """
+                SELECT deal_description, amount, deal_date, category 
+                FROM Transactions 
+                WHERE id_account_emitter =%s or id_account_receiver =%s;
+            """)
             cursor.execute(accounts_query, (account_id, account_id))
             accounts = cursor.fetchall()
             cursor.close()
