@@ -2,7 +2,7 @@
 
 # Financial Management Tool
 
-![preview main](budget_buddy.png)
+![preview main](budget_buddy_dashboard.jp)
 
 **Project Description**
 
@@ -174,3 +174,7 @@ This project was made by:
 ### Licence
 
 This project is licensed under the MIT License.
+
+---
+
+![preview main](budget_buddy.png)
