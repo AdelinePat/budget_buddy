@@ -2,9 +2,8 @@ import customtkinter
 # import tkinter
 # import time
 from model.server import ServerDatabase
-import re
-import bcrypt
-# import sqlite3
+# import re
+# import bcrypt
 from data_access.read_user_data import UserDataAcess
 
 from view.scrollable_frame import Scrollable_frame
@@ -221,23 +220,23 @@ class LogInOut(Interface):
         self.register_screen_build()
 
     def register_screen_build(self):
-        self.set_scrollable_bar()  # Initialise la frame de scroll
+        self.set_scrollable_bar()  
 
-        # Ajuste la hauteur de la frame pour permettre le scroll
+    
         self.scrollable_frame.configure(height=1000)  
 
-        # Configuration du layout principal pour une bonne adaptation
+    
         self.scrollable_frame.grid(row=0, column=0, sticky="nsew")
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
 
-        # Titre
+        # Title
         self.scrollable_frame.title_text = self.build_label_scrollable_frame(
             "Créer un compte", 0, color=YELLOW, custom_font=self.title_font, 
             padvertical=(20, 10), justify="center"
         )
 
-        # Nom
+        # Lastname
         self.scrollable_frame.lastname_label = self.build_label_scrollable_frame("Nom :", 1)
         self.scrollable_frame.lastname_box = customtkinter.CTkEntry(
             self.scrollable_frame, font=self.text_font, height=48, corner_radius=10,
@@ -245,7 +244,7 @@ class LogInOut(Interface):
         )
         self.scrollable_frame.lastname_box.grid(row=2, column=0, sticky="ew", padx=20, pady=(2,5))
 
-        # Prénom
+        # Fistname
         self.scrollable_frame.firstname_label = self.build_label_scrollable_frame("Prénom :", 3)
         self.scrollable_frame.firstname_box = customtkinter.CTkEntry(
             self.scrollable_frame, font=self.text_font, height=48, corner_radius=10,
@@ -261,7 +260,7 @@ class LogInOut(Interface):
         )
         self.scrollable_frame.email_box.grid(row=6, column=0, sticky="ew", padx=20, pady=(2,5))
 
-        # Mot de passe
+        #Pastword
         self.scrollable_frame.password_label = self.build_label_scrollable_frame("Mot de passe :", 7)
         self.scrollable_frame.password_box = customtkinter.CTkEntry(
             self.scrollable_frame, font=self.text_font, height=48, corner_radius=10,
@@ -269,7 +268,7 @@ class LogInOut(Interface):
         )
         self.scrollable_frame.password_box.grid(row=8, column=0, sticky="ew", padx=20, pady=(2,5))
 
-        # Bouton montrer/masquer mot de passe
+        # Show Password
         self.scrollable_frame.show_password_button = customtkinter.CTkButton(
             master=self.scrollable_frame, 
             text="",  
@@ -283,7 +282,7 @@ class LogInOut(Interface):
         )
         self.scrollable_frame.show_password_button.grid(row=8, column=0, padx=20, pady=(2,5), sticky="e")
 
-        # Confirmer le mot de passe
+        # Confirm password
         self.scrollable_frame.confirm_password_label = self.build_label_scrollable_frame("Confirmez le mot de passe :", 9)
         self.scrollable_frame.confirm_password_box = customtkinter.CTkEntry(
             self.scrollable_frame, font=self.text_font, height=48, corner_radius=10,
@@ -291,7 +290,7 @@ class LogInOut(Interface):
         )
         self.scrollable_frame.confirm_password_box.grid(row=10, column=0, sticky="ew", padx=20, pady=(2,5))
 
-        # Bouton S'inscrire
+        # Button register
         self.scrollable_frame.button_register = customtkinter.CTkButton(
             master=self.scrollable_frame,
             text="S'inscrire".upper(),
@@ -303,13 +302,13 @@ class LogInOut(Interface):
         )
         self.scrollable_frame.button_register.grid(row=11, column=0, padx=20, pady=10, sticky="")
 
-        # Bouton Retour
+        # Button return
         self.build_return_button(self.scrollable_frame)
 
-        # Bouton Quitter
+        # Button quit
         self.scrollable_frame.quit_button = self.build_quit_button(self.scrollable_frame)
 
-        # Ajuster l'expansion en hauteur pour un bon affichage
+       
         self.scrollable_frame.rowconfigure(12, weight=1)
 
 
