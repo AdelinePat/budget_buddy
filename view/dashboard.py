@@ -149,18 +149,18 @@ class Dashboard():
             dropdown_fg_color = SOFT_YELLOW, 
             dropdown_font= self.master.text_font,
             dropdown_hover_color = SOFT_BLUE,
-            corner_radius=10)
+            corner_radius=15)
 
-        self.interface_frame.account_type_choice.grid(row=5, column=0, sticky="sew", padx=20, pady=0)
+        self.interface_frame.account_type_choice.grid(row=6, column=0, sticky="sew", padx=20, pady=0)
         self.interface_frame.account_type_choice.set(self.account_type_list[0])
 
     def account_combobox_callback(self, choice):
         account_type = choice
         id_user = self.login_info.get_user_id()
         self.controller.create_account_from_user_id(id_user, account_type)
-        self.interface_frame.create_account_message = self.build_label("Compte créer avec succès", 5)
         self.interface_frame.account_type_choice.destroy()
-       
+        self.interface_frame.create_account_message = self.build_label("Compte créer avec succès", 6, self.interface_frame)
+        
     def build_label(self, label_text, row_number, master=None, color=DARK_BLUE, bg_color=LIGHT_BLUE, custom_font=None, padvertical=(5,2), justify="center", anchor="center"):
         if custom_font == None:
             custom_font = self.master.text_font
@@ -168,12 +168,12 @@ class Dashboard():
         if justify != "center":
             anchor=justify
         if master==None:
-            master = self.master
+            master = self.main_frame
 
         if bg_color != LIGHT_BLUE:
             bg_color = bg_color
         
-        my_label = customtkinter.CTkLabel(master=self.main_frame,
+        my_label = customtkinter.CTkLabel(master=master,
                                           text=label_text,
                                           font=custom_font, 
                                           text_color=color, 
