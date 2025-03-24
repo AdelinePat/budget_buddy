@@ -4,9 +4,10 @@ from view.interface import Interface
 
 from view.historic import Historic
 from view.interface_frames import Interface_frames
-from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK
+from view.__settings__ import DARK_BLUE, SOFT_BLUE, LIGHT_BLUE, YELLOW, SOFT_YELLOW, PINK, ACCOUNT_TYPE_LIST
 from data_access.read_data_access import DataAccess
 from view.transactions import TransactionView
+from controller.dashboard_data_manager import DashboardManager
 
 class Dashboard():
     def __init__(self, master, window_title, column_number, login_info):
@@ -16,6 +17,8 @@ class Dashboard():
         self.database = DataAccess()
         self.list_accounts : list = self.database.get_all_accounts_from_user(self.login_info.get_user_id())
         self.list_accounts.insert(0, (0, "Tous les comptes"))
+        self.controller = DashboardManager()
+        self.account_type_list = ACCOUNT_TYPE_LIST
         # self.master = master
         # self.master = self
         
@@ -28,6 +31,7 @@ class Dashboard():
         self.build_dashboard()
     
     def build_dashboard(self):
+        # self.build_title_and_subtitle()
         # self.interface_frame = Interface_frames(self, bg_color=DARK_BLUE, fg_color=LIGHT_BLUE, width=400,corner_radius=20)
         # self.interface_frame.columnconfigure(0, weight=1)
         # self.interface_frame.grid(row=0, column=0, padx=20, pady=20, sticky="snew")
@@ -52,17 +56,57 @@ class Dashboard():
         self.interface_frame.account_choice.grid(row=1, column=0, padx=10, pady=20, sticky="ew")
         self.interface_frame.transaction_button.grid(row=2, column=0, padx=10, pady=5, sticky="ew")
 
-        self.interface_frame.transaction_button = customtkinter.CTkButton(
+        self.interface_frame.create_bank_account_button = customtkinter.CTkButton(
             self.interface_frame, text="Création d'un nouveau compte bancaire",
             height=60, bg_color=SOFT_BLUE,
             fg_color=SOFT_BLUE, text_color=LIGHT_BLUE,
             font=self.master.text_font, command=self.create_account_callback
         )
+        self.interface_frame.create_bank_account_button.grid(row=3, column=0, padx=10, pady=5, sticky="ew")
+
         self.historic = Historic(self.master, self.list_accounts, self.display_accounts, self.account_id)
 
     def create_account_callback(self):
-        blabla#
-        pass
+
+        self.interface_frame.account_type_choice = customtkinter.CTkComboBox(master=self.interface_frame,
+            values=self.account_type_list, state="readonly",
+            command=self.account_combobox_callback, font=self.master.text_font, text_color=DARK_BLUE,
+            bg_color=DARK_BLUE, fg_color=SOFT_YELLOW, dropdown_fg_color = SOFT_YELLOW, 
+            dropdown_text_color = DARK_BLUE, dropdown_font= self.master.text_font,
+            dropdown_hover_color = SOFT_BLUE, corner_radius=10)
+
+        self.interface_frame.account_type_choice.grid(row=4, column=0, sticky="sew", padx=20, pady=0)
+        self.interface_frame.account_type_choice.set(self.account_type_list[0])
+
+    def account_combobox_callback(self, choice):
+        account_type = choice
+        id_user = self.login_info.get_user_id()
+        self.controller.create_account_from_user_id(id_user, account_type)
+        self.interface_frame.create_account_message = self.build_label("Compte créer avec succès", 5)
+        self.interface_frame.account_type_choice.destroy()
+
+    def build_title_and_subtitle(self):
+        self.title = self.build_label("Budget Buddy", 0, master=self, color=YELLOW, custom_font=self.master.title_font, padvertical=(20,5))
+
+    def build_label(self, label_text, row_number, master=None, color=DARK_BLUE, custom_font=None, padvertical=(5,2), justify="left", anchor="w"):
+        if custom_font == None:
+            custom_font = self.master.text_font
+
+        if justify != "left":
+            anchor="center"
+        if master==None:
+            master = self.interface_frame
+        
+
+        my_label = customtkinter.CTkLabel(master,
+                                          text=label_text,
+                                          font=custom_font, 
+                                          text_color=color, 
+                                          bg_color=SOFT_BLUE, 
+                                          justify=justify,
+                                          anchor=anchor)
+        my_label.grid(row=row_number, column=0, sticky="ew", padx=20, pady=padvertical)
+        return my_label
 
     def init_transaction(self):
         # window_title, column_number, current_session, current_account
