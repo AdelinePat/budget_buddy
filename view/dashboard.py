@@ -220,6 +220,14 @@ class Dashboard():
         if hasattr(self.interface_frame, 'account_type_choice'):
             self.interface_frame.account_type_choice.destroy()
 
+        self.login_info.set_current_account(choice[0])
+
+        self.historic.login_info.set_current_account(choice[0])
+        
+
+        if hasattr(self.interface_frame, 'account_type_choice'):
+            self.interface_frame.account_type_choice.destroy()
+
     def list_all_accounts(self):
         if self.list_accounts != self.database.get_all_accounts_from_user(self.login_info.get_user_id()):
             self.list_accounts = self.database.get_all_accounts_from_user(self.login_info.get_user_id())
