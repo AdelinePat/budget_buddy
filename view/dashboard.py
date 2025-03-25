@@ -114,7 +114,9 @@ class Dashboard():
         self.create_logout_button(7) ### if create_bank_account -> row_position 5 already taken ###
         
         self.list_accounts = self.list_all_accounts()
-        self.historic = Historic(self.historic_frame, self.list_accounts, self.display_accounts, self.account_id)
+        self.historic = Historic(self.historic_frame, self.list_accounts, self.display_accounts, self.login_info)
+        print("j'essaye de print historic à sa création")
+        print(self.historic)
 
     def create_logout_button(self, row_position):
         self.interface_frame.logout_button = customtkinter.CTkButton(
@@ -217,6 +219,12 @@ class Dashboard():
     def flip_account(self, choice):
         self.historic.flip_historic_account(choice)
         self.account_id = choice[0]
+
+        self.login_info.set_current_account(choice[0])
+
+        self.historic.login_info.set_current_account(choice[0])
+        
+
         if hasattr(self.interface_frame, 'account_type_choice'):
             self.interface_frame.account_type_choice.destroy()
 

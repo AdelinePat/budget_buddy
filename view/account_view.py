@@ -8,7 +8,10 @@ from model.historic_transaction_model import Historic_Transaction
 from data_access.write_historic_query import HistoricQuery
 
 class Account_view:
-    def __init__(self, account_id):
+    def __init__(self, account_id, login_info):
+        # self.login_info = login_info
+        # self.account_id = login_info.get_current_account()
+        self.user_id = login_info.get_user_id()
         self.account_id = account_id
         self.util = UtilTool()
 
@@ -52,7 +55,8 @@ class Account_view:
             dropdown_fg_color = SOFT_YELLOW, 
             dropdown_font= self.util.text_font,
             dropdown_hover_color = SOFT_BLUE,
-            corner_radius=15
+            corner_radius=15,
+            state="readonly"
             
         )
         master.filters.grid(row=3, column=0, padx=10, pady=10, sticky="ew")
@@ -72,13 +76,25 @@ class Account_view:
         self.master.transactions_frame.columnconfigure((0), weight=1)
         self.master.transactions_frame.grid(row=5,column=0,padx=15, pady=5, sticky="ew")
 
-        self.list_transactions = self.database.historic_queries_dict[self.current_filter](
+        # match self.current_filter:
+        #     # "Voir tout", "Par catégorie", "Par type", "Par dates"
+        #     case 'Voir tout':
+        #         self.database.historic_query_all(self.account_id, self.user_id)
+        #     case 'Par catégorie':
+        #         self.database.historic_query_category(self.user_id, self.account_id, self.current_factor)
+        #     case 'Par type':
+        #         self.database.historic_query_type(self.user_id, self.account_id, self.current_factor)
+        #         pass
+        #     case 'Par dates':
+        #         pass
+
+        self.list_transactions = self.database.historic_queries_dict[self.current_filter](self.user_id,
             self.account_id,
             self.current_factor)
 
         self.account_transactions = []
         for index, transaction in enumerate(self.list_transactions):
-            if transaction[1] == self.account_id or transaction[2] == self.account_id:
+            # if transaction[1] == self.account_id or transaction[2] == self.account_id:
 
                 transaction_element = Historic_Transaction(
                     self.master.transactions_frame,
@@ -99,6 +115,11 @@ class Account_view:
         self.current_filter = choice
         self.build_historic()
     
+    def flip_factors(self, choice):
+        self.destroy_historic()
+        self.current_factor = choice
+        self.build_historic()
+    
     def build_all(self):
         pass
     
@@ -114,9 +135,12 @@ class Account_view:
             dropdown_fg_color = SOFT_YELLOW, 
             dropdown_font= self.util.text_font,
             dropdown_hover_color = SOFT_BLUE,
-            corner_radius=15
+            corner_radius=15,
+            command=self.flip_factors,
+            state="readonly"
         )
         self.master.category.grid(column=0, row=4, padx=10, pady=10, sticky="ew")
+        self.master.category.set(CATEGORY_LIST[0])
 
     def build_type(self):
         self.master.type = customtkinter.CTkComboBox(
@@ -130,9 +154,12 @@ class Account_view:
             dropdown_fg_color = SOFT_YELLOW, 
             dropdown_font= self.util.text_font,
             dropdown_hover_color = SOFT_BLUE,
-            corner_radius=15
+            corner_radius=15,
+            command=self.flip_factors,
+            state="readonly"
         )
         self.master.type.grid(column=0, row=4, padx=10, pady=10, sticky="ew")
+        self.master.type.set(DEAL_TYPE_LIST[0])
 
     def build_dates(self):
         pass
